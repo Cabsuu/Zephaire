@@ -60,9 +60,9 @@ public class StaticPointParticleTask extends BukkitRunnable implements Debuggabl
             @Override
             public void run() {
                 world.spawnParticle(
-                    particle, location, count,
-                    offsetX, offsetY, offsetZ,
-                    speed, particleOptions
+                        particle, location, count,
+                        offsetX, offsetY, offsetZ,
+                        speed, particleOptions
                 );
             }
         }.runTask(JavaPlugin.getPlugin(Zephaire.class));

@@ -82,7 +82,7 @@ public class CircleParticleTask implements AnimatedParticle {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-            world.spawnParticle(particle, spawnLocation, 1, 0, 0, 0, 0, options);
+                    world.spawnParticle(particle, spawnLocation, 1, 0, 0, 0, 0, options);
                 }
             }.runTask(JavaPlugin.getPlugin(Zephaire.class));
         }

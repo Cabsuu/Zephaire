@@ -1,93 +1,67 @@
 package com.jerae.zephaire.data;
 
 import com.jerae.zephaire.Zephaire;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 
 /**
- * Manages the persistent state of toggled blocks.
+ * Manages the persistent state of disabled particles.
  */
 public class DataManager {
 
     private final Zephaire plugin;
-    private FileConfiguration dataConfig = null;
-    private final File configFile;
-    private final Set<Location> activeToggledBlocks = new HashSet<>();
+    private FileConfiguration disabledParticlesConfig = null;
+    private final File disabledParticlesFile;
+    private final Set<String> disabledParticles = new HashSet<>();
 
     public DataManager(Zephaire plugin) {
         this.plugin = plugin;
-        this.configFile = new File(plugin.getDataFolder(), "toggled-blocks.yml");
+        this.disabledParticlesFile = new File(plugin.getDataFolder(), "disabled-particles.yml");
     }
 
     public void load() {
-        if (!configFile.exists()) {
-            plugin.saveResource("toggled-blocks.yml", false);
+        if (!disabledParticlesFile.exists()) {
+            plugin.saveResource("disabled-particles.yml", false);
         }
 
-        dataConfig = YamlConfiguration.loadConfiguration(configFile);
-        activeToggledBlocks.clear();
-
-        ConfigurationSection section = dataConfig.getConfigurationSection("active-toggles");
-        if (section != null) {
-            for (String key : section.getKeys(false)) {
-                String[] parts = key.split(";");
-                if (parts.length == 4) {
-                    World world = Bukkit.getWorld(parts[0]);
-                    if (world != null) {
-                        try {
-                            double x = Double.parseDouble(parts[1]);
-                            double y = Double.parseDouble(parts[2]);
-                            double z = Double.parseDouble(parts[3]);
-                            activeToggledBlocks.add(new Location(world, x, y, z));
-                        } catch (NumberFormatException e) {
-                            plugin.getLogger().log(Level.WARNING, "Invalid location format in toggled-blocks.yml: " + key);
-                        }
-                    }
-                }
-            }
-        }
+        disabledParticlesConfig = YamlConfiguration.loadConfiguration(disabledParticlesFile);
+        disabledParticles.clear();
+        disabledParticles.addAll(disabledParticlesConfig.getStringList("disabled-list"));
     }
 
     public void save() {
-        // Clear old data
-        dataConfig.set("active-toggles", null);
-        // Create a new section to avoid leaving an empty 'active-toggles:' line
-        ConfigurationSection section = dataConfig.createSection("active-toggles");
-
-        for (Location loc : activeToggledBlocks) {
-            // Use a consistent, parsable format for the location key
-            String key = String.format("%s;%.2f;%.2f;%.2f", loc.getWorld().getName(), loc.getX(), loc.getY(), loc.getZ());
-            section.set(key, true);
-        }
-
+        // Save the list of disabled particles to the file
+        disabledParticlesConfig.set("disabled-list", new ArrayList<>(disabledParticles));
         try {
-            dataConfig.save(configFile);
+            disabledParticlesConfig.save(disabledParticlesFile);
         } catch (IOException e) {
-            plugin.getLogger().log(Level.SEVERE, "Could not save toggled-blocks.yml!", e);
+            plugin.getLogger().log(Level.SEVERE, "Could not save disabled-particles.yml!", e);
         }
     }
 
-    public boolean isBlockActive(Location location) {
-        return activeToggledBlocks.contains(location);
+    public boolean isParticleDisabled(String particleName) {
+        return disabledParticles.contains(particleName.toLowerCase());
     }
 
-    public void setBlockActive(Location location) {
-        activeToggledBlocks.add(location);
-        save();
-    }
+    public boolean toggleParticle(String particleName) {
+        String lowerCaseName = particleName.toLowerCase();
+        boolean isDisabled = isParticleDisabled(lowerCaseName);
 
-    public void setBlockInactive(Location location) {
-        activeToggledBlocks.remove(location);
+        if (isDisabled) {
+            disabledParticles.remove(lowerCaseName);
+        } else {
+            disabledParticles.add(lowerCaseName);
+        }
         save();
+        return !isDisabled; // Return the new state (true if it's now enabled)
     }
 }
+

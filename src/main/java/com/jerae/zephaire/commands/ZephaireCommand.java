@@ -5,6 +5,7 @@ import com.jerae.zephaire.commands.subcommands.DebugCommand;
 import com.jerae.zephaire.commands.subcommands.ListCommand;
 import com.jerae.zephaire.commands.subcommands.ReloadCommand;
 import com.jerae.zephaire.commands.subcommands.SubCommand;
+import com.jerae.zephaire.commands.subcommands.ToggleCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -27,6 +28,7 @@ public class ZephaireCommand implements CommandExecutor, TabCompleter {
         commandManager.registerCommand(new ReloadCommand(plugin));
         commandManager.registerCommand(new DebugCommand());
         commandManager.registerCommand(new ListCommand());
+        commandManager.registerCommand(new ToggleCommand(plugin));
     }
 
     @Override
@@ -68,6 +70,6 @@ public class ZephaireCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(ChatColor.GOLD + "/zephaire reload" + ChatColor.WHITE + " - Reloads the plugin's configuration.");
         sender.sendMessage(ChatColor.GOLD + "/zephaire debug <name>" + ChatColor.WHITE + " - Shows debug info for a particle.");
         sender.sendMessage(ChatColor.GOLD + "/zephaire list [page|name]" + ChatColor.WHITE + " - Lists or inspects active particles.");
+        sender.sendMessage(ChatColor.GOLD + "/zephaire toggle <name>" + ChatColor.WHITE + " - Toggles a particle effect on or off.");
     }
 }
-

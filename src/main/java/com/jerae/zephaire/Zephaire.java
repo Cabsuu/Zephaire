@@ -25,13 +25,15 @@ public final class Zephaire extends JavaPlugin {
         this.saveDefaultConfig();
         this.saveResource("guide.txt", true);
         this.saveResource("particles.txt", false);
+        this.saveResource("disabled-particles.yml", false);
+
 
         // --- INITIALIZE CORE COMPONENTS ---
-        // Create instances of all managers first. This is safer than initializing and using them intermittently.
         this.factoryManager = new FactoryManager();
         this.dataManager = new DataManager(this);
         this.particleManager = new ParticleManager(this);
         this.particleConfigLoader = new ParticleConfigLoader(this, factoryManager, particleManager);
+        this.particleManager.setConfigLoader(this.particleConfigLoader); // Link loader to manager
 
         // Make the particle manager globally accessible
         ParticleRegistry.initialize(this.particleManager);
@@ -39,7 +41,6 @@ public final class Zephaire extends JavaPlugin {
         // --- LOAD DATA AND PARTICLES ---
         this.dataManager.load();
         // Perform the initial load of configuration and particles.
-        // This now centralizes the loading logic in one method.
         reloadPluginConfig();
 
 
@@ -77,3 +78,4 @@ public final class Zephaire extends JavaPlugin {
         return dataManager;
     }
 }
+

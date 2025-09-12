@@ -42,48 +42,76 @@ public class ParticleConfigLoader {
         loadParticleSection("animated-particles");
     }
 
-    private void loadParticleSection(String configSection) {
-        ConfigurationSection section = plugin.getConfig().getConfigurationSection(configSection);
+    private void loadParticleSection(String configSectionName) {
+        ConfigurationSection section = plugin.getConfig().getConfigurationSection(configSectionName);
         if (section == null) {
             return;
         }
 
-        boolean isAnimated = "animated-particles".equals(configSection);
+        boolean isAnimated = "animated-particles".equals(configSectionName);
 
         for (String key : section.getKeys(false)) {
-            ConfigurationSection particleConfig = section.getConfigurationSection(key);
-            if (particleConfig == null) {
-                plugin.getLogger().warning("Invalid configuration for particle key '" + key + "' in '" + configSection + "'. Skipping.");
+            // On a full load/reload, check against the persistent disabled list
+            if (plugin.getDataManager().isParticleDisabled(key)) {
                 continue;
             }
-
-            try {
-                String shape = particleConfig.getString("shape", isAnimated ? "" : "POINT").toUpperCase();
-                if (isAnimated && shape.isEmpty()) {
-                    plugin.getLogger().warning("Missing 'shape' for animated particle '" + key + "'. Skipping.");
-                    continue;
-                }
-
-                World world = Bukkit.getWorld(particleConfig.getString("world", "world"));
-                if (world == null) {
-                    plugin.getLogger().warning("Invalid world for particle '" + key + "'. Skipping.");
-                    continue;
-                }
-
-                String particlePath = configSection + "." + key;
-                ConditionManager manager = parseConditions(particleConfig, world, particlePath);
-
-                if (isAnimated) {
-                    loadAnimatedParticle(key, shape, particleConfig, manager);
-                } else {
-                    loadStaticParticle(key, shape, particleConfig, manager);
-                }
-
-            } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "An unexpected error occurred while loading particle '" + key + "' in '" + configSection + "'.", e);
-            }
+            loadParticleFromSection(section, key, isAnimated);
         }
     }
+
+    public boolean loadSingleParticle(String key) {
+        ConfigurationSection staticSection = plugin.getConfig().getConfigurationSection("static-particles");
+        if (staticSection != null && staticSection.isConfigurationSection(key)) {
+            loadParticleFromSection(staticSection, key, false);
+            // If the loaded particle was animated, we need to restart the manager if it wasn't running
+            particleManager.startAnimationManager();
+            return true;
+        }
+
+        ConfigurationSection animatedSection = plugin.getConfig().getConfigurationSection("animated-particles");
+        if (animatedSection != null && animatedSection.isConfigurationSection(key)) {
+            loadParticleFromSection(animatedSection, key, true);
+            particleManager.startAnimationManager();
+            return true;
+        }
+
+        return false;
+    }
+
+    private void loadParticleFromSection(ConfigurationSection section, String key, boolean isAnimated) {
+        ConfigurationSection particleConfig = section.getConfigurationSection(key);
+        if (particleConfig == null) {
+            plugin.getLogger().warning("Invalid configuration for particle key '" + key + "' in '" + section.getName() + "'. Skipping.");
+            return;
+        }
+
+        try {
+            String shape = particleConfig.getString("shape", isAnimated ? "" : "POINT").toUpperCase();
+            if (isAnimated && shape.isEmpty()) {
+                plugin.getLogger().warning("Missing 'shape' for animated particle '" + key + "'. Skipping.");
+                return;
+            }
+
+            World world = Bukkit.getWorld(particleConfig.getString("world", "world"));
+            if (world == null) {
+                plugin.getLogger().warning("Invalid world for particle '" + key + "'. Skipping.");
+                return;
+            }
+
+            String particlePath = section.getName() + "." + key;
+            ConditionManager manager = parseConditions(particleConfig, world, particlePath);
+
+            if (isAnimated) {
+                loadAnimatedParticle(key, shape, particleConfig, manager);
+            } else {
+                loadStaticParticle(key, shape, particleConfig, manager);
+            }
+
+        } catch (Exception e) {
+            plugin.getLogger().log(Level.SEVERE, "An unexpected error occurred while loading particle '" + key + "' in '" + section.getName() + "'.", e);
+        }
+    }
+
 
     private void loadAnimatedParticle(String key, String shape, ConfigurationSection config, ConditionManager condManager) {
         Optional<AnimatedParticleFactory> factoryOpt = factoryManager.getAnimatedFactory(shape);
