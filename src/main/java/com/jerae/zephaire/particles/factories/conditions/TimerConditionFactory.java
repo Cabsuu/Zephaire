@@ -1,6 +1,6 @@
 package com.jerae.zephaire.particles.factories.conditions;
 
-import com.jerae.zephaire.particles.FactoryManager;
+import com.jerae.zephaire.particles.managers.FactoryManager;
 import com.jerae.zephaire.particles.conditions.ParticleCondition;
 import com.jerae.zephaire.particles.conditions.TimerCondition;
 import com.jerae.zephaire.particles.util.ConfigValidator;

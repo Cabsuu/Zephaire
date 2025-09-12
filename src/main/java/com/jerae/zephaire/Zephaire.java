@@ -2,12 +2,14 @@ package com.jerae.zephaire;
 
 import com.jerae.zephaire.commands.ZephaireCommand;
 import com.jerae.zephaire.data.DataManager;
+import com.jerae.zephaire.listeners.EntityListener;
 import com.jerae.zephaire.listeners.PlayerInteractListener;
-import com.jerae.zephaire.particles.FactoryManager;
+import com.jerae.zephaire.particles.managers.EntityParticleManager;
+import com.jerae.zephaire.particles.managers.FactoryManager;
 import com.jerae.zephaire.particles.ParticleConfigLoader;
-import com.jerae.zephaire.particles.ParticleManager;
+import com.jerae.zephaire.particles.managers.ParticleManager;
 import com.jerae.zephaire.particles.ParticleRegistry;
-import com.jerae.zephaire.particles.PerformanceManager;
+import com.jerae.zephaire.particles.managers.PerformanceManager;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -17,6 +19,7 @@ public final class Zephaire extends JavaPlugin {
     private ParticleManager particleManager;
     private DataManager dataManager;
     private ParticleConfigLoader particleConfigLoader;
+    private EntityParticleManager entityParticleManager;
 
 
     @Override
@@ -26,13 +29,15 @@ public final class Zephaire extends JavaPlugin {
         this.saveResource("guide.txt", true);
         this.saveResource("particles.txt", false);
         this.saveResource("disabled-particles.yml", false);
+        this.saveResource("entity-particles.yml", false);
 
 
         // --- INITIALIZE CORE COMPONENTS ---
         this.factoryManager = new FactoryManager();
         this.dataManager = new DataManager(this);
         this.particleManager = new ParticleManager(this);
-        this.particleConfigLoader = new ParticleConfigLoader(this, factoryManager, particleManager);
+        this.entityParticleManager = new EntityParticleManager(this);
+        this.particleConfigLoader = new ParticleConfigLoader(this, factoryManager, particleManager, entityParticleManager);
         this.particleManager.setConfigLoader(this.particleConfigLoader); // Link loader to manager
 
         // Make the particle manager globally accessible
@@ -53,6 +58,7 @@ public final class Zephaire extends JavaPlugin {
         }
 
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(this), this);
+        getServer().getPluginManager().registerEvents(new EntityListener(this), this);
     }
 
     /**
@@ -63,10 +69,12 @@ public final class Zephaire extends JavaPlugin {
         reloadConfig();
         PerformanceManager.initialize(getConfig());
 
-        // 2. Re-initialize the particle manager and load the new particle configurations.
+        // 2. Re-initialize the particle managers and load the new particle configurations.
         this.particleManager.initialize();
+        this.entityParticleManager.initialize();
         this.particleConfigLoader.loadParticles();
         this.particleManager.startAnimationManager();
+        this.entityParticleManager.startManager();
     }
 
     // --- GETTERS FOR MANAGERS ---
@@ -76,6 +84,10 @@ public final class Zephaire extends JavaPlugin {
 
     public DataManager getDataManager() {
         return dataManager;
+    }
+
+    public EntityParticleManager getEntityParticleManager() {
+        return entityParticleManager;
     }
 }
 

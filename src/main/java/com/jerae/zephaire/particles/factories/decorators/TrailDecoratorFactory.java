@@ -2,7 +2,7 @@ package com.jerae.zephaire.particles.factories.decorators;
 
 import com.jerae.zephaire.Zephaire;
 import com.jerae.zephaire.particles.animations.AnimatedParticle;
-import com.jerae.zephaire.particles.animations.TrailDecorator;
+import com.jerae.zephaire.particles.animations.decorator.TrailDecorator;
 import com.jerae.zephaire.particles.util.ConfigValidator;
 import com.jerae.zephaire.particles.util.ParticleUtils;
 import org.bukkit.Particle;

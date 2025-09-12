@@ -1,7 +1,7 @@
 package com.jerae.zephaire.particles.factories.statics;
 
 import com.jerae.zephaire.Zephaire;
-import com.jerae.zephaire.particles.CollisionManager;
+import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.factories.StaticParticleFactory;
 import com.jerae.zephaire.particles.statics.StaticCurveParticleTask;

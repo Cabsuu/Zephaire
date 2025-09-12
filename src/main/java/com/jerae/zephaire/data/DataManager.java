@@ -1,7 +1,6 @@
 package com.jerae.zephaire.data;
 
 import com.jerae.zephaire.Zephaire;
-import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 

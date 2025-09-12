@@ -2,7 +2,7 @@ package com.jerae.zephaire.particles.factories.decorators;
 
 import com.jerae.zephaire.Zephaire;
 import com.jerae.zephaire.particles.animations.AnimatedParticle;
-import com.jerae.zephaire.particles.animations.SoundDecorator;
+import com.jerae.zephaire.particles.animations.decorator.SoundDecorator;
 import com.jerae.zephaire.particles.util.ConfigValidator;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;

@@ -1,6 +1,7 @@
 package com.jerae.zephaire.particles;
 
 import com.jerae.zephaire.particles.conditions.BlockInteractCondition;
+import com.jerae.zephaire.particles.managers.ParticleManager;
 import org.bukkit.Location;
 
 import java.util.List;

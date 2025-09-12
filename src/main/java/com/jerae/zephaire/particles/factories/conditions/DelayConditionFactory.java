@@ -1,6 +1,6 @@
 package com.jerae.zephaire.particles.factories.conditions;
 
-import com.jerae.zephaire.particles.FactoryManager;
+import com.jerae.zephaire.particles.managers.FactoryManager;
 import com.jerae.zephaire.particles.conditions.DelayConditionDecorator;
 import com.jerae.zephaire.particles.conditions.ParticleCondition;
 import org.bukkit.World;

@@ -1,0 +1,127 @@
+package com.jerae.zephaire.particles.animations.entity;
+
+import com.jerae.zephaire.particles.managers.CollisionManager;
+import com.jerae.zephaire.particles.conditions.ConditionManager;
+import com.jerae.zephaire.particles.data.EntityTarget;
+import com.jerae.zephaire.particles.util.VectorUtils;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.entity.Entity;
+import org.bukkit.util.Vector;
+
+public class EntityStarParticleTask implements EntityParticleTask {
+
+    private final String effectName;
+    private final Particle particle;
+    private final int points;
+    private final double outerRadius;
+    private final double innerRadius;
+    private final double speed;
+    private final double density;
+    private final Object options;
+    private final double pitch;
+    private final double yaw;
+    private final ConditionManager conditionManager;
+    private final boolean collisionEnabled;
+    private final Vector offset;
+    private final EntityTarget target;
+
+    private double rotationAngle = 0;
+
+    // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
+    private final Vector[] vertices;
+    private final Vector reusableVertex = new Vector();
+    private final Vector lineDirection = new Vector();
+    private final Vector currentLinePoint = new Vector();
+    private final Location particleLoc;
+
+    public EntityStarParticleTask(String effectName, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target) {
+        this.effectName = effectName;
+        this.particle = particle;
+        this.points = Math.max(2, points);
+        this.outerRadius = outerRadius;
+        this.innerRadius = innerRadius;
+        this.speed = speed;
+        this.density = density;
+        this.options = options;
+        this.pitch = pitch;
+        this.yaw = yaw;
+        this.conditionManager = conditionManager;
+        this.collisionEnabled = collisionEnabled;
+        this.offset = offset;
+        this.target = target;
+        this.vertices = new Vector[this.points * 2];
+        this.particleLoc = new Location(null, 0, 0, 0);
+    }
+
+    @Override
+    public EntityParticleTask newInstance() {
+        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, conditionManager, collisionEnabled, offset, target);
+    }
+
+    @Override
+    public EntityTarget getTarget() {
+        return target;
+    }
+
+    @Override
+    public void tick(Entity entity) {
+        Location center = entity.getLocation().add(offset);
+        particleLoc.setWorld(entity.getWorld());
+
+        rotationAngle += speed;
+        drawStar(center);
+    }
+
+    private void drawStar(Location center) {
+        int totalVertices = points * 2;
+
+        for (int i = 0; i < totalVertices; i++) {
+            double angle = rotationAngle + (i * Math.PI / points);
+            double radius = (i % 2 == 0) ? outerRadius : innerRadius;
+            reusableVertex.setX(Math.cos(angle) * radius).setY(0).setZ(Math.sin(angle) * radius);
+            vertices[i] = VectorUtils.rotateVector(reusableVertex, pitch, yaw);
+        }
+
+        for (int i = 0; i < totalVertices; i++) {
+            Vector start = vertices[i];
+            Vector end = vertices[(i + 1) % totalVertices];
+            drawParticleLine(center, start, end);
+        }
+    }
+
+    private void drawParticleLine(Location center, Vector start, Vector end) {
+        lineDirection.copy(end).subtract(start);
+        double length = lineDirection.length();
+        lineDirection.normalize();
+
+        for (double d = 0; d < length; d += (1.0 / density)) {
+            currentLinePoint.copy(lineDirection).multiply(d).add(start);
+            particleLoc.setX(center.getX() + currentLinePoint.getX());
+            particleLoc.setY(center.getY() + currentLinePoint.getY());
+            particleLoc.setZ(center.getZ() + currentLinePoint.getZ());
+
+            if (collisionEnabled && CollisionManager.isColliding(particleLoc)) {
+                continue;
+            }
+            center.getWorld().spawnParticle(particle, particleLoc, 1, 0, 0, 0, 0, options);
+        }
+    }
+
+    @Override
+    public boolean shouldCollide() {
+        return collisionEnabled;
+    }
+
+    @Override
+    public String getEffectName() {
+        return effectName;
+    }
+
+    @Override
+    public String getDebugInfo() {
+        return ChatColor.AQUA + "Type: " + ChatColor.WHITE + "ENTITY_ANIMATED" + "\n" +
+                ChatColor.AQUA + "Shape: " + ChatColor.WHITE + "STAR";
+    }
+}

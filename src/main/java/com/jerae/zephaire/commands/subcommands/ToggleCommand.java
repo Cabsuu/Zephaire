@@ -1,7 +1,6 @@
 package com.jerae.zephaire.commands.subcommands;
 
 import com.jerae.zephaire.Zephaire;
-import com.jerae.zephaire.particles.ParticleRegistry;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;

@@ -1,0 +1,50 @@
+# ===================================================================
+# Zephaire Plugin Entity-Targeted Particles Configuration
+# ===================================================================
+#
+# 'target' section guide:
+#   type: Can be PLAYER, ZOMBIE, SKELETON, CREEPER, etc. (any valid EntityType name)
+#         or use special types: ALL_PLAYERS, ALL_HOSTILE_MOBS.
+#   name: (Optional) For PLAYER type, you can specify a player's name.
+#
+# 'offset' section guide:
+#   x, y, z: (Optional) Offsets the particle effect from the entity's location.
+#            'y' is useful for raising effects above the entity's feet.
+#
+entity-particles:
+  aura-of-flames:
+    target:
+      type: PLAYER
+      name: "Notch"  # Example for a specific player
+    shape: 'CIRCLE'
+    type: 'FLAME'
+    radius: 1.5
+    particle-count: 20
+    speed: 0.1
+    offset:
+      y: 1.0
+
+  cursed-mob-effect:
+    target:
+      type: ZOMBIE
+    shape: 'VORTEX'
+    type: 'SOUL_FIRE_FLAME'
+    radius: 0.8
+    height: 1.5
+    speed: 0.3
+    particle-count: 50
+    offset:
+      y: 0.5
+
+  all-players-welcome:
+    target:
+      type: ALL_PLAYERS
+    shape: 'STAR'
+    type: 'HAPPY_VILLAGER'
+    points: 5
+    outer-radius: 1.0
+    inner-radius: 0.5
+    speed: 0.02
+    density: 10
+    offset:
+      y: 2.5

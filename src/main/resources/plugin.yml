@@ -8,7 +8,7 @@ description: Make Zephaire great again!
 commands:
   zephaire:
     description: Main command for the Zephaire plugin.
-    usage: /<command> [reload|debug]
+    usage: /<command>
     permission: zephaire.use
     permission-message: You do not have permission to use this command.
 permissions:
@@ -20,4 +20,10 @@ permissions:
     default: op
   zephaire.debug:
     description: Allows debugging particle effects.
+    default: op
+  zephaire.list:
+    description: Allows listing particle effects.
+    default: op
+  zephaire.toggle:
+    description: Allows toggling particle effects.
     default: op

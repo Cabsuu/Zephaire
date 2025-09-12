@@ -1,7 +1,7 @@
 package com.jerae.zephaire.particles.factories.conditions;
 
 import com.jerae.zephaire.Zephaire;
-import com.jerae.zephaire.particles.FactoryManager;
+import com.jerae.zephaire.particles.managers.FactoryManager;
 import com.jerae.zephaire.particles.ParticleRegistry;
 import com.jerae.zephaire.particles.conditions.BlockInteractCondition;
 import com.jerae.zephaire.particles.conditions.ParticleCondition;
@@ -28,33 +28,11 @@ public class BlockInteractConditionFactory implements ConditionFactory {
         Material material = parseMaterial(configMap, "material", particlePath, true);
         if (material == null) return null;
 
-        boolean isToggle = ConfigValidator.getBoolean(configMap, "toggle", false, particlePath);
+        boolean triggerOnce = ConfigValidator.getBoolean(configMap, "trigger-once", false, particlePath);
+        long repeatDuration = ConfigValidator.getPositiveInt(configMap, "repeat-duration", 0, particlePath);
+        Material requiredItem = parseMaterial(configMap, "required-item", particlePath, false); // Not required for trigger
 
-        // --- Declare variables for all possible settings ---
-        boolean triggerOnce = false;
-        long repeatDuration = 0;
-        Material requiredItem = null;
-        Material activationItem = null;
-        Material deactivationItem = null;
-
-        // --- Parse settings based on the mode ---
-        if (isToggle) {
-            // --- TOGGLE MODE ---
-            activationItem = parseMaterial(configMap, "activation-item", particlePath, true);
-            deactivationItem = parseMaterial(configMap, "deactivation-item", particlePath, true);
-            if (activationItem == null || deactivationItem == null) {
-                JavaPlugin.getPlugin(Zephaire.class).getLogger().log(Level.WARNING, "Toggle interaction in '" + particlePath + "' requires both 'activation-item' and 'deactivation-item'.");
-                return null;
-            }
-        } else {
-            // --- TRIGGER MODE ---
-            triggerOnce = ConfigValidator.getBoolean(configMap, "trigger-once", false, particlePath);
-            // This was the line causing the error. It now correctly calls the 4-argument version.
-            repeatDuration = ConfigValidator.getPositiveInt(configMap, "repeat-duration", 0, particlePath);
-            requiredItem = parseMaterial(configMap, "required-item", particlePath, false); // Not required for trigger
-        }
-
-        BlockInteractCondition condition = new BlockInteractCondition(loc, material, isToggle, triggerOnce, repeatDuration, requiredItem, activationItem, deactivationItem);
+        BlockInteractCondition condition = new BlockInteractCondition(loc, material, triggerOnce, repeatDuration, requiredItem);
         ParticleRegistry.registerBlockInteractCondition(condition);
         return condition;
     }

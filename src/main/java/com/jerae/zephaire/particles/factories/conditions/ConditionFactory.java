@@ -1,11 +1,10 @@
 package com.jerae.zephaire.particles.factories.conditions;
 
-import com.jerae.zephaire.particles.FactoryManager;
+import com.jerae.zephaire.particles.managers.FactoryManager;
 import com.jerae.zephaire.particles.conditions.ParticleCondition;
 import org.bukkit.World;
 
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * An interface for a factory that creates ParticleCondition instances.

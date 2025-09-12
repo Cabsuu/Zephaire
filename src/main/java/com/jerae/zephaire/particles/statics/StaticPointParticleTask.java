@@ -1,9 +1,9 @@
 package com.jerae.zephaire.particles.statics;
 
 import com.jerae.zephaire.Zephaire;
-import com.jerae.zephaire.particles.CollisionManager;
+import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.Debuggable;
-import com.jerae.zephaire.particles.PerformanceManager;
+import com.jerae.zephaire.particles.managers.PerformanceManager;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

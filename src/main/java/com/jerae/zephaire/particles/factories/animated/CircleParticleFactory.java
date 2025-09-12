@@ -1,7 +1,7 @@
 package com.jerae.zephaire.particles.factories.animated;
 
 import com.jerae.zephaire.Zephaire;
-import com.jerae.zephaire.particles.CollisionManager;
+import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.animations.AnimatedParticle;
 import com.jerae.zephaire.particles.animations.CircleParticleTask;
 import com.jerae.zephaire.particles.conditions.ConditionManager;

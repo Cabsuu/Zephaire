@@ -1,22 +1,18 @@
 package com.jerae.zephaire.particles;
 
 import com.jerae.zephaire.Zephaire;
-import com.jerae.zephaire.particles.animations.AnimatedParticle;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
-import com.jerae.zephaire.particles.conditions.ParticleCondition;
-import com.jerae.zephaire.particles.factories.AnimatedParticleFactory;
-import com.jerae.zephaire.particles.factories.StaticParticleFactory;
-import com.jerae.zephaire.particles.factories.conditions.ConditionFactory;
-import com.jerae.zephaire.particles.factories.decorators.DecoratorFactory;
+import com.jerae.zephaire.particles.loaders.AnimatedParticleLoader;
+import com.jerae.zephaire.particles.loaders.ConditionParser;
+import com.jerae.zephaire.particles.loaders.EntityParticleLoader;
+import com.jerae.zephaire.particles.loaders.StaticParticleLoader;
+import com.jerae.zephaire.particles.managers.EntityParticleManager;
+import com.jerae.zephaire.particles.managers.FactoryManager;
+import com.jerae.zephaire.particles.managers.ParticleManager;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.logging.Level;
 
 /**
@@ -25,21 +21,26 @@ import java.util.logging.Level;
 public class ParticleConfigLoader {
 
     private final Zephaire plugin;
-    private final FactoryManager factoryManager;
-    private final ParticleManager particleManager;
+    private final StaticParticleLoader staticLoader;
+    private final AnimatedParticleLoader animatedLoader;
+    private final EntityParticleLoader entityLoader;
+    private final ConditionParser conditionParser;
 
-    public ParticleConfigLoader(Zephaire plugin, FactoryManager factoryManager, ParticleManager particleManager) {
+    public ParticleConfigLoader(Zephaire plugin, FactoryManager factoryManager, ParticleManager particleManager, EntityParticleManager entityParticleManager) {
         this.plugin = plugin;
-        this.factoryManager = factoryManager;
-        this.particleManager = particleManager;
+        this.staticLoader = new StaticParticleLoader(plugin, factoryManager, particleManager);
+        this.animatedLoader = new AnimatedParticleLoader(plugin, factoryManager, particleManager);
+        this.entityLoader = new EntityParticleLoader(plugin, factoryManager, entityParticleManager);
+        this.conditionParser = new ConditionParser(plugin, factoryManager);
     }
 
     /**
-     * Loads all static and animated particles from the configuration file.
+     * Loads all static, animated, and entity-targeted particles from the configuration files.
      */
     public void loadParticles() {
         loadParticleSection("static-particles");
         loadParticleSection("animated-particles");
+        loadEntityParticleSection();
     }
 
     private void loadParticleSection(String configSectionName) {
@@ -51,7 +52,6 @@ public class ParticleConfigLoader {
         boolean isAnimated = "animated-particles".equals(configSectionName);
 
         for (String key : section.getKeys(false)) {
-            // On a full load/reload, check against the persistent disabled list
             if (plugin.getDataManager().isParticleDisabled(key)) {
                 continue;
             }
@@ -59,19 +59,40 @@ public class ParticleConfigLoader {
         }
     }
 
+    private void loadEntityParticleSection() {
+        ConfigurationSection section = plugin.getConfig().getConfigurationSection("entity-particles");
+        if (section == null) {
+            return;
+        }
+
+        plugin.getLogger().info("Loading entity particle templates...");
+        for (String key : section.getKeys(false)) {
+            ConfigurationSection particleConfig = section.getConfigurationSection(key);
+            if (particleConfig == null) {
+                plugin.getLogger().warning("Invalid configuration for entity particle key '" + key + "'. Skipping.");
+                continue;
+            }
+            try {
+                entityLoader.load(key, particleConfig);
+            } catch (Exception e) {
+                plugin.getLogger().log(Level.SEVERE, "An unexpected error occurred while loading entity particle '" + key + "'.", e);
+            }
+        }
+    }
+
+
     public boolean loadSingleParticle(String key) {
         ConfigurationSection staticSection = plugin.getConfig().getConfigurationSection("static-particles");
         if (staticSection != null && staticSection.isConfigurationSection(key)) {
             loadParticleFromSection(staticSection, key, false);
-            // If the loaded particle was animated, we need to restart the manager if it wasn't running
-            particleManager.startAnimationManager();
+            plugin.getParticleManager().startAnimationManager();
             return true;
         }
 
         ConfigurationSection animatedSection = plugin.getConfig().getConfigurationSection("animated-particles");
         if (animatedSection != null && animatedSection.isConfigurationSection(key)) {
             loadParticleFromSection(animatedSection, key, true);
-            particleManager.startAnimationManager();
+            plugin.getParticleManager().startAnimationManager();
             return true;
         }
 
@@ -99,99 +120,17 @@ public class ParticleConfigLoader {
             }
 
             String particlePath = section.getName() + "." + key;
-            ConditionManager manager = parseConditions(particleConfig, world, particlePath);
+            ConditionManager manager = conditionParser.parse(particleConfig, world, particlePath);
 
             if (isAnimated) {
-                loadAnimatedParticle(key, shape, particleConfig, manager);
+                animatedLoader.load(key, shape, particleConfig, manager);
             } else {
-                loadStaticParticle(key, shape, particleConfig, manager);
+                staticLoader.load(key, shape, particleConfig, manager);
             }
 
         } catch (Exception e) {
             plugin.getLogger().log(Level.SEVERE, "An unexpected error occurred while loading particle '" + key + "' in '" + section.getName() + "'.", e);
         }
     }
-
-
-    private void loadAnimatedParticle(String key, String shape, ConfigurationSection config, ConditionManager condManager) {
-        Optional<AnimatedParticleFactory> factoryOpt = factoryManager.getAnimatedFactory(shape);
-
-        if (factoryOpt.isEmpty()) {
-            plugin.getLogger().warning("Unknown animated shape: '" + shape + "' for key '" + key + "'. Skipping.");
-            return;
-        }
-
-        AnimatedParticle baseParticle = factoryOpt.get().create(config, condManager);
-        if (baseParticle != null) {
-            AnimatedParticle decoratedParticle = applyDecorators(baseParticle, config, key);
-            particleManager.addParticle(key, decoratedParticle);
-        }
-    }
-
-    private void loadStaticParticle(String key, String shape, ConfigurationSection config, ConditionManager condManager) {
-        Optional<StaticParticleFactory> factoryOpt = factoryManager.getStaticFactory(shape);
-
-        if (factoryOpt.isEmpty()) {
-            plugin.getLogger().warning("Unknown static shape: '" + shape + "' for key '" + key + "'. Skipping.");
-            return;
-        }
-
-        BukkitRunnable task = factoryOpt.get().create(config, condManager);
-        if (task instanceof Debuggable) {
-            long period = config.getLong("period", shape.equals("POINT") ? 20L : 1L);
-            task.runTaskTimerAsynchronously(plugin, 0L, period);
-            particleManager.addParticle(key, (Debuggable) task);
-        }
-    }
-
-
-    private AnimatedParticle applyDecorators(AnimatedParticle baseParticle, ConfigurationSection config, String particleKey) {
-        ConfigurationSection decoratorsSection = config.getConfigurationSection("decorators");
-        if (decoratorsSection == null) {
-            return baseParticle;
-        }
-
-        AnimatedParticle currentParticle = baseParticle;
-        for (String decoratorKey : decoratorsSection.getKeys(false)) {
-            Optional<DecoratorFactory> decoratorFactoryOpt = factoryManager.getDecoratorFactory(decoratorKey);
-            if(decoratorFactoryOpt.isPresent()) {
-                ConfigurationSection decoratorConfig = decoratorsSection.getConfigurationSection(decoratorKey);
-                if (decoratorConfig != null) {
-                    currentParticle = decoratorFactoryOpt.get().create(currentParticle, decoratorConfig);
-                } else {
-                    plugin.getLogger().warning("Invalid configuration for decorator '" + decoratorKey + "' for particle '" + particleKey + "'.");
-                }
-            } else {
-                plugin.getLogger().warning("Unknown decorator '" + decoratorKey + "' for particle '" + particleKey + "'.");
-            }
-
-        }
-        return currentParticle;
-    }
-
-
-    private ConditionManager parseConditions(ConfigurationSection section, World defaultWorld, String particlePath) {
-        List<ParticleCondition> conditions = new ArrayList<>();
-        List<Map<?, ?>> conditionList = section.getMapList("conditions");
-
-        for (Map<?, ?> conditionMap : conditionList) {
-            try {
-                String type = ((String) conditionMap.get("type")).toUpperCase();
-                Optional<ConditionFactory> factoryOpt = factoryManager.getConditionFactory(type);
-                if (factoryOpt.isPresent()) {
-                    ParticleCondition condition = factoryOpt.get().create(conditionMap, defaultWorld, particlePath, factoryManager);
-                    if (condition != null) {
-                        conditions.add(condition);
-                    } else {
-                        plugin.getLogger().warning("Failed to create condition of type '" + type + "' in '" + particlePath + "'. Check its parameters.");
-                    }
-                } else {
-                    plugin.getLogger().warning("Unknown condition type '" + type + "' in '" + particlePath + "'.");
-                }
-            } catch (Exception e) {
-                plugin.getLogger().log(Level.WARNING, "Invalid format for a condition in '" + particlePath + "'. Please check the configuration.", e);
-            }
-        }
-        return new ConditionManager(conditions);
-    }
 }
+
