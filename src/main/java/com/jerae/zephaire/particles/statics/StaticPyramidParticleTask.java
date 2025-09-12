@@ -6,6 +6,7 @@ import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.managers.PerformanceManager;
+import com.jerae.zephaire.particles.util.ParticleUtils;
 import com.jerae.zephaire.particles.util.VectorUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -107,12 +108,8 @@ public class StaticPyramidParticleTask extends BukkitRunnable implements Debugga
                 ChatColor.AQUA + "Height: " + ChatColor.WHITE + height + "\n" +
                 ChatColor.AQUA + "Sides: " + ChatColor.WHITE + sides + "\n" +
                 ChatColor.DARK_AQUA + "--- Status ---" + "\n" +
-                ChatColor.AQUA + "Player Nearby: " + formatBoolean(PerformanceManager.isPlayerNearby(center)) + "\n" +
-                ChatColor.AQUA + "Conditions Met: " + formatBoolean(conditionManager.allConditionsMet(center)) + "\n" +
-                ChatColor.AQUA + "Collision Enabled: " + formatBoolean(collisionEnabled);
-    }
-
-    private String formatBoolean(boolean value) {
-        return value ? ChatColor.GREEN + "true" : ChatColor.RED + "false";
+                ChatColor.AQUA + "Player Nearby: " + ParticleUtils.formatBoolean(PerformanceManager.isPlayerNearby(center)) + "\n" +
+                ChatColor.AQUA + "Conditions Met: " + ParticleUtils.formatBoolean(conditionManager.allConditionsMet(center)) + "\n" +
+                ChatColor.AQUA + "Collision Enabled: " + ParticleUtils.formatBoolean(collisionEnabled);
     }
 }

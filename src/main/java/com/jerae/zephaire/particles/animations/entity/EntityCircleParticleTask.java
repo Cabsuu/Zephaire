@@ -5,6 +5,8 @@ import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.data.EntityTarget;
+import com.jerae.zephaire.particles.managers.PerformanceManager;
+import com.jerae.zephaire.particles.util.ParticleUtils;
 import com.jerae.zephaire.particles.util.VectorUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -12,8 +14,11 @@ import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
-public class EntityCircleParticleTask implements EntityParticleTask {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
+public class EntityCircleParticleTask implements EntityParticleTask {
     private final String effectName;
     private final Particle particle;
     private final double radius;
@@ -121,11 +126,12 @@ public class EntityCircleParticleTask implements EntityParticleTask {
 
     @Override
     public String getDebugInfo() {
-        // Debug info for entity particles might be different, for now, we return basic info
         return ChatColor.AQUA + "Type: " + ChatColor.WHITE + "ENTITY_ANIMATED" + "\n" +
                 ChatColor.AQUA + "Shape: " + ChatColor.WHITE + "CIRCLE" + "\n" +
                 ChatColor.AQUA + "Radius: " + ChatColor.WHITE + radius + "\n" +
-                ChatColor.AQUA + "Speed: " + ChatColor.WHITE + speed;
+                ChatColor.AQUA + "Speed: " + ChatColor.WHITE + speed + "\n" +
+                ChatColor.AQUA + "Target: " + ChatColor.WHITE + target.getTargetType().name() +
+                (target.getName() != null ? " (" + target.getName() + ")" : "") +
+                (target.getEntityType() != null ? " (" + target.getEntityType().name() + ")" : "");
     }
 }
-

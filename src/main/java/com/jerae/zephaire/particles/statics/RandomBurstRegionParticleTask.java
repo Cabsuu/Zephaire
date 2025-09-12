@@ -6,6 +6,7 @@ import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.managers.PerformanceManager;
+import com.jerae.zephaire.particles.util.ParticleUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -112,14 +113,10 @@ public class RandomBurstRegionParticleTask extends BukkitRunnable implements Deb
         info.append(ChatColor.AQUA).append("Timer: ").append(ChatColor.WHITE).append(timer).append(" / ").append(activeDuration + cooldownDuration).append("\n");
         info.append(ChatColor.AQUA).append("State: ").append(ChatColor.WHITE).append(timer <= activeDuration ? "Active" : "Cooldown").append("\n");
         info.append(ChatColor.DARK_AQUA).append("--- Status ---").append("\n");
-        info.append(ChatColor.AQUA).append("Player Nearby: ").append(formatBoolean(PerformanceManager.isPlayerNearby(currentBurstLocation))).append("\n");
-        info.append(ChatColor.AQUA).append("Conditions Met: ").append(formatBoolean(conditionManager.allConditionsMet(currentBurstLocation))).append("\n");
-        info.append(ChatColor.AQUA).append("Collision Enabled: ").append(formatBoolean(collisionEnabled));
+        info.append(ChatColor.AQUA).append("Player Nearby: ").append(ParticleUtils.formatBoolean(PerformanceManager.isPlayerNearby(currentBurstLocation))).append("\n");
+        info.append(ChatColor.AQUA).append("Conditions Met: ").append(ParticleUtils.formatBoolean(conditionManager.allConditionsMet(currentBurstLocation))).append("\n");
+        info.append(ChatColor.AQUA).append("Collision Enabled: ").append(ParticleUtils.formatBoolean(collisionEnabled));
 
         return info.toString();
-    }
-
-    private String formatBoolean(boolean value) {
-        return value ? ChatColor.GREEN + "true" : ChatColor.RED + "false";
     }
 }

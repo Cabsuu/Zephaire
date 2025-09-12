@@ -8,6 +8,7 @@ H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zep
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\data\DataManager.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\listeners\EntityListener.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\listeners\PlayerInteractListener.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\AbstractParticleTask.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\AnimatedParticle.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\CircleParticleTask.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\CurveParticleTask.java

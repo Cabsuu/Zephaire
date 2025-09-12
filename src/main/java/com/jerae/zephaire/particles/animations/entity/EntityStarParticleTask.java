@@ -127,7 +127,11 @@ public class EntityStarParticleTask implements EntityParticleTask {
     @Override
     public String getDebugInfo() {
         return ChatColor.AQUA + "Type: " + ChatColor.WHITE + "ENTITY_ANIMATED" + "\n" +
-                ChatColor.AQUA + "Shape: " + ChatColor.WHITE + "STAR";
+                ChatColor.AQUA + "Shape: " + ChatColor.WHITE + "STAR" + "\n" +
+                ChatColor.AQUA + "Radii: " + ChatColor.WHITE + String.format("Outer:%.1f, Inner:%.1f", outerRadius, innerRadius) + "\n" +
+                ChatColor.AQUA + "Rotation Speed: " + ChatColor.WHITE + speed + "\n" +
+                ChatColor.AQUA + "Target: " + ChatColor.WHITE + target.getTargetType().name() +
+                (target.getName() != null ? " (" + target.getName() + ")" : "") +
+                (target.getEntityType() != null ? " (" + target.getEntityType().name() + ")" : "");
     }
 }
-

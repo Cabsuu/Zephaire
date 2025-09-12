@@ -6,6 +6,7 @@ import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.managers.PerformanceManager;
+import com.jerae.zephaire.particles.util.ParticleUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -71,14 +72,10 @@ public class StaticPointParticleTask extends BukkitRunnable implements Debuggabl
         info.append(ChatColor.AQUA).append("Particle: ").append(ChatColor.WHITE).append(particle.name()).append("\n");
         info.append(ChatColor.AQUA).append("Count: ").append(ChatColor.WHITE).append(count).append("\n");
         info.append(ChatColor.DARK_AQUA).append("--- Status ---").append("\n");
-        info.append(ChatColor.AQUA).append("Player Nearby: ").append(formatBoolean(PerformanceManager.isPlayerNearby(location))).append("\n");
-        info.append(ChatColor.AQUA).append("Conditions Met: ").append(formatBoolean(conditionManager.allConditionsMet(location))).append("\n");
-        info.append(ChatColor.AQUA).append("Collision Enabled: ").append(formatBoolean(collisionEnabled));
+        info.append(ChatColor.AQUA).append("Player Nearby: ").append(ParticleUtils.formatBoolean(PerformanceManager.isPlayerNearby(location))).append("\n");
+        info.append(ChatColor.AQUA).append("Conditions Met: ").append(ParticleUtils.formatBoolean(conditionManager.allConditionsMet(location))).append("\n");
+        info.append(ChatColor.AQUA).append("Collision Enabled: ").append(ParticleUtils.formatBoolean(collisionEnabled));
 
         return info.toString();
-    }
-
-    private String formatBoolean(boolean value) {
-        return value ? ChatColor.GREEN + "true" : ChatColor.RED + "false";
     }
 }

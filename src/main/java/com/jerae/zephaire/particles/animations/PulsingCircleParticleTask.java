@@ -5,6 +5,7 @@ import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.managers.PerformanceManager;
+import com.jerae.zephaire.particles.util.ParticleUtils;
 import com.jerae.zephaire.particles.util.VectorUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -121,14 +122,9 @@ public class PulsingCircleParticleTask implements AnimatedParticle {
         info.append(ChatColor.AQUA).append("Pulse Speed: ").append(ChatColor.WHITE).append(pulseSpeed).append("\n");
         info.append(ChatColor.AQUA).append("Direction: ").append(ChatColor.WHITE).append(expand ? "Expand" : "Shrink").append("\n");
         info.append(ChatColor.DARK_AQUA).append("--- Status ---").append("\n");
-        info.append(ChatColor.AQUA).append("Player Nearby: ").append(formatBoolean(PerformanceManager.isPlayerNearby(center))).append("\n");
-        info.append(ChatColor.AQUA).append("Conditions Met: ").append(formatBoolean(conditionManager.allConditionsMet(center))).append("\n");
-        info.append(ChatColor.AQUA).append("Collision Enabled: ").append(formatBoolean(collisionEnabled));
+        info.append(ChatColor.AQUA).append("Player Nearby: ").append(ParticleUtils.formatBoolean(PerformanceManager.isPlayerNearby(center))).append("\n");
+        info.append(ChatColor.AQUA).append("Conditions Met: ").append(ParticleUtils.formatBoolean(conditionManager.allConditionsMet(center))).append("\n");
+        info.append(ChatColor.AQUA).append("Collision Enabled: ").append(ParticleUtils.formatBoolean(collisionEnabled));
         return info.toString();
     }
-
-    private String formatBoolean(boolean value) {
-        return value ? ChatColor.GREEN + "true" : ChatColor.RED + "false";
-    }
 }
-

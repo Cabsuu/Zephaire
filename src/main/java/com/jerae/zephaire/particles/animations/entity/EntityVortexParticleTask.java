@@ -6,6 +6,7 @@ import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.data.EntityTarget;
 import com.jerae.zephaire.particles.managers.PerformanceManager;
+import com.jerae.zephaire.particles.util.ParticleUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -147,4 +148,3 @@ public class EntityVortexParticleTask implements EntityParticleTask {
                 (target.getEntityType() != null ? " (" + target.getEntityType().name() + ")" : "");
     }
 }
-

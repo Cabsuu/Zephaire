@@ -5,6 +5,7 @@ import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.managers.PerformanceManager;
+import com.jerae.zephaire.particles.util.ParticleUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -101,13 +102,9 @@ public class CurveParticleTask implements AnimatedParticle {
         info.append(ChatColor.AQUA).append("Current Location: ").append(ChatColor.WHITE).append(String.format("%.2f, %.2f, %.2f", currentLocation.getX(), currentLocation.getY(), currentLocation.getZ())).append("\n");
         info.append(ChatColor.AQUA).append("Speed: ").append(ChatColor.WHITE).append(speed).append("\n");
         info.append(ChatColor.DARK_AQUA).append("--- Status ---").append("\n");
-        info.append(ChatColor.AQUA).append("Player Nearby: ").append(formatBoolean(PerformanceManager.isPlayerNearby(currentLocation))).append("\n");
-        info.append(ChatColor.AQUA).append("Conditions Met: ").append(formatBoolean(conditionManager.allConditionsMet(currentLocation))).append("\n");
-        info.append(ChatColor.AQUA).append("Collision Enabled: ").append(formatBoolean(collisionEnabled));
+        info.append(ChatColor.AQUA).append("Player Nearby: ").append(ParticleUtils.formatBoolean(PerformanceManager.isPlayerNearby(currentLocation))).append("\n");
+        info.append(ChatColor.AQUA).append("Conditions Met: ").append(ParticleUtils.formatBoolean(conditionManager.allConditionsMet(currentLocation))).append("\n");
+        info.append(ChatColor.AQUA).append("Collision Enabled: ").append(ParticleUtils.formatBoolean(collisionEnabled));
         return info.toString();
-    }
-
-    private String formatBoolean(boolean value) {
-        return value ? ChatColor.GREEN + "true" : ChatColor.RED + "false";
     }
 }

@@ -62,4 +62,13 @@ public final class ParticleUtils {
         }
         return null;
     }
+
+    /**
+     * Formats a boolean value into a colored string for debug output.
+     * @param value The boolean value.
+     * @return A green "true" or red "false" string.
+     */
+    public static String formatBoolean(boolean value) {
+        return value ? ChatColor.GREEN + "true" : ChatColor.RED + "false";
+    }
 }
