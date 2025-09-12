@@ -1,5 +1,7 @@
 package com.jerae.zephaire.particles.animations.entity;
 
+import com.jerae.zephaire.particles.ParticleScheduler;
+import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.data.EntityTarget;
@@ -30,6 +32,8 @@ public class EntityCircleParticleTask implements EntityParticleTask {
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Location spawnLocation;
     private final Vector relativePos;
+    private final Vector rotatedPos = new Vector();
+
 
     public EntityCircleParticleTask(String effectName, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target) {
         this.effectName = effectName;
@@ -91,7 +95,7 @@ public class EntityCircleParticleTask implements EntityParticleTask {
             relativePos.setY(0);
             relativePos.setZ(radius * Math.sin(particleAngle));
 
-            Vector rotatedPos = VectorUtils.rotateVector(relativePos, pitch, yaw);
+            VectorUtils.rotateVector(relativePos, pitch, yaw, rotatedPos);
 
             spawnLocation.setX(center.getX() + rotatedPos.getX());
             spawnLocation.setY(center.getY() + rotatedPos.getY());
@@ -100,8 +104,8 @@ public class EntityCircleParticleTask implements EntityParticleTask {
             if (collisionEnabled && CollisionManager.isColliding(spawnLocation)) {
                 continue;
             }
-            // We are already in an async task, no need for another BukkitRunnable
-            entity.getWorld().spawnParticle(particle, spawnLocation, 1, 0, 0, 0, 0, options);
+
+            ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, 1, 0, 0, 0, 0, options));
         }
     }
 

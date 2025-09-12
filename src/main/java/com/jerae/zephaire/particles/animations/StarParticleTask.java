@@ -1,5 +1,7 @@
 package com.jerae.zephaire.particles.animations;
 
+import com.jerae.zephaire.particles.ParticleScheduler;
+import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.managers.PerformanceManager;
@@ -32,6 +34,8 @@ public class StarParticleTask implements AnimatedParticle {
     private final Vector lineDirection = new Vector();
     private final Vector currentLinePoint = new Vector();
     private final Location particleLoc;
+    private final Vector rotatedPos = new Vector();
+
 
     public StarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled) {
         this.center = center;
@@ -47,6 +51,9 @@ public class StarParticleTask implements AnimatedParticle {
         this.conditionManager = conditionManager;
         this.collisionEnabled = collisionEnabled;
         this.vertices = new Vector[this.points * 2];
+        for (int i = 0; i < vertices.length; i++) {
+            vertices[i] = new Vector();
+        }
         this.particleLoc = center.clone();
     }
 
@@ -67,7 +74,7 @@ public class StarParticleTask implements AnimatedParticle {
             double radius = (i % 2 == 0) ? outerRadius : innerRadius;
             // --- PERFORMANCE: Use the reusable vector instead of creating a new one ---
             reusableVertex.setX(Math.cos(angle) * radius).setY(0).setZ(Math.sin(angle) * radius);
-            vertices[i] = VectorUtils.rotateVector(reusableVertex, pitch, yaw);
+            VectorUtils.rotateVector(reusableVertex, pitch, yaw, vertices[i]);
         }
 
         // Draw lines between the vertices to form the star's outline
@@ -95,7 +102,7 @@ public class StarParticleTask implements AnimatedParticle {
             if (collisionEnabled && CollisionManager.isColliding(particleLoc)) {
                 continue;
             }
-            center.getWorld().spawnParticle(particle, particleLoc, 1, 0, 0, 0, 0, options);
+            ParticleScheduler.queueParticle(new ParticleSpawnData(particle, particleLoc, 1, 0, 0, 0, 0, options));
         }
     }
 
@@ -130,3 +137,4 @@ public class StarParticleTask implements AnimatedParticle {
         return value ? ChatColor.GREEN + "true" : ChatColor.RED + "false";
     }
 }
+

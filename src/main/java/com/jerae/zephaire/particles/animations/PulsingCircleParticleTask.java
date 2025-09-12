@@ -1,5 +1,7 @@
 package com.jerae.zephaire.particles.animations;
 
+import com.jerae.zephaire.particles.ParticleScheduler;
+import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.managers.PerformanceManager;
@@ -30,6 +32,7 @@ public class PulsingCircleParticleTask implements AnimatedParticle {
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Location currentLocation;
     private final Vector particleVector;
+    private final Vector rotatedVector = new Vector();
 
 
     public PulsingCircleParticleTask(Location center, Particle particle, double maxRadius, double pulseSpeed, int particleCount, double pitch, double yaw, boolean expand, Object options, ConditionManager conditionManager, int period, boolean collisionEnabled) {
@@ -84,7 +87,7 @@ public class PulsingCircleParticleTask implements AnimatedParticle {
 
             // --- PERFORMANCE: Reuse the particleVector object ---
             particleVector.setX(xOffset).setY(0).setZ(zOffset);
-            Vector rotatedVector = VectorUtils.rotateVector(particleVector, pitch, yaw);
+            VectorUtils.rotateVector(particleVector, pitch, yaw, rotatedVector);
 
             // --- PERFORMANCE: Reuse the currentLocation object ---
             currentLocation.setX(center.getX() + rotatedVector.getX());
@@ -94,7 +97,7 @@ public class PulsingCircleParticleTask implements AnimatedParticle {
             if (collisionEnabled && CollisionManager.isColliding(currentLocation)) {
                 continue;
             }
-            center.getWorld().spawnParticle(particle, currentLocation, 1, 0, 0, 0, 0, options);
+            ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, 1, 0, 0, 0, 0, options));
         }
     }
 
@@ -128,3 +131,4 @@ public class PulsingCircleParticleTask implements AnimatedParticle {
         return value ? ChatColor.GREEN + "true" : ChatColor.RED + "false";
     }
 }
+

@@ -1,6 +1,8 @@
 package com.jerae.zephaire.particles.statics;
 
 import com.jerae.zephaire.particles.Debuggable;
+import com.jerae.zephaire.particles.ParticleScheduler;
+import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.managers.PerformanceManager;
@@ -51,11 +53,13 @@ public class StaticPointParticleTask extends BukkitRunnable implements Debuggabl
             return;
         }
 
-        world.spawnParticle(
+        // --- PERFORMANCE: Queue particle spawning to be handled on the main thread ---
+        ParticleSpawnData data = new ParticleSpawnData(
                 particle, location, count,
                 offsetX, offsetY, offsetZ,
                 speed, particleOptions
         );
+        ParticleScheduler.queueParticle(data);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.jerae.zephaire.particles.animations;
 
+import com.jerae.zephaire.particles.ParticleScheduler;
+import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.managers.PerformanceManager;
@@ -78,7 +80,7 @@ public class CurveParticleTask implements AnimatedParticle {
         if (collisionEnabled && CollisionManager.isColliding(currentLocation)) {
             return;
         }
-        world.spawnParticle(particle, currentLocation, 1, 0, 0, 0, 0, options);
+        ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, 1, 0, 0, 0, 0, options));
     }
 
     @Override

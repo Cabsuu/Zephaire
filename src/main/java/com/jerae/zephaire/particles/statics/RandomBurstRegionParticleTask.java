@@ -1,6 +1,8 @@
 package com.jerae.zephaire.particles.statics;
 
 import com.jerae.zephaire.particles.Debuggable;
+import com.jerae.zephaire.particles.ParticleScheduler;
+import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.managers.PerformanceManager;
@@ -91,7 +93,7 @@ public class RandomBurstRegionParticleTask extends BukkitRunnable implements Deb
                         continue;
                     }
 
-                    world.spawnParticle(particle, spawnLoc, 1, 0, 0, 0, 0, particleOptions);
+                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLoc, 1, 0, 0, 0, 0, particleOptions));
                 }
             }
         } else if (timer > activeDuration + cooldownDuration) {

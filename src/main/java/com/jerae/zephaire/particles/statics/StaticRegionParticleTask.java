@@ -1,6 +1,8 @@
 package com.jerae.zephaire.particles.statics;
 
 import com.jerae.zephaire.particles.Debuggable;
+import com.jerae.zephaire.particles.ParticleScheduler;
+import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.managers.PerformanceManager;
@@ -69,7 +71,7 @@ public class StaticRegionParticleTask extends BukkitRunnable implements Debuggab
                 continue;
             }
 
-            world.spawnParticle(particle, reusableLocation, 1, 0, 0, 0, 0, particleOptions);
+            ParticleScheduler.queueParticle(new ParticleSpawnData(particle, reusableLocation, 1, 0, 0, 0, 0, particleOptions));
         }
     }
 

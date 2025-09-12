@@ -1,5 +1,7 @@
 package com.jerae.zephaire.particles.animations;
 
+import com.jerae.zephaire.particles.ParticleScheduler;
+import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.managers.PerformanceManager;
@@ -29,6 +31,11 @@ public class VortexParticleTask implements AnimatedParticle {
 
     private final List<Location> particles = new ArrayList<>();
     private final List<Vector> velocities = new ArrayList<>();
+
+    // --- PERFORMANCE: Reusable objects for vector calculations ---
+    private final Vector toCenter = new Vector();
+    private final Vector rotational = new Vector();
+
 
     public VortexParticleTask(Location center, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled) {
         this.center = center;
@@ -60,7 +67,9 @@ public class VortexParticleTask implements AnimatedParticle {
             Vector v = velocities.get(i);
 
             // Vector pointing from the particle to the vortex center line
-            Vector toCenter = new Vector(center.getX() - p.getX(), 0, center.getZ() - p.getZ());
+            toCenter.setX(center.getX() - p.getX());
+            toCenter.setY(0);
+            toCenter.setZ(center.getZ() - p.getZ());
             double distanceToCenter = toCenter.length();
 
             // Gravity towards the center (stronger when further away)
@@ -70,8 +79,12 @@ public class VortexParticleTask implements AnimatedParticle {
             v.setY(v.getY() + (radius - distanceToCenter) * 0.01);
 
             // Rotational force
-            Vector rotational = new Vector(-toCenter.getZ(), 0, toCenter.getX()).normalize().multiply(speed);
+            rotational.setX(-toCenter.getZ());
+            rotational.setY(0);
+            rotational.setZ(toCenter.getX());
+            rotational.normalize().multiply(speed);
             v.add(rotational);
+
 
             // Apply velocity and some damping
             p.add(v.multiply(0.8));
@@ -88,7 +101,7 @@ public class VortexParticleTask implements AnimatedParticle {
             if (collisionEnabled && CollisionManager.isColliding(p)) {
                 continue;
             }
-            world.spawnParticle(particle, p, 1, 0, 0, 0, 0, options);
+            ParticleScheduler.queueParticle(new ParticleSpawnData(particle, p, 1, 0, 0, 0, 0, options));
         }
     }
 
@@ -129,3 +142,4 @@ public class VortexParticleTask implements AnimatedParticle {
         return value ? ChatColor.GREEN + "true" : ChatColor.RED + "false";
     }
 }
+

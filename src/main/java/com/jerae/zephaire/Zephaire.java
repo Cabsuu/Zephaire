@@ -4,6 +4,7 @@ import com.jerae.zephaire.commands.ZephaireCommand;
 import com.jerae.zephaire.data.DataManager;
 import com.jerae.zephaire.listeners.EntityListener;
 import com.jerae.zephaire.listeners.PlayerInteractListener;
+import com.jerae.zephaire.particles.ParticleScheduler;
 import com.jerae.zephaire.particles.managers.EntityParticleManager;
 import com.jerae.zephaire.particles.managers.FactoryManager;
 import com.jerae.zephaire.particles.ParticleConfigLoader;
@@ -12,6 +13,7 @@ import com.jerae.zephaire.particles.ParticleRegistry;
 import com.jerae.zephaire.particles.managers.PerformanceManager;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 public final class Zephaire extends JavaPlugin {
 
@@ -20,6 +22,7 @@ public final class Zephaire extends JavaPlugin {
     private DataManager dataManager;
     private ParticleConfigLoader particleConfigLoader;
     private EntityParticleManager entityParticleManager;
+    private BukkitTask particleSchedulerTask;
 
 
     @Override
@@ -69,12 +72,22 @@ public final class Zephaire extends JavaPlugin {
         reloadConfig();
         PerformanceManager.initialize(getConfig());
 
-        // 2. Re-initialize the particle managers and load the new particle configurations.
+        // 2. Stop any existing particle scheduler to prevent duplicates.
+        if (this.particleSchedulerTask != null) {
+            try {
+                this.particleSchedulerTask.cancel();
+            } catch (IllegalStateException ignored) {}
+        }
+
+        // 3. Re-initialize the particle managers and load the new particle configurations.
         this.particleManager.initialize();
         this.entityParticleManager.initialize();
         this.particleConfigLoader.loadParticles();
         this.particleManager.startAnimationManager();
         this.entityParticleManager.startManager();
+
+        // 4. Start the new centralized particle scheduler.
+        this.particleSchedulerTask = new ParticleScheduler().runTaskTimer(this, 0L, 1L);
     }
 
     // --- GETTERS FOR MANAGERS ---

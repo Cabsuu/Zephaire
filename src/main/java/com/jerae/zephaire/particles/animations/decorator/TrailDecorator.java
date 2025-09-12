@@ -1,5 +1,7 @@
 package com.jerae.zephaire.particles.animations.decorator;
 
+import com.jerae.zephaire.particles.ParticleScheduler;
+import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.animations.AnimatedParticle;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -56,7 +58,7 @@ public class TrailDecorator implements AnimatedParticle {
             tickCounter = 0;
             if (currentLoc != null) {
                 for (Location trailLoc : recentLocations) {
-                    world.spawnParticle(trailParticle, trailLoc, 1, 0, 0, 0, 0, trailParticleOptions);
+                    ParticleScheduler.queueParticle(new ParticleSpawnData(trailParticle, trailLoc, 1, 0, 0, 0, 0, trailParticleOptions));
                 }
             }
         }

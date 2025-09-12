@@ -1,5 +1,7 @@
 package com.jerae.zephaire.particles.animations.decorator;
 
+import com.jerae.zephaire.particles.ParticleScheduler;
+import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.animations.AnimatedParticle;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -55,8 +57,8 @@ public class MultiColorTransitionDecorator implements AnimatedParticle {
         Particle.DustTransition dustTransition = new Particle.DustTransition(from, to, size);
 
         Location loc = getCurrentLocation();
-        if (loc != null && loc.isChunkLoaded()) {
-            world.spawnParticle(Particle.DUST_COLOR_TRANSITION, loc, 1, dustTransition);
+        if (loc != null) { // Chunk load check will happen in scheduler
+            ParticleScheduler.queueParticle(new ParticleSpawnData(Particle.DUST_COLOR_TRANSITION, loc, 1, 0, 0, 0, 0, dustTransition));
         }
     }
 

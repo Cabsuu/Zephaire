@@ -1,5 +1,7 @@
 package com.jerae.zephaire.particles.animations.entity;
 
+import com.jerae.zephaire.particles.ParticleScheduler;
+import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.data.EntityTarget;
@@ -52,6 +54,9 @@ public class EntityStarParticleTask implements EntityParticleTask {
         this.offset = offset;
         this.target = target;
         this.vertices = new Vector[this.points * 2];
+        for (int i = 0; i < vertices.length; i++) {
+            vertices[i] = new Vector();
+        }
         this.particleLoc = new Location(null, 0, 0, 0);
     }
 
@@ -81,7 +86,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
             double angle = rotationAngle + (i * Math.PI / points);
             double radius = (i % 2 == 0) ? outerRadius : innerRadius;
             reusableVertex.setX(Math.cos(angle) * radius).setY(0).setZ(Math.sin(angle) * radius);
-            vertices[i] = VectorUtils.rotateVector(reusableVertex, pitch, yaw);
+            VectorUtils.rotateVector(reusableVertex, pitch, yaw, vertices[i]);
         }
 
         for (int i = 0; i < totalVertices; i++) {
@@ -105,7 +110,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
             if (collisionEnabled && CollisionManager.isColliding(particleLoc)) {
                 continue;
             }
-            center.getWorld().spawnParticle(particle, particleLoc, 1, 0, 0, 0, 0, options);
+            ParticleScheduler.queueParticle(new ParticleSpawnData(particle, particleLoc, 1, 0, 0, 0, 0, options));
         }
     }
 
@@ -125,3 +130,4 @@ public class EntityStarParticleTask implements EntityParticleTask {
                 ChatColor.AQUA + "Shape: " + ChatColor.WHITE + "STAR";
     }
 }
+

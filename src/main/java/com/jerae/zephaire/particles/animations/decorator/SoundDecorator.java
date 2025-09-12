@@ -1,6 +1,8 @@
 package com.jerae.zephaire.particles.animations.decorator;
 
 import com.jerae.zephaire.particles.Debuggable;
+import com.jerae.zephaire.particles.SoundPlayData;
+import com.jerae.zephaire.particles.ParticleScheduler;
 import com.jerae.zephaire.particles.animations.AnimatedParticle;
 import org.bukkit.Location;
 import org.bukkit.Registry;
@@ -33,10 +35,7 @@ public class SoundDecorator implements AnimatedParticle {
             tickCounter = 0;
             Location loc = getCurrentLocation();
             if (loc != null) {
-                World world = loc.getWorld();
-                if (world != null) {
-                    world.playSound(loc, sound, volume, pitch);
-                }
+                ParticleScheduler.queueSound(new SoundPlayData(sound, loc, volume, pitch));
             }
         }
     }

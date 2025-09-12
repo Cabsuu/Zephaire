@@ -1,5 +1,7 @@
 package com.jerae.zephaire.particles.animations;
 
+import com.jerae.zephaire.particles.ParticleScheduler;
+import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.managers.PerformanceManager;
@@ -28,6 +30,7 @@ public class CircleParticleTask implements AnimatedParticle {
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Location spawnLocation;
     private final Vector relativePos;
+    private final Vector rotatedPos = new Vector();
 
     public CircleParticleTask(Location center, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled) {
         this.center = center;
@@ -66,7 +69,7 @@ public class CircleParticleTask implements AnimatedParticle {
             relativePos.setY(0);
             relativePos.setZ(radius * Math.sin(particleAngle));
 
-            Vector rotatedPos = VectorUtils.rotateVector(relativePos, pitch, yaw);
+            VectorUtils.rotateVector(relativePos, pitch, yaw, rotatedPos);
 
             // --- PERFORMANCE: Reuse the spawnLocation object ---
             spawnLocation.setX(center.getX() + rotatedPos.getX());
@@ -76,7 +79,7 @@ public class CircleParticleTask implements AnimatedParticle {
             if (collisionEnabled && CollisionManager.isColliding(spawnLocation)) {
                 continue;
             }
-            world.spawnParticle(particle, spawnLocation, 1, 0, 0, 0, 0, options);
+            ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, 1, 0, 0, 0, 0, options));
         }
     }
 
@@ -110,3 +113,4 @@ public class CircleParticleTask implements AnimatedParticle {
         return value ? ChatColor.GREEN + "true" : ChatColor.RED + "false";
     }
 }
+
