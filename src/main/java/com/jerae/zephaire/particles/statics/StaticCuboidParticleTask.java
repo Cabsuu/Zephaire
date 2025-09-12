@@ -1,15 +1,14 @@
 package com.jerae.zephaire.particles.statics;
 
-import com.jerae.zephaire.Zephaire;
-import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.Debuggable;
-import com.jerae.zephaire.particles.managers.PerformanceManager;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
+import com.jerae.zephaire.particles.managers.CollisionManager;
+import com.jerae.zephaire.particles.managers.PerformanceManager;
 import com.jerae.zephaire.particles.util.VectorUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -89,17 +88,16 @@ public class StaticCuboidParticleTask extends BukkitRunnable implements Debuggab
         if (!PerformanceManager.isPlayerNearby(center) || !conditionManager.allConditionsMet(center)) {
             return;
         }
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Location loc : particleLocations) {
-                    if (collisionEnabled && CollisionManager.isColliding(loc)) {
-                        continue;
-                    }
-                    center.getWorld().spawnParticle(particle, loc, 1, 0, 0, 0, 0, particleOptions);
-                }
+
+        World world = center.getWorld();
+        if (world == null) return;
+
+        for (Location loc : particleLocations) {
+            if (collisionEnabled && CollisionManager.isColliding(loc)) {
+                continue;
             }
-        }.runTask(JavaPlugin.getPlugin(Zephaire.class));
+            world.spawnParticle(particle, loc, 1, 0, 0, 0, 0, particleOptions);
+        }
     }
 
     @Override
@@ -121,4 +119,3 @@ public class StaticCuboidParticleTask extends BukkitRunnable implements Debuggab
         return value ? ChatColor.GREEN + "true" : ChatColor.RED + "false";
     }
 }
-

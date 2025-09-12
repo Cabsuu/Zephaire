@@ -1,14 +1,11 @@
 package com.jerae.zephaire.particles.animations.decorator;
 
-import com.jerae.zephaire.Zephaire;
 import com.jerae.zephaire.particles.animations.AnimatedParticle;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
@@ -58,14 +55,9 @@ public class MultiColorTransitionDecorator implements AnimatedParticle {
         Particle.DustTransition dustTransition = new Particle.DustTransition(from, to, size);
 
         Location loc = getCurrentLocation();
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (loc != null && loc.isChunkLoaded()) {
-                    world.spawnParticle(Particle.DUST_COLOR_TRANSITION, loc, 1, dustTransition);
-                }
-            }
-        }.runTask(JavaPlugin.getPlugin(Zephaire.class));
+        if (loc != null && loc.isChunkLoaded()) {
+            world.spawnParticle(Particle.DUST_COLOR_TRANSITION, loc, 1, dustTransition);
+        }
     }
 
     @Override
@@ -90,4 +82,3 @@ public class MultiColorTransitionDecorator implements AnimatedParticle {
         return info.toString();
     }
 }
-

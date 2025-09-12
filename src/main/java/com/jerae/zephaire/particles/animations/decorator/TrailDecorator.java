@@ -1,13 +1,10 @@
 package com.jerae.zephaire.particles.animations.decorator;
 
-import com.jerae.zephaire.Zephaire;
 import com.jerae.zephaire.particles.animations.AnimatedParticle;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -57,16 +54,11 @@ public class TrailDecorator implements AnimatedParticle {
         tickCounter++;
         if (tickCounter >= period) {
             tickCounter = 0;
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    if (currentLoc != null) {
-                        for (Location trailLoc : recentLocations) {
-                            world.spawnParticle(trailParticle, trailLoc, 1, 0, 0, 0, 0, trailParticleOptions);
-                        }
-                    }
+            if (currentLoc != null) {
+                for (Location trailLoc : recentLocations) {
+                    world.spawnParticle(trailParticle, trailLoc, 1, 0, 0, 0, 0, trailParticleOptions);
                 }
-            }.runTask(JavaPlugin.getPlugin(Zephaire.class));
+            }
         }
     }
 
@@ -92,4 +84,3 @@ public class TrailDecorator implements AnimatedParticle {
         return info.toString();
     }
 }
-

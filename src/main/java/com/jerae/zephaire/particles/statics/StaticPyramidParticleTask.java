@@ -1,16 +1,14 @@
 package com.jerae.zephaire.particles.statics;
 
-import com.jerae.zephaire.Zephaire;
-import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.Debuggable;
-import com.jerae.zephaire.particles.managers.PerformanceManager;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
+import com.jerae.zephaire.particles.managers.CollisionManager;
+import com.jerae.zephaire.particles.managers.PerformanceManager;
 import com.jerae.zephaire.particles.util.VectorUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -89,17 +87,13 @@ public class StaticPyramidParticleTask extends BukkitRunnable implements Debugga
 
         World world = center.getWorld();
         if (world == null) return;
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Location loc : particleLocations) {
-                    if (collisionEnabled && CollisionManager.isColliding(loc)) {
-                        continue;
-                    }
-                    world.spawnParticle(particle, loc, 1, 0, 0, 0, 0, particleOptions);
-                }
+
+        for (Location loc : particleLocations) {
+            if (collisionEnabled && CollisionManager.isColliding(loc)) {
+                continue;
             }
-        }.runTask(JavaPlugin.getPlugin(Zephaire.class));
+            world.spawnParticle(particle, loc, 1, 0, 0, 0, 0, particleOptions);
+        }
     }
 
     @Override

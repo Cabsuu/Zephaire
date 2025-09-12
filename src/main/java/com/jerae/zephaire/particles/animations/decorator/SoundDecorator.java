@@ -1,14 +1,11 @@
 package com.jerae.zephaire.particles.animations.decorator;
 
-import com.jerae.zephaire.Zephaire;
 import com.jerae.zephaire.particles.Debuggable;
 import com.jerae.zephaire.particles.animations.AnimatedParticle;
 import org.bukkit.Location;
 import org.bukkit.Registry;
 import org.bukkit.Sound;
 import org.bukkit.World;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class SoundDecorator implements AnimatedParticle {
 
@@ -35,17 +32,12 @@ public class SoundDecorator implements AnimatedParticle {
         if (tickCounter >= period) {
             tickCounter = 0;
             Location loc = getCurrentLocation();
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    if (loc != null) {
-                        World world = loc.getWorld();
-                        if (world != null) {
-                            world.playSound(loc, sound, volume, pitch);
-                        }
-                    }
+            if (loc != null) {
+                World world = loc.getWorld();
+                if (world != null) {
+                    world.playSound(loc, sound, volume, pitch);
                 }
-            }.runTask(JavaPlugin.getPlugin(Zephaire.class));
+            }
         }
     }
 
@@ -73,4 +65,3 @@ public class SoundDecorator implements AnimatedParticle {
         return "--- Decorator: SOUND (Wrapped particle is not debuggable) ---";
     }
 }
-

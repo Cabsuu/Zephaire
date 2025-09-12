@@ -1,15 +1,13 @@
 package com.jerae.zephaire.particles.statics;
 
-import com.jerae.zephaire.Zephaire;
-import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.Debuggable;
-import com.jerae.zephaire.particles.managers.PerformanceManager;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
+import com.jerae.zephaire.particles.managers.CollisionManager;
+import com.jerae.zephaire.particles.managers.PerformanceManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class StaticPointParticleTask extends BukkitRunnable implements Debuggable {
@@ -22,7 +20,6 @@ public class StaticPointParticleTask extends BukkitRunnable implements Debuggabl
     private final Object particleOptions;
     private final ConditionManager conditionManager;
     private final boolean collisionEnabled;
-    // --- DEFENSIVE: Cache the world object ---
     private final World world;
 
     public StaticPointParticleTask(Location location, Particle particle, int count, double offsetX, double offsetY, double offsetZ, double speed, Object particleOptions, ConditionManager conditionManager, boolean collisionEnabled) {
@@ -36,13 +33,11 @@ public class StaticPointParticleTask extends BukkitRunnable implements Debuggabl
         this.particleOptions = particleOptions;
         this.conditionManager = conditionManager;
         this.collisionEnabled = collisionEnabled;
-        // --- DEFENSIVE: Initialize the cached world ---
         this.world = location.getWorld();
     }
 
     @Override
     public void run() {
-        // --- DEFENSIVE: Check if the world is still loaded ---
         if (world == null) {
             this.cancel(); // Stop the task if the world is gone
             return;
@@ -56,16 +51,11 @@ public class StaticPointParticleTask extends BukkitRunnable implements Debuggabl
             return;
         }
 
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                world.spawnParticle(
-                        particle, location, count,
-                        offsetX, offsetY, offsetZ,
-                        speed, particleOptions
-                );
-            }
-        }.runTask(JavaPlugin.getPlugin(Zephaire.class));
+        world.spawnParticle(
+                particle, location, count,
+                offsetX, offsetY, offsetZ,
+                speed, particleOptions
+        );
     }
 
     @Override

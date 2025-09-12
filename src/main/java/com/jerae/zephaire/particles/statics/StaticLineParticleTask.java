@@ -1,14 +1,13 @@
 package com.jerae.zephaire.particles.statics;
 
-import com.jerae.zephaire.Zephaire;
-import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.Debuggable;
-import com.jerae.zephaire.particles.managers.PerformanceManager;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
+import com.jerae.zephaire.particles.managers.CollisionManager;
+import com.jerae.zephaire.particles.managers.PerformanceManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -18,13 +17,13 @@ import java.util.List;
 public class StaticLineParticleTask extends BukkitRunnable implements Debuggable {
 
     private final Location start;
-    private final Location end;
     private final Particle particle;
     private final Object particleOptions;
     private final List<Location> particleLocations;
     private final ConditionManager conditionManager;
     private final boolean collisionEnabled;
     private final double density;
+    private final Location end;
 
     public StaticLineParticleTask(Location start, Location end, Particle particle, double density, Object particleOptions, ConditionManager conditionManager, boolean collisionEnabled) {
         this.start = start;
@@ -50,23 +49,19 @@ public class StaticLineParticleTask extends BukkitRunnable implements Debuggable
     @Override
     public void run() {
         // Check performance and conditions first
-        if (!PerformanceManager.isPlayerNearby(start)) {
+        if (!PerformanceManager.isPlayerNearby(start) || !conditionManager.allConditionsMet(start)) {
             return;
         }
-        if (!conditionManager.allConditionsMet(start)) {
-            return;
-        }
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Location loc : particleLocations) {
-                    if (collisionEnabled && CollisionManager.isColliding(loc)) {
-                        continue;
-                    }
-                start.getWorld().spawnParticle(particle, loc, 1, 0, 0, 0, 0, particleOptions);
-                }
+
+        World world = start.getWorld();
+        if (world == null) return;
+
+        for (Location loc : particleLocations) {
+            if (collisionEnabled && CollisionManager.isColliding(loc)) {
+                continue;
             }
-        }.runTask(JavaPlugin.getPlugin(Zephaire.class));
+            world.spawnParticle(particle, loc, 1, 0, 0, 0, 0, particleOptions);
+        }
     }
 
     @Override

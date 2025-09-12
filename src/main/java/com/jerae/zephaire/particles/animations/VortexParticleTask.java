@@ -1,15 +1,12 @@
 package com.jerae.zephaire.particles.animations;
 
-import com.jerae.zephaire.Zephaire;
+import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.managers.PerformanceManager;
-import com.jerae.zephaire.particles.conditions.ConditionManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -91,12 +88,7 @@ public class VortexParticleTask implements AnimatedParticle {
             if (collisionEnabled && CollisionManager.isColliding(p)) {
                 continue;
             }
-            new BukkitRunnable() {
-                @Override
-                public void run() {
             world.spawnParticle(particle, p, 1, 0, 0, 0, 0, options);
-                }
-            }.runTask(JavaPlugin.getPlugin(Zephaire.class));
         }
     }
 
@@ -137,4 +129,3 @@ public class VortexParticleTask implements AnimatedParticle {
         return value ? ChatColor.GREEN + "true" : ChatColor.RED + "false";
     }
 }
-

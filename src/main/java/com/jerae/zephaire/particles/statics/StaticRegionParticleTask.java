@@ -1,16 +1,15 @@
 package com.jerae.zephaire.particles.statics;
 
-import com.jerae.zephaire.Zephaire;
-import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.Debuggable;
-import com.jerae.zephaire.particles.managers.PerformanceManager;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
+import com.jerae.zephaire.particles.managers.CollisionManager;
+import com.jerae.zephaire.particles.managers.PerformanceManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 public class StaticRegionParticleTask extends BukkitRunnable implements Debuggable {
@@ -52,31 +51,26 @@ public class StaticRegionParticleTask extends BukkitRunnable implements Debuggab
         if (!PerformanceManager.isPlayerNearby(center) || !conditionManager.allConditionsMet(center)) {
             return;
         }
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                World world = center.getWorld();
-                if (world == null) {
-                    return; // Add a safety check for the world.
-                }
+        World world = center.getWorld();
+        if (world == null) {
+            return; // Add a safety check for the world.
+        }
 
-                for (int i = 0; i < particleCount; i++) {
-                    double x = ThreadLocalRandom.current().nextDouble(minX, maxX);
-                    double y = ThreadLocalRandom.current().nextDouble(minY, maxY);
-                    double z = ThreadLocalRandom.current().nextDouble(minZ, maxZ);
+        for (int i = 0; i < particleCount; i++) {
+            double x = ThreadLocalRandom.current().nextDouble(minX, maxX);
+            double y = ThreadLocalRandom.current().nextDouble(minY, maxY);
+            double z = ThreadLocalRandom.current().nextDouble(minZ, maxZ);
 
-                    reusableLocation.setX(x);
-                    reusableLocation.setY(y);
-                    reusableLocation.setZ(z);
+            reusableLocation.setX(x);
+            reusableLocation.setY(y);
+            reusableLocation.setZ(z);
 
-                    if (collisionEnabled && CollisionManager.isColliding(reusableLocation)) {
-                        continue;
-                    }
+            if (collisionEnabled && CollisionManager.isColliding(reusableLocation)) {
+                continue;
+            }
 
             world.spawnParticle(particle, reusableLocation, 1, 0, 0, 0, 0, particleOptions);
-                }
-            }
-        }.runTask(JavaPlugin.getPlugin(Zephaire.class));
+        }
     }
 
     @Override
@@ -99,4 +93,3 @@ public class StaticRegionParticleTask extends BukkitRunnable implements Debuggab
         return value ? ChatColor.GREEN + "true" : ChatColor.RED + "false";
     }
 }
-

@@ -1,16 +1,15 @@
 package com.jerae.zephaire.particles.statics;
 
-import com.jerae.zephaire.Zephaire;
-import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.Debuggable;
-import com.jerae.zephaire.particles.managers.PerformanceManager;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
+import com.jerae.zephaire.particles.managers.CollisionManager;
+import com.jerae.zephaire.particles.managers.PerformanceManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomBurstRegionParticleTask extends BukkitRunnable implements Debuggable {
@@ -78,26 +77,22 @@ public class RandomBurstRegionParticleTask extends BukkitRunnable implements Deb
             spawnTickCounter++;
             if (spawnTickCounter >= spawnPeriod) {
                 spawnTickCounter = 0;
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        for (int i = 0; i < spawnRate; i++) {
-                            double offsetX = ThreadLocalRandom.current().nextDouble(-burstRadius, burstRadius);
-                            double offsetY = ThreadLocalRandom.current().nextDouble(-burstRadius, burstRadius);
-                            double offsetZ = ThreadLocalRandom.current().nextDouble(-burstRadius, burstRadius);
 
-                            spawnLoc.setX(currentBurstLocation.getX() + offsetX);
-                            spawnLoc.setY(currentBurstLocation.getY() + offsetY);
-                            spawnLoc.setZ(currentBurstLocation.getZ() + offsetZ);
+                for (int i = 0; i < spawnRate; i++) {
+                    double offsetX = ThreadLocalRandom.current().nextDouble(-burstRadius, burstRadius);
+                    double offsetY = ThreadLocalRandom.current().nextDouble(-burstRadius, burstRadius);
+                    double offsetZ = ThreadLocalRandom.current().nextDouble(-burstRadius, burstRadius);
 
-                            if (collisionEnabled && CollisionManager.isColliding(spawnLoc)) {
-                                continue;
-                            }
+                    spawnLoc.setX(currentBurstLocation.getX() + offsetX);
+                    spawnLoc.setY(currentBurstLocation.getY() + offsetY);
+                    spawnLoc.setZ(currentBurstLocation.getZ() + offsetZ);
 
-                            world.spawnParticle(particle, spawnLoc, 1, 0, 0, 0, 0, particleOptions);
-                        }
+                    if (collisionEnabled && CollisionManager.isColliding(spawnLoc)) {
+                        continue;
                     }
-                }.runTask(JavaPlugin.getPlugin(Zephaire.class));
+
+                    world.spawnParticle(particle, spawnLoc, 1, 0, 0, 0, 0, particleOptions);
+                }
             }
         } else if (timer > activeDuration + cooldownDuration) {
             // Cooldown finished, reset and pick a new location

@@ -1,15 +1,14 @@
 package com.jerae.zephaire.particles.statics;
 
-import com.jerae.zephaire.Zephaire;
-import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.Debuggable;
-import com.jerae.zephaire.particles.managers.PerformanceManager;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
+import com.jerae.zephaire.particles.managers.CollisionManager;
+import com.jerae.zephaire.particles.managers.PerformanceManager;
 import com.jerae.zephaire.particles.util.VectorUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -26,6 +25,7 @@ public class StaticCircleParticleTask extends BukkitRunnable implements Debuggab
     private final boolean collisionEnabled;
     private final double radius;
     private final int particleCount;
+    private final World world;
 
     public StaticCircleParticleTask(Location center, Particle particle, double radius, int particleCount, Object particleOptions, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled) {
         this.center = center;
@@ -36,6 +36,7 @@ public class StaticCircleParticleTask extends BukkitRunnable implements Debuggab
         this.collisionEnabled = collisionEnabled;
         this.radius = radius;
         this.particleCount = particleCount;
+        this.world = center.getWorld();
 
         for (int i = 0; i < particleCount; i++) {
             double angle = (2 * Math.PI * i) / particleCount;
@@ -52,26 +53,20 @@ public class StaticCircleParticleTask extends BukkitRunnable implements Debuggab
     @Override
     public void run() {
         // Use the centralized performance check.
-        if (!PerformanceManager.isPlayerNearby(center)) {
+        if (!PerformanceManager.isPlayerNearby(center) || !conditionManager.allConditionsMet(center)) {
             return;
         }
 
-        // Check all custom conditions
-        if (!conditionManager.allConditionsMet(center)) {
-            return;
+        if (world == null) {
+            return; // Safety check for the world.
         }
 
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Location loc : particleLocations) {
-                    if (collisionEnabled && CollisionManager.isColliding(loc)) {
-                        continue;
-                    }
-                    center.getWorld().spawnParticle(particle, loc, 1, 0, 0, 0, 0, particleOptions);
-                }
+        for (Location loc : particleLocations) {
+            if (collisionEnabled && CollisionManager.isColliding(loc)) {
+                continue;
             }
-        }.runTask(JavaPlugin.getPlugin(Zephaire.class));
+            world.spawnParticle(particle, loc, 1, 0, 0, 0, 0, particleOptions);
+        }
     }
 
     @Override

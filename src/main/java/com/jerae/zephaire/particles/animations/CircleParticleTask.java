@@ -1,16 +1,13 @@
 package com.jerae.zephaire.particles.animations;
 
-import com.jerae.zephaire.Zephaire;
+import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.managers.PerformanceManager;
-import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.util.VectorUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 public class CircleParticleTask implements AnimatedParticle {
@@ -79,12 +76,7 @@ public class CircleParticleTask implements AnimatedParticle {
             if (collisionEnabled && CollisionManager.isColliding(spawnLocation)) {
                 continue;
             }
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    world.spawnParticle(particle, spawnLocation, 1, 0, 0, 0, 0, options);
-                }
-            }.runTask(JavaPlugin.getPlugin(Zephaire.class));
+            world.spawnParticle(particle, spawnLocation, 1, 0, 0, 0, 0, options);
         }
     }
 
