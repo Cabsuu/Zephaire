@@ -1,0 +1,323 @@
+# Here's a guide how to configure this plugin at 'config.yml'.
+
+# -------------------------------------------------------------------
+# STATIC PARTICLES
+# These particles redraw themselves periodically at a fixed location.
+# They are good for atmospheric effects that don't need smooth animation.
+# -------------------------------------------------------------------
+
+static-particles:
+  point-particle-name: # (A variable name for the particle)
+    shape: 'POINT' # (Default if 'shape' is omitted)
+    type: 'FLAME' # (Default if 'type' is omitted)
+    period: 20 # (Default if 'period' is omitted, and only available for 'POINT' in static-particles.)
+    world: 'world' # (Default if 'world' is omitted)
+    location: # (Default if 'location' is omitted)
+      x: 0
+      y: 0
+      z: 0
+    count: 1 # (Default if 'count' is omitted)
+    speed: 0 # (Default for POINT if 'speed' is omitted)
+    offset-x: 0.0
+    offset-y: 0.0
+    offset-z: 0.0 # (Default if offset-xyz is omitted)
+
+  dust-name:
+    type: 'DUST' # (This particle requires an 'options' section)
+    options:
+      color: '#FFFFFF' # (Default if 'color' is omitted)
+      size: 1.0 # (Default if 'size' is omitted)
+
+  dust_color_transition-name:
+    type: 'DUST_COLOR_TRANSITION'
+    options: # (Special options required for DUST_COLOR_TRANSITION)
+      from-color: "#FFFFFF" # (Default if 'from-color' is omitted)
+      to-color: "#000000" # (Default if 'to-color' is omitted)
+      size: 1.0
+
+  static_line-name:
+    shape: 'STATIC_LINE'
+    type: 'FLAME'
+    density: 0.5 # (Default for STATIC_LINE if 'density' is omitted)
+    world: 'world'
+    start: # (Default if 'start' is omitted)
+      x: 0
+      y: 0
+      z: 0
+    end: # (Default if 'end' is omitted)
+      x: 0
+      y: 0
+      z: 0
+
+  static_circle-name:
+    shape: 'STATIC_CIRCLE'
+    type: 'FLAME'
+    radius: 2.0 # (Default for STATIC_CIRCLE if 'radius' is omitted)
+    particle-count: 30 # (Default for STATIC_CIRCLE if 'particle-count' is omitted)
+    pitch: 0.0 # (x-axis rotation. Default if 'pitch' is omitted)
+    yaw: 0.0 # (y-axis rotation. Default if 'yaw' is omitted)
+    world: 'world'
+    center: # (Default if 'center' is omitted)
+      x: 0
+      y: 0
+      z: 0
+
+  static_region-name:
+    shape: 'STATIC_REGION'
+    type: 'FLAME'
+    particle-count: 50 # (Default for STATIC_REGION if 'particle-count' is omitted)
+    world: 'world'
+    corner1: # (Default if 'corner1' is omitted)
+      x: 0
+      y: 0
+      z: 0
+    corner2: # (Default if 'corner2' is omitted)
+      x: 0
+      y: 0
+      z: 0
+
+  static_cuboid-name:
+    shape: 'STATIC_CUBOID'
+    type: 'FLAME'
+    width: 1.0  # (Default if 'width' is omitted)
+    height: 1.0 # (Default if 'height' is omitted)
+    depth: 1.0  # (Default if 'depth' is omitted)
+    # You can also use 'size' for a uniform cube. If 'size' is present, it will override width, height, and depth.
+    # size: 2.0
+    density: 5.0 # (Default for STATIC_CUBOID if 'density' is omitted)
+    world: 'world'
+    pitch: 0.0
+    yaw: 0.0
+    center:
+      x: 0
+      y: 0
+      z: 0
+
+  static_star-name:
+    shape: 'STATIC_STAR'
+    type: 'FLAME'
+    points: 5 # (Default if 'points' is omitted)
+    outer-radius: 3.0 # (Default for STATIC_STAR if 'outer-radius' is omitted)
+    inner-radius: 1.5 # (Default for STATIC_STAR if 'inner-radius' is omitted)
+    density: 10.0 # (Default for STATIC_STAR if 'density' is omitted)
+    world: 'world'
+    pitch: 0.0
+    yaw: 0.0
+    center:
+      x: 0
+      y: 0
+      z: 0
+
+  random_burst_region-name:
+    shape: 'RANDOM_BURST_REGION'
+    type: 'SMOKE'
+    world: 'world'
+    active-duration: 100    # How long the smoke appears in one spot (5 seconds)
+    cooldown-duration: 60   # How long it's gone before reappearing (3 seconds)
+    # Note: Higher active-duration than cooldown-duration means the particle spawn increases overtime but still has a cap. (5+3=8)
+    burst-radius: 1.5       # The size of the smoke cloud
+    spawn-rate: 5           # Particles to spawn in each burst.
+    spawn-period: 10        # Ticks to wait before spawning the next burst of particles.
+    corner1: {x: 0, y: 65, z: 0}
+    corner2: {x: 20, y: 70, z: 20}
+
+  static_pyramid-name:
+    shape: 'STATIC_PYRAMID'
+    type: 'FLAME'
+    base-size: 2.0 # (Radius of the base polygon. Default is 2.0)
+    height: 3.0 # (Default is 3.0)
+    sides: 4 # (Number of sides for the base. 3=triangle, 4=square, etc. Default is 4)
+    density: 5.0 # (Default is 5.0)
+    pitch: 0.0
+    yaw: 0.0
+    world: 'world'
+    center:
+      x: 0
+      y: 0
+      z: 0
+
+# -------------------------------------------------------------------
+# ANIMATED PARTICLES
+# These particles are updated every single tick for smooth movement
+# and visual effects like color changes.
+# -------------------------------------------------------------------
+
+animated-particles:
+  animated_circle-name:
+    shape: 'CIRCLE'
+    type: 'FLAME'
+    particle-count: 20 # (Default for CIRCLE if 'particle-count' is omitted)
+    radius: 1.0 # (Default for CIRCLE if 'radius' is omitted)
+    speed: 0.1 # (Default for CIRCLE if 'speed' is omitted)
+    period: 1 # (Default for animated particles if 'period' is omitted)
+    pitch: 0.0
+    yaw: 0.0
+    world: 'world'
+    center:
+      x: 0
+      y: 0
+      z: 0
+
+  animated_pulsing_circle-name:
+    shape: 'PULSING_CIRCLE
+    type: 'FLAME'
+    max-radius: 5.0
+    pulse-speed: 0.1
+    particle-count: 50
+    expand: false # (Default for PULSING_CIRCLE if 'expand' is omitted. A reverse pulse option)
+    world: 'world'
+    center:
+      x: 0
+      y: 0
+      z: 0
+
+  animated_line-name:
+    shape: 'LINE'
+    type: 'FLAME'
+    period: 1
+    speed: 0.05 # (Default for LINE if 'speed' is omitted)
+    reset-on-end: false # (Default if 'reset-on-end' is omitted. This makes the particle jump back to the start when it reaches the end)
+    world: 'world'
+    start:
+      x: 0
+      y: 0
+      z: 0
+    end:
+      x: 0
+      y: 0
+      z: 0
+
+  animated_helix-name:
+    shape: 'HELIX'
+    type: 'FLAME'
+    period: 1
+    speed: 0.1 # (Default for HELIX if 'speed' is omitted) # Rotational speed
+    vertical-speed: 0.1 # (How fast it moves up/down. Use a negative value to go down.)
+    radius: 1.0 # (Default for HELIX if 'radius' is omitted)
+    height: 5.0 # (Default if 'height' is omitted)
+    start-angle: 0.0 # (Default if 'start-angle' is omitted) (3.14 is Offset by ~180 degrees (pi) to create a double helix in case you want to)
+    pitch: 0.0
+    yaw: 0.0
+    bounce: false # (Default if 'bounce' is omitted)
+    world: 'world'
+    base: # (Default if 'base' is omitted)
+      x: 0
+      y: 0
+      z: 0
+
+  animated_star-name: # Note: The arrangement for config.yml doesn't matter.
+    shape: 'STAR'
+    world: "world"
+    center: { x: 0, y: 0, z: 0 }
+    type: "WITCH"
+    pitch: 0.0
+    yaw: 0.0
+    points: 5            # The number of points on the star.
+    outer-radius: 3.0    # The distance to the star's outer tips.
+    inner-radius: 1.5    # The distance to the star's inner corners.
+    speed: 0.02          # How fast the star rotates.
+    density: 10          # How many particles per block on the star's outline.
+
+  moving_star-name:
+    shape: 'MOVING_STAR'
+    world: "world"
+    center: { x: 0, y: 70, z: 0 }
+    type: "SOUL_FIRE_FLAME"
+    pitch: 0.0
+    yaw: 0.0
+    points: 5
+    outer-radius: 2.0
+    inner-radius: 1.0
+    speed: 0.05          # Rotational speed
+    density: 10
+    velocity:            # How the star moves each tick.
+      x: 0.0
+      y: 0.1
+      z: 0.0
+
+  animated_vortex-name:
+    shape: 'VORTEX'
+    type: 'PORTAL'
+    radius: 3.0
+    height: 5.0
+    speed: 0.5 # Rotational speed
+    particle-count: 150
+    world: 'world'
+    center:
+      x: 0
+      y: 65
+      z: 0
+
+  animated_wave-name:
+    shape: 'WAVE'
+    world: 'world'
+    type: 'FLAME'
+    amplitude: 1.0
+    length: 5.0
+    speed: 0.1
+    period: 1
+    base:
+      x: 0
+      y: 65
+      z: 0
+
+  # --- EXAMPLE OF CONDITIONS ---
+  particle-name:
+    conditions:
+      - type: "TIME"
+        from: 0
+        to: 12000
+      - type: "WEATHER"
+        is: "RAINING" # Can be RAINING / THUNDERING / CLEAR
+      - type: "BLOCK_MATCH"
+        location:
+          x: 0
+          y: 0
+          z: 0
+        material: REDSTONE_BLOCK
+        trigger-once: true # The effect will only fire on the tick this block appears.
+      - type: "TIMER"
+        active-duration: 40  # 2 seconds ON (20 ticks per second)
+        cooldown-duration: 60 # 3 seconds OFF
+      - type: "DELAY" # (After fulfilling the condition, a delay is added.)
+        delay: 60
+        condition:
+          type: "WEATHER"
+          is: "RAINING"
+      - type: "BLOCK_INTERACT"
+    # This condition has two modes: Trigger and Toggle.
+    # --- Trigger Mode Example (for temporary effects) ---
+        location: {x: 0, y: 64, z: 0}
+        material: LEVER
+        required-item: STICK     # Optional. Player must hold this item.
+        trigger-once: false      # Optional. If true, only fires once until reload.
+        repeat-duration: 100     # Optional. Effect plays for 100 ticks (5 seconds).
+    # --- Toggle Mode Example (for persistent on/off effects) ---
+        toggle: true
+        location: {x: 0, y: 64, z: 0}
+        material: BEACON
+        activation-item: NETHER_STAR    # REQUIRED for toggle mode
+        deactivation-item: STICK        # REQUIRED for toggle mode
+
+  # --- EXAMPLE OF A DECORATOR ---
+  particle-name:
+    decorators:
+      multi-color-transition: # (The decorator will override this with DUST_COLOR_TRANSITION, but it's still needed.)
+        size: 1.2
+        transition-time: 40 # Ticks for each color-to-color fade (2 seconds)
+        colors:
+          - '#FF0000' # Red
+          - '#FFFF00' # Yellow
+          - '#00FF00' # Green
+          - '#00FFFF' # Cyan
+          - '#0000FF' # Blue
+          - '#FF00FF' # Magenta
+      sound:
+        sound: "BLOCK_BELL_RESONATE"
+        volume: 1.0
+        pitch: 1.2
+        period: 40 # Play the sound every 2 seconds.
+      trail:
+        trail-particle-type: "SMOKE"
+        trail-length: 25 # The trail will consist of the last 25 particle positions.
+        period: 1       # A new set of trail particles spawns every tick.

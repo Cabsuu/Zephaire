@@ -1,0 +1,35 @@
+# ===================================================================
+# Zephaire Plugin Particles Configuration
+# ===================================================================
+
+# Global performance settings for all particle effects.
+performance:
+  # If true, particles will only spawn if a player is within the 'max-view-distance'.
+  # This is more efficient than the default chunk check.
+  # If false, it will fall back to only checking if the chunk is loaded.
+  enable-distance-check: true
+
+  # The maximum distance in blocks a player can be from an effect for it to render.
+  # Only active if 'enable-distance-check' is true.
+  # A value of 64 is a good starting point.
+  max-view-distance: 64
+
+  # If true, animated particles can be stopped by solid blocks.
+  # This can be overridden by individual particle settings.
+  enable-collision-check: false
+
+static-particles:
+  point-particle-name: # (A variable name for the particle)
+    shape: 'POINT' # (Default if 'shape' is omitted)
+    type: 'FALLING_WATER' # (Default if 'type' is omitted)
+    period: 1 # (Default if 'period' is omitted, and only available for 'POINT' in static-particles.)
+    world: 'build_world' # (Default if 'world' is omitted)
+    location: # (Default if 'location' is omitted)
+      x: 79.5
+      y: -19
+      z: 983.5
+    count: 1 # (Default if 'count' is omitted)
+    speed: 1 # (Default for POINT if 'speed' is omitted)
+    offset-x: 0.0
+    offset-y: 2.0
+    offset-z: 0.0 # (Default if offset-xyz is omitted)
