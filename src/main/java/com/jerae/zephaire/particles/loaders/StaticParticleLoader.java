@@ -36,9 +36,11 @@ public class StaticParticleLoader {
 
         BukkitRunnable task = factoryOpt.get().create(config, condManager);
         if (task instanceof Debuggable) {
-            long period = config.getLong("period", shape.equals("POINT") ? 20L : 1L);
-            task.runTaskTimerAsynchronously(plugin, 0L, period);
+            long period = config.getLong("period", 20L);
+            // --- FIX: Switched to runTaskTimer to ensure thread safety with Bukkit API calls ---
+            task.runTaskTimer(plugin, 0L, period);
             particleManager.addParticle(key, (Debuggable) task);
         }
     }
 }
+

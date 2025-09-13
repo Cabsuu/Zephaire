@@ -50,7 +50,8 @@ public class ParticleManager {
 
     public void startAnimationManager() {
         if (!animationManager.getAnimatedParticles().isEmpty()) {
-            animationManager.runTaskTimerAsynchronously(plugin, 0L, 1L);
+            // --- FIX: Switched to runTaskTimer to ensure thread safety with Bukkit API calls ---
+            animationManager.runTaskTimer(plugin, 0L, 1L);
         }
     }
 
