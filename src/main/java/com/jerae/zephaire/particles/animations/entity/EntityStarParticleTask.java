@@ -29,9 +29,14 @@ public class EntityStarParticleTask implements EntityParticleTask {
     private final Vector offset;
     private final EntityTarget target;
     private final int period;
+    private final double height;
+    private final double verticalSpeed;
+    private final boolean bounce;
 
     private double rotationAngle = 0;
     private int tickCounter = 0;
+    private double currentYOffset = 0;
+    private int verticalDirection = 1;
 
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Vector[] vertices;
@@ -40,7 +45,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
     private final Vector currentLinePoint = new Vector();
     private final Location particleLoc;
 
-    public EntityStarParticleTask(String effectName, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period) {
+    public EntityStarParticleTask(String effectName, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, double height, double verticalSpeed, boolean bounce) {
         this.effectName = effectName;
         this.particle = particle;
         this.points = Math.max(2, points);
@@ -56,6 +61,9 @@ public class EntityStarParticleTask implements EntityParticleTask {
         this.offset = offset;
         this.target = target;
         this.period = Math.max(1, period);
+        this.height = height;
+        this.verticalSpeed = verticalSpeed;
+        this.bounce = bounce;
         this.vertices = new Vector[this.points * 2];
         for (int i = 0; i < vertices.length; i++) {
             vertices[i] = new Vector();
@@ -65,7 +73,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
 
     @Override
     public EntityParticleTask newInstance() {
-        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, conditionManager, collisionEnabled, offset, target, period);
+        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, conditionManager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce);
     }
 
     @Override
@@ -85,6 +93,27 @@ public class EntityStarParticleTask implements EntityParticleTask {
         particleLoc.setWorld(entity.getWorld());
 
         rotationAngle += speed;
+
+        if (height != 0) {
+            currentYOffset += verticalSpeed * verticalDirection;
+
+            if (bounce) {
+                if (currentYOffset >= height) {
+                    currentYOffset = height;
+                    verticalDirection = -1;
+                } else if (currentYOffset <= 0) {
+                    currentYOffset = 0;
+                    verticalDirection = 1;
+                }
+            } else {
+                if (currentYOffset >= height) {
+                    currentYOffset = 0;
+                } else if (currentYOffset < 0) {
+                    currentYOffset = 0;
+                }
+            }
+        }
+
         drawStar(center);
     }
 
@@ -94,7 +123,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
         for (int i = 0; i < totalVertices; i++) {
             double angle = rotationAngle + (i * Math.PI / points);
             double radius = (i % 2 == 0) ? outerRadius : innerRadius;
-            reusableVertex.setX(Math.cos(angle) * radius).setY(0).setZ(Math.sin(angle) * radius);
+            reusableVertex.setX(Math.cos(angle) * radius).setY(currentYOffset).setZ(Math.sin(angle) * radius);
             VectorUtils.rotateVector(reusableVertex, pitch, yaw, vertices[i]);
         }
 
@@ -139,8 +168,10 @@ public class EntityStarParticleTask implements EntityParticleTask {
                 ChatColor.AQUA + "Shape: " + ChatColor.WHITE + "STAR" + "\n" +
                 ChatColor.AQUA + "Radii: " + ChatColor.WHITE + String.format("Outer:%.1f, Inner:%.1f", outerRadius, innerRadius) + "\n" +
                 ChatColor.AQUA + "Rotation Speed: " + ChatColor.WHITE + speed + "\n" +
+                ChatColor.AQUA + "Height: " + ChatColor.WHITE + height + "\n" +
                 ChatColor.AQUA + "Target: " + ChatColor.WHITE + target.getTargetType().name() +
                 (target.getName() != null ? " (" + target.getName() + ")" : "") +
                 (target.getEntityType() != null ? " (" + target.getEntityType().name() + ")" : "");
     }
 }
+

@@ -23,9 +23,13 @@ public class EntityStarParticleFactory implements EntityParticleFactory {
         double density = ConfigValidator.getPositiveDouble(section, "density", 10.0);
         double pitch = section.getDouble("pitch", 0.0);
         double yaw = section.getDouble("yaw", 0.0);
+        double height = section.getDouble("height", 0.0);
+        double verticalSpeed = section.getDouble("vertical-speed", 0.1);
+        boolean bounce = section.getBoolean("bounce", true);
         Object options = ParticleUtils.parseParticleOptions(particle, section.getConfigurationSection("options"));
         boolean collisionEnabled = CollisionManager.shouldCollide(section);
 
-        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, manager, collisionEnabled, offset, target, period);
+        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, manager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce);
     }
 }
+
