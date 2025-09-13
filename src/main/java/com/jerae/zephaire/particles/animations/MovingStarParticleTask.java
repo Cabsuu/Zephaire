@@ -28,13 +28,18 @@ public class MovingStarParticleTask implements AnimatedParticle {
     private final ConditionManager conditionManager;
     private final Vector velocity;
     private final boolean collisionEnabled;
+    private final double height;
+    private final double verticalSpeed;
+    private final boolean bounce;
 
     private double rotationAngle = 0;
+    private double currentYOffset = 0;
+    private int verticalDirection = 1;
 
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Vector[] vertices;
 
-    public MovingStarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, Vector velocity, boolean collisionEnabled) {
+    public MovingStarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, Vector velocity, boolean collisionEnabled, double height, double verticalSpeed, boolean bounce) {
         this.center = center;
         this.particle = particle;
         this.points = Math.max(2, points);
@@ -48,6 +53,9 @@ public class MovingStarParticleTask implements AnimatedParticle {
         this.conditionManager = conditionManager;
         this.velocity = velocity;
         this.collisionEnabled = collisionEnabled;
+        this.height = height;
+        this.verticalSpeed = verticalSpeed;
+        this.bounce = bounce;
         this.vertices = new Vector[this.points * 2];
         for (int i = 0; i < vertices.length; i++) {
             vertices[i] = new Vector();
@@ -60,19 +68,49 @@ public class MovingStarParticleTask implements AnimatedParticle {
             return;
         }
 
-        // Check for collision at the center before moving
+        // Check for collision at the center's next position
         if (collisionEnabled && CollisionManager.isColliding(center.clone().add(velocity))) {
             return;
         }
 
+        // Move the entire system
         center.add(velocity);
         rotationAngle += speed;
 
-        ParticleDrawingUtils.drawStar(center, points, outerRadius, innerRadius, rotationAngle, pitch, yaw, vertices);
+        // Handle vertical oscillation
+        if (height != 0) {
+            currentYOffset += verticalSpeed * verticalDirection;
+            if (bounce) {
+                if (currentYOffset >= height) {
+                    currentYOffset = height;
+                    verticalDirection = -1;
+                } else if (currentYOffset <= 0) {
+                    currentYOffset = 0;
+                    verticalDirection = 1;
+                }
+            } else {
+                if (currentYOffset >= height || currentYOffset < 0) { // Reset if it goes above or below (if verticalSpeed is negative)
+                    currentYOffset = 0;
+                }
+            }
+        }
 
-        for (int i = 0; i < points * 2; i++) {
+        // --- Draw the star with the vertical offset ---
+        int totalVertices = points * 2;
+        Vector reusableVertex = new Vector();
+
+        // Calculate all the vertices of the star with the vertical offset
+        for (int i = 0; i < totalVertices; i++) {
+            double angle = rotationAngle + (i * Math.PI / points);
+            double radius = (i % 2 == 0) ? outerRadius : innerRadius;
+            reusableVertex.setX(Math.cos(angle) * radius).setY(currentYOffset).setZ(Math.sin(angle) * radius);
+            VectorUtils.rotateVector(reusableVertex, pitch, yaw, vertices[i]);
+        }
+
+        // Draw lines between the vertices
+        for (int i = 0; i < totalVertices; i++) {
             Vector start = vertices[i];
-            Vector end = vertices[(i + 1) % (points * 2)];
+            Vector end = vertices[(i + 1) % totalVertices];
             ParticleDrawingUtils.drawParticleLine(center, start, end, density, particle, options);
         }
     }
@@ -97,6 +135,7 @@ public class MovingStarParticleTask implements AnimatedParticle {
         info.append(ChatColor.AQUA).append("Points: ").append(ChatColor.WHITE).append(points).append("\n");
         info.append(ChatColor.AQUA).append("Radii: ").append(ChatColor.WHITE).append(String.format("Outer:%.1f, Inner:%.1f", outerRadius, innerRadius)).append("\n");
         info.append(ChatColor.AQUA).append("Rotation Speed: ").append(ChatColor.WHITE).append(speed).append("\n");
+        info.append(ChatColor.AQUA).append("Height: ").append(ChatColor.WHITE).append(height).append("\n");
         info.append(ChatColor.DARK_AQUA).append("--- Status ---").append("\n");
         info.append(ChatColor.AQUA).append("Player Nearby: ").append(ParticleUtils.formatBoolean(PerformanceManager.isPlayerNearby(center))).append("\n");
         info.append(ChatColor.AQUA).append("Conditions Met: ").append(ParticleUtils.formatBoolean(conditionManager.allConditionsMet(center))).append("\n");
