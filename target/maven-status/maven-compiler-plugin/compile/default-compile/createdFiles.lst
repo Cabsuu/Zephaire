@@ -59,7 +59,6 @@ com\jerae\zephaire\particles\managers\EntityParticleManager$1.class
 com\jerae\zephaire\particles\factories\statics\RandomBurstRegionFactory.class
 com\jerae\zephaire\particles\animations\CurveParticleTask.class
 com\jerae\zephaire\particles\animations\decorator\TrailDecorator.class
-com\jerae\zephaire\particles\data\EntityTarget$TargetType.class
 com\jerae\zephaire\particles\managers\ParticleManager.class
 com\jerae\zephaire\particles\AbstractParticleTask.class
 com\jerae\zephaire\particles\animations\MovingStarParticleTask.class
@@ -71,7 +70,6 @@ com\jerae\zephaire\data\DataManager.class
 com\jerae\zephaire\particles\conditions\TimeCondition.class
 com\jerae\zephaire\particles\managers\PerformanceManager.class
 com\jerae\zephaire\particles\conditions\CachedParticleCondition.class
-com\jerae\zephaire\particles\data\EntityTarget.class
 com\jerae\zephaire\particles\statics\StaticPointParticleTask.class
 com\jerae\zephaire\particles\util\VectorUtils.class
 com\jerae\zephaire\particles\loaders\ConditionParser.class
