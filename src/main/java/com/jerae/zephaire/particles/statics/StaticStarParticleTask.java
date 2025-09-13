@@ -6,8 +6,8 @@ import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.managers.PerformanceManager;
+import com.jerae.zephaire.particles.util.ParticleDrawingUtils;
 import com.jerae.zephaire.particles.util.ParticleUtils;
-import com.jerae.zephaire.particles.util.VectorUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -30,6 +30,9 @@ public class StaticStarParticleTask extends BukkitRunnable implements Debuggable
     private final double outerRadius;
     private final double innerRadius;
     private final double density;
+    private final double pitch;
+    private final double yaw;
+    private final Vector[] vertices;
 
     public StaticStarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled) {
         this.center = center;
@@ -42,22 +45,18 @@ public class StaticStarParticleTask extends BukkitRunnable implements Debuggable
         this.outerRadius = outerRadius;
         this.innerRadius = innerRadius;
         this.density = density;
-
-        int totalVertices = Math.max(2, points) * 2;
-        Vector[] vertices = new Vector[totalVertices];
-
-        // Pre-calculate all the vertices of the star.
-        for (int i = 0; i < totalVertices; i++) {
-            double angle = (i * Math.PI / points);
-            double radius = (i % 2 == 0) ? outerRadius : innerRadius;
-            vertices[i] = new Vector(Math.cos(angle) * radius, 0, Math.sin(angle) * radius);
-            vertices[i] = VectorUtils.rotateVector(vertices[i], pitch, yaw);
+        this.pitch = pitch;
+        this.yaw = yaw;
+        this.vertices = new Vector[this.points * 2];
+        for (int i = 0; i < vertices.length; i++) {
+            vertices[i] = new Vector();
         }
 
-        // Pre-calculate all the particle locations along the star's outline.
-        for (int i = 0; i < totalVertices; i++) {
+        ParticleDrawingUtils.drawStar(center, points, outerRadius, innerRadius, 0, pitch, yaw, vertices);
+
+        for (int i = 0; i < points * 2; i++) {
             Vector start = vertices[i];
-            Vector end = vertices[(i + 1) % totalVertices];
+            Vector end = vertices[(i + 1) % (points * 2)];
             addParticlesAlongLine(start, end, density);
         }
     }

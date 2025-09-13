@@ -1,45 +1,30 @@
 package com.jerae.zephaire.particles.factories.animated;
 
-import com.jerae.zephaire.Zephaire;
-import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.animations.AnimatedParticle;
 import com.jerae.zephaire.particles.animations.CurveParticleTask;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
-import com.jerae.zephaire.particles.factories.AnimatedParticleFactory;
-import com.jerae.zephaire.particles.util.ConfigValidator;
-import com.jerae.zephaire.particles.util.ParticleUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.logging.Level;
-
-public class CurveParticleFactory implements AnimatedParticleFactory {
+public class CurveParticleFactory extends AbstractAnimatedParticleFactory {
     @Override
-    public AnimatedParticle create(ConfigurationSection section, ConditionManager manager) {
-        World world = Bukkit.getWorld(section.getString("world", "world"));
-        if (world == null) return null;
+    protected AnimatedParticle createParticleTask(ConfigurationSection section, ConditionManager manager, World world) {
+        Location start = parseLocation(world, section, "start");
+        Location control = parseLocation(world, section, "control");
+        Location end = parseLocation(world, section, "end");
 
-        if (!section.isConfigurationSection("start") || !section.isConfigurationSection("control") || !section.isConfigurationSection("end")) {
-            JavaPlugin.getPlugin(Zephaire.class).getLogger().log(Level.WARNING, "Particle '" + section.getName() + "' is missing required 'start', 'control', or 'end' section. Skipping.");
+        if (start == null || control == null || end == null) {
             return null;
         }
 
-        Location start = ParticleUtils.parseLocation(world, section.getConfigurationSection("start"));
-        Location control = ParticleUtils.parseLocation(world, section.getConfigurationSection("control"));
-        Location end = ParticleUtils.parseLocation(world, section.getConfigurationSection("end"));
-        // --- VALIDATION: Use ConfigValidator for safe parsing ---
-        Particle particle = ConfigValidator.getParticleType(section, "type", "FLAME");
-
+        Particle particle = parseParticle(section);
         double speed = section.getDouble("speed", 0.02);
         boolean bounce = section.getBoolean("bounce", false);
-        Object options = ParticleUtils.parseParticleOptions(particle, section.getConfigurationSection("options"));
-        boolean collisionEnabled = CollisionManager.shouldCollide(section);
+        Object options = parseOptions(particle, section);
+        boolean collisionEnabled = parseCollision(section);
 
         return new CurveParticleTask(start, control, end, particle, speed, bounce, options, manager, collisionEnabled);
     }
 }
-

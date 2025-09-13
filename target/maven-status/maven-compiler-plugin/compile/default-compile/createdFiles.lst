@@ -24,6 +24,7 @@ com\jerae\zephaire\particles\animations\WaveParticleTask.class
 com\jerae\zephaire\particles\statics\StaticPyramidParticleTask.class
 com\jerae\zephaire\particles\util\ConfigValidator.class
 com\jerae\zephaire\commands\CommandManager.class
+com\jerae\zephaire\particles\factories\statics\AbstractStaticParticleFactory.class
 com\jerae\zephaire\particles\managers\FactoryManager.class
 com\jerae\zephaire\particles\factories\statics\StaticPyramidFactory.class
 com\jerae\zephaire\listeners\PlayerInteractListener.class
@@ -42,10 +43,13 @@ com\jerae\zephaire\particles\loaders\AnimatedParticleLoader.class
 com\jerae\zephaire\particles\conditions\TimerCondition.class
 com\jerae\zephaire\particles\factories\statics\StaticStarFactory.class
 com\jerae\zephaire\particles\animations\entity\EntityCircleParticleTask.class
+com\jerae\zephaire\particles\factories\AbstractParticleFactory.class
 com\jerae\zephaire\particles\factories\animated\PulsingCircleParticleFactory.class
+com\jerae\zephaire\particles\factories\animated\AbstractAnimatedParticleFactory.class
 com\jerae\zephaire\particles\animations\entity\EntityVortexParticleTask.class
 com\jerae\zephaire\particles\conditions\ConditionManager.class
 com\jerae\zephaire\particles\conditions\WeatherCondition$WeatherType.class
+com\jerae\zephaire\particles\util\ParticleDrawingUtils.class
 com\jerae\zephaire\commands\subcommands\ToggleCommand.class
 com\jerae\zephaire\particles\conditions\WeatherCondition.class
 com\jerae\zephaire\particles\factories\decorators\MultiColorTransitionDecoratorFactory.class

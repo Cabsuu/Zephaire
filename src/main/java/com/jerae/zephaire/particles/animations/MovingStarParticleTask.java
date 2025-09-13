@@ -5,6 +5,7 @@ import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.managers.PerformanceManager;
+import com.jerae.zephaire.particles.util.ParticleDrawingUtils;
 import com.jerae.zephaire.particles.util.ParticleUtils;
 import com.jerae.zephaire.particles.util.VectorUtils;
 import org.bukkit.ChatColor;
@@ -32,12 +33,6 @@ public class MovingStarParticleTask implements AnimatedParticle {
 
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Vector[] vertices;
-    private final Vector reusableVertex = new Vector();
-    private final Vector lineDirection = new Vector();
-    private final Vector currentLinePoint = new Vector();
-    private final Location particleLoc;
-    private final Vector rotatedPos = new Vector();
-
 
     public MovingStarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, Vector velocity, boolean collisionEnabled) {
         this.center = center;
@@ -57,7 +52,6 @@ public class MovingStarParticleTask implements AnimatedParticle {
         for (int i = 0; i < vertices.length; i++) {
             vertices[i] = new Vector();
         }
-        this.particleLoc = center.clone();
     }
 
     @Override
@@ -73,40 +67,13 @@ public class MovingStarParticleTask implements AnimatedParticle {
 
         center.add(velocity);
         rotationAngle += speed;
-        drawStar();
-    }
 
-    private void drawStar() {
-        int totalVertices = points * 2;
+        ParticleDrawingUtils.drawStar(center, points, outerRadius, innerRadius, rotationAngle, pitch, yaw, vertices);
 
-        for (int i = 0; i < totalVertices; i++) {
-            double angle = rotationAngle + (i * Math.PI / points);
-            double radius = (i % 2 == 0) ? outerRadius : innerRadius;
-            // --- PERFORMANCE: Use the reusable vector instead of creating a new one ---
-            reusableVertex.setX(Math.cos(angle) * radius).setY(0).setZ(Math.sin(angle) * radius);
-            VectorUtils.rotateVector(reusableVertex, pitch, yaw, vertices[i]);
-        }
-
-        for (int i = 0; i < totalVertices; i++) {
+        for (int i = 0; i < points * 2; i++) {
             Vector start = vertices[i];
-            Vector end = vertices[(i + 1) % totalVertices];
-            drawParticleLine(start, end);
-        }
-    }
-
-    private void drawParticleLine(Vector start, Vector end) {
-        // --- PERFORMANCE: Reuse the lineDirection vector ---
-        lineDirection.copy(end).subtract(start);
-        double length = lineDirection.length();
-        lineDirection.normalize();
-
-        for (double d = 0; d < length; d += (1.0 / density)) {
-            // --- PERFORMANCE: Reuse the currentLinePoint vector and particleLoc location ---
-            currentLinePoint.copy(lineDirection).multiply(d).add(start);
-            particleLoc.setX(center.getX() + currentLinePoint.getX());
-            particleLoc.setY(center.getY() + currentLinePoint.getY());
-            particleLoc.setZ(center.getZ() + currentLinePoint.getZ());
-            ParticleScheduler.queueParticle(new ParticleSpawnData(particle, particleLoc, 1, 0, 0, 0, 0, options));
+            Vector end = vertices[(i + 1) % (points * 2)];
+            ParticleDrawingUtils.drawParticleLine(center, start, end, density, particle, options);
         }
     }
 
