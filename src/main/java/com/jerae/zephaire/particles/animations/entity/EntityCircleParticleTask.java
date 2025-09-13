@@ -5,18 +5,12 @@ import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.data.EntityTarget;
-import com.jerae.zephaire.particles.managers.PerformanceManager;
-import com.jerae.zephaire.particles.util.ParticleUtils;
 import com.jerae.zephaire.particles.util.VectorUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class EntityCircleParticleTask implements EntityParticleTask {
     private final String effectName;
@@ -31,8 +25,10 @@ public class EntityCircleParticleTask implements EntityParticleTask {
     private final boolean collisionEnabled;
     private final Vector offset;
     private final EntityTarget target;
+    private final int period;
 
     private double angle = 0;
+    private int tickCounter = 0;
 
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Location spawnLocation;
@@ -40,7 +36,7 @@ public class EntityCircleParticleTask implements EntityParticleTask {
     private final Vector rotatedPos = new Vector();
 
 
-    public EntityCircleParticleTask(String effectName, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target) {
+    public EntityCircleParticleTask(String effectName, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period) {
         this.effectName = effectName;
         this.particle = particle;
         this.radius = radius;
@@ -53,26 +49,17 @@ public class EntityCircleParticleTask implements EntityParticleTask {
         this.collisionEnabled = collisionEnabled;
         this.offset = offset;
         this.target = target;
+        this.period = Math.max(1, period);
         this.spawnLocation = new Location(null, 0, 0, 0); // World will be set dynamically
         this.relativePos = new Vector();
     }
 
     @Override
     public EntityParticleTask newInstance() {
-        // Return a new instance with the same configuration but reset state (angle will be 0 by default).
         return new EntityCircleParticleTask(
-                this.effectName,
-                this.particle,
-                this.radius,
-                this.speed,
-                this.particleCount,
-                this.options,
-                this.pitch,
-                this.yaw,
-                this.conditionManager,
-                this.collisionEnabled,
-                this.offset,
-                this.target
+                this.effectName, this.particle, this.radius, this.speed,
+                this.particleCount, this.options, this.pitch, this.yaw,
+                this.conditionManager, this.collisionEnabled, this.offset, this.target, this.period
         );
     }
 
@@ -83,13 +70,14 @@ public class EntityCircleParticleTask implements EntityParticleTask {
 
     @Override
     public void tick(Entity entity) {
+        tickCounter++;
+        if (tickCounter < period) {
+            return;
+        }
+        tickCounter = 0;
+
         Location center = entity.getLocation().add(offset);
         spawnLocation.setWorld(entity.getWorld()); // Ensure world is correct
-
-        // In the future, conditions could be checked against the entity or location
-        // if (conditionManager != null && !conditionManager.allConditionsMet(center)) {
-        //     return;
-        // }
 
         angle += speed;
 

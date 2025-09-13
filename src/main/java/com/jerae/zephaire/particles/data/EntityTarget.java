@@ -15,13 +15,11 @@ public class EntityTarget {
     private final TargetType targetType;
     private final EntityType entityType;
     private final String name;
-    private final Vector offset;
 
-    public EntityTarget(TargetType targetType, EntityType entityType, String name, Vector offset) {
+    public EntityTarget(TargetType targetType, EntityType entityType, String name) {
         this.targetType = targetType;
         this.entityType = entityType;
         this.name = name;
-        this.offset = offset;
     }
 
     public TargetType getTargetType() {
@@ -35,9 +33,4 @@ public class EntityTarget {
     public String getName() {
         return name;
     }
-
-    public Vector getOffset() {
-        return offset;
-    }
 }
-

@@ -5,8 +5,6 @@ import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.data.EntityTarget;
-import com.jerae.zephaire.particles.managers.PerformanceManager;
-import com.jerae.zephaire.particles.util.ParticleUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -25,6 +23,7 @@ public class EntityVortexParticleTask implements EntityParticleTask {
     private final boolean collisionEnabled;
     private final Vector offset;
     private final EntityTarget target;
+    private final int period;
 
     private final double radius;
     private final double height;
@@ -34,11 +33,13 @@ public class EntityVortexParticleTask implements EntityParticleTask {
     private final List<Location> particles = new ArrayList<>();
     private final List<Vector> velocities = new ArrayList<>();
 
+    private int tickCounter = 0;
+
     private final Vector toCenter = new Vector();
     private final Vector rotational = new Vector();
 
 
-    public EntityVortexParticleTask(String effectName, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target) {
+    public EntityVortexParticleTask(String effectName, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period) {
         this.effectName = effectName;
         this.particle = particle;
         this.radius = radius;
@@ -50,11 +51,12 @@ public class EntityVortexParticleTask implements EntityParticleTask {
         this.collisionEnabled = collisionEnabled;
         this.offset = offset;
         this.target = target;
+        this.period = Math.max(1, period);
     }
 
     @Override
     public EntityParticleTask newInstance() {
-        return new EntityVortexParticleTask(effectName, particle, radius, height, speed, particleCount, options, conditionManager, collisionEnabled, offset, target);
+        return new EntityVortexParticleTask(effectName, particle, radius, height, speed, particleCount, options, conditionManager, collisionEnabled, offset, target, period);
     }
 
     @Override
@@ -64,6 +66,12 @@ public class EntityVortexParticleTask implements EntityParticleTask {
 
     @Override
     public void tick(Entity entity) {
+        tickCounter++;
+        if (tickCounter < period) {
+            return;
+        }
+        tickCounter = 0;
+
         Location center = entity.getLocation().add(offset);
 
         // Initialize particles if this is the first tick for this instance

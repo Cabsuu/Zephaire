@@ -28,8 +28,10 @@ public class EntityStarParticleTask implements EntityParticleTask {
     private final boolean collisionEnabled;
     private final Vector offset;
     private final EntityTarget target;
+    private final int period;
 
     private double rotationAngle = 0;
+    private int tickCounter = 0;
 
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Vector[] vertices;
@@ -38,7 +40,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
     private final Vector currentLinePoint = new Vector();
     private final Location particleLoc;
 
-    public EntityStarParticleTask(String effectName, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target) {
+    public EntityStarParticleTask(String effectName, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period) {
         this.effectName = effectName;
         this.particle = particle;
         this.points = Math.max(2, points);
@@ -53,6 +55,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
         this.collisionEnabled = collisionEnabled;
         this.offset = offset;
         this.target = target;
+        this.period = Math.max(1, period);
         this.vertices = new Vector[this.points * 2];
         for (int i = 0; i < vertices.length; i++) {
             vertices[i] = new Vector();
@@ -62,7 +65,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
 
     @Override
     public EntityParticleTask newInstance() {
-        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, conditionManager, collisionEnabled, offset, target);
+        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, conditionManager, collisionEnabled, offset, target, period);
     }
 
     @Override
@@ -72,6 +75,12 @@ public class EntityStarParticleTask implements EntityParticleTask {
 
     @Override
     public void tick(Entity entity) {
+        tickCounter++;
+        if (tickCounter < period) {
+            return;
+        }
+        tickCounter = 0;
+
         Location center = entity.getLocation().add(offset);
         particleLoc.setWorld(entity.getWorld());
 

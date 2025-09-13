@@ -1,11 +1,12 @@
 package com.jerae.zephaire.particles.loaders;
 
 import com.jerae.zephaire.Zephaire;
+import com.jerae.zephaire.particles.conditions.ConditionManager;
+import com.jerae.zephaire.particles.data.EntityTarget;
+import com.jerae.zephaire.particles.factories.EntityParticleFactory;
 import com.jerae.zephaire.particles.managers.EntityParticleManager;
 import com.jerae.zephaire.particles.managers.FactoryManager;
 import com.jerae.zephaire.particles.animations.entity.EntityParticleTask;
-import com.jerae.zephaire.particles.data.EntityTarget;
-import com.jerae.zephaire.particles.factories.EntityParticleFactory;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.util.Vector;
@@ -46,8 +47,17 @@ public class EntityParticleLoader {
             return;
         }
 
+        // Parse appearance offset and period from the main particle config
+        Vector offset = new Vector(
+                config.getDouble("offset-x", 0),
+                config.getDouble("offset-y", 0),
+                config.getDouble("offset-z", 0)
+        );
+        int period = config.getInt("period", 1);
+
+
         // Conditions for entity particles are currently not supported but could be added here.
-        EntityParticleTask task = factoryOpt.get().create(key, config, target, null);
+        EntityParticleTask task = factoryOpt.get().create(key, config, target, null, offset, period);
 
         if (task != null) {
             entityParticleManager.addEffectTemplate(key, task);
@@ -59,11 +69,6 @@ public class EntityParticleLoader {
 
         String typeStr = targetSection.getString("type", "").toUpperCase();
         String name = targetSection.getString("name");
-        Vector offset = new Vector(
-                targetSection.getDouble("offset.x", 0),
-                targetSection.getDouble("offset.y", 0),
-                targetSection.getDouble("offset.z", 0)
-        );
 
         EntityTarget.TargetType targetType;
         EntityType entityType = null;
@@ -89,6 +94,6 @@ public class EntityParticleLoader {
                 }
         }
 
-        return new EntityTarget(targetType, entityType, name, offset);
+        return new EntityTarget(targetType, entityType, name);
     }
 }

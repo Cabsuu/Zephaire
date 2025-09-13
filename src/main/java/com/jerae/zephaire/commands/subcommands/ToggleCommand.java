@@ -32,7 +32,6 @@ public class ToggleCommand implements SubCommand {
 
         String particleName = args[1];
 
-        // Check if the particle name exists in the config file at all
         ConfigurationSection staticSection = plugin.getConfig().getConfigurationSection("static-particles");
         ConfigurationSection animatedSection = plugin.getConfig().getConfigurationSection("animated-particles");
         boolean particleExistsInConfig = (staticSection != null && staticSection.contains(particleName)) ||
@@ -43,19 +42,39 @@ public class ToggleCommand implements SubCommand {
             return;
         }
 
-        // Toggle the persistent state and the runtime state
-        if (plugin.getDataManager().isParticleDisabled(particleName)) {
-            // It's currently disabled, so we are ENABLING it.
-            plugin.getDataManager().toggleParticle(particleName); // Updates file, returns true (now enabled)
-            plugin.getParticleManager().enableParticle(particleName); // Loads and starts the particle
-            sender.sendMessage(ChatColor.GREEN + "Particle effect '" + particleName + "' has been enabled.");
+        // The action is to flip the disabled state in the data file.
+        // Then, we sync the runtime state to match the new data file state.
+        boolean isNowEnabled = plugin.getDataManager().toggleParticle(particleName);
+
+        if (isNowEnabled) {
+            // We want it running.
+            boolean wasAlreadyRunning = plugin.getParticleManager().getParticle(particleName).isPresent();
+            if (wasAlreadyRunning) {
+                sender.sendMessage(ChatColor.YELLOW + "Particle effect '" + particleName + "' was already enabled.");
+            } else {
+                // We are using enableParticle here which internally checks again if it's running,
+                // this is a safe redundancy.
+                boolean success = plugin.getParticleManager().enableParticle(particleName);
+                if (success) {
+                    sender.sendMessage(ChatColor.GREEN + "Particle effect '" + particleName + "' has been enabled.");
+                } else {
+                    sender.sendMessage(ChatColor.RED + "Failed to enable particle effect '" + particleName + "'. Check server logs.");
+                    // Revert data change because it failed
+                    plugin.getDataManager().toggleParticle(particleName);
+                }
+            }
         } else {
-            // It's currently enabled, so we are DISABLING it.
-            plugin.getDataManager().toggleParticle(particleName); // Updates file, returns false (now disabled)
-            plugin.getParticleManager().disableParticle(particleName); // Stops and unloads the particle
-            sender.sendMessage(ChatColor.YELLOW + "Particle effect '" + particleName + "' has been disabled.");
+            // We want it stopped.
+            boolean wasRunning = plugin.getParticleManager().getParticle(particleName).isPresent();
+            if (wasRunning) {
+                plugin.getParticleManager().disableParticle(particleName);
+                sender.sendMessage(ChatColor.YELLOW + "Particle effect '" + particleName + "' has been disabled.");
+            } else {
+                sender.sendMessage(ChatColor.YELLOW + "Particle effect '" + particleName + "' was already disabled.");
+            }
         }
     }
+
 
     @Override
     public List<String> getTabCompletions(String[] args) {
@@ -80,4 +99,3 @@ public class ToggleCommand implements SubCommand {
         return "toggle";
     }
 }
-
