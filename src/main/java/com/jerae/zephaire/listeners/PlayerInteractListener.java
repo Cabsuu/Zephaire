@@ -44,7 +44,7 @@ public class PlayerInteractListener implements Listener {
 
     private void handleTriggerInteraction(PlayerInteractEvent event, BlockInteractCondition condition) {
         if (condition.getRequiredItem() != null) {
-            ItemStack itemInHand = event.getItem();
+            ItemStack itemInHand = event.getPlayer().getInventory().getItem(event.getHand());
             if (itemInHand == null || itemInHand.getType() != condition.getRequiredItem()) {
                 return; // Player is not holding the required item for a trigger.
             }

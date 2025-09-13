@@ -38,16 +38,7 @@ public class ParticleManager {
                 animationManager.cancel();
             } catch (IllegalStateException ignored) {}
         }
-        // Cancel all active particle tasks, which are self-contained BukkitRunnables.
-        for (Debuggable particle : new ArrayList<>(activeParticles.values())) {
-            if (particle instanceof BukkitRunnable) {
-                try {
-                    if (!((BukkitRunnable) particle).isCancelled()) {
-                        ((BukkitRunnable) particle).cancel();
-                    }
-                } catch (IllegalStateException ignored) {}
-            }
-        }
+        plugin.getServer().getScheduler().cancelTasks(plugin);
 
         particleNames.clear();
         activeParticles.clear();
