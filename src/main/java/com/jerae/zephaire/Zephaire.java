@@ -12,8 +12,12 @@ import com.jerae.zephaire.particles.managers.ParticleManager;
 import com.jerae.zephaire.particles.ParticleRegistry;
 import com.jerae.zephaire.particles.managers.PerformanceManager;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.io.File;
 
 public final class Zephaire extends JavaPlugin {
 
@@ -23,6 +27,8 @@ public final class Zephaire extends JavaPlugin {
     private ParticleConfigLoader particleConfigLoader;
     private EntityParticleManager entityParticleManager;
     private BukkitTask particleSchedulerTask;
+    private FileConfiguration entityParticlesConfig;
+    private File entityParticlesFile;
 
 
     @Override
@@ -40,6 +46,11 @@ public final class Zephaire extends JavaPlugin {
         this.dataManager = new DataManager(this);
         this.particleManager = new ParticleManager(this);
         this.entityParticleManager = new EntityParticleManager(this);
+
+        // Load entity-particles.yml
+        this.entityParticlesFile = new File(getDataFolder(), "entity-particles.yml");
+        this.entityParticlesConfig = YamlConfiguration.loadConfiguration(entityParticlesFile);
+
         this.particleConfigLoader = new ParticleConfigLoader(this, factoryManager, particleManager, entityParticleManager);
         this.particleManager.setConfigLoader(this.particleConfigLoader); // Link loader to manager
 
@@ -72,6 +83,10 @@ public final class Zephaire extends JavaPlugin {
         reloadConfig();
         PerformanceManager.initialize(getConfig());
 
+        // Reload entity-particles.yml
+        this.entityParticlesConfig = YamlConfiguration.loadConfiguration(entityParticlesFile);
+
+
         // 2. Stop any existing particle scheduler to prevent duplicates.
         if (this.particleSchedulerTask != null) {
             try {
@@ -102,5 +117,8 @@ public final class Zephaire extends JavaPlugin {
     public EntityParticleManager getEntityParticleManager() {
         return entityParticleManager;
     }
-}
 
+    public FileConfiguration getEntityParticlesConfig() {
+        return entityParticlesConfig;
+    }
+}

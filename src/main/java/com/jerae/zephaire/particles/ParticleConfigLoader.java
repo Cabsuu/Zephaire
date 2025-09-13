@@ -60,7 +60,8 @@ public class ParticleConfigLoader {
     }
 
     private void loadEntityParticleSection() {
-        ConfigurationSection section = plugin.getConfig().getConfigurationSection("entity-particles");
+        // Use the dedicated entityParticlesConfig instead of the main config
+        ConfigurationSection section = plugin.getEntityParticlesConfig().getConfigurationSection("entity-particles");
         if (section == null) {
             return;
         }
@@ -133,4 +134,3 @@ public class ParticleConfigLoader {
         }
     }
 }
-

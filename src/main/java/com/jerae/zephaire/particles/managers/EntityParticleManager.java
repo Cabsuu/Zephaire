@@ -49,7 +49,10 @@ public class EntityParticleManager {
                 tick();
             }
         };
-        animationTask.runTaskTimerAsynchronously(plugin, 0L, 1L);
+        // ------------------- THE FIX IS ON THIS LINE -------------------
+        // Switched from runTaskTimerAsynchronously to runTaskTimer to ensure thread safety
+        animationTask.runTaskTimer(plugin, 0L, 1L);
+        // -----------------------------------------------------------------
     }
 
     public void addEffectTemplate(String name, EntityParticleTask task) {
@@ -115,4 +118,3 @@ public class EntityParticleManager {
         }
     }
 }
-
