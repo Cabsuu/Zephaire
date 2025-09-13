@@ -49,12 +49,6 @@ public class VortexParticleTask implements AnimatedParticle {
         this.conditionManager = conditionManager;
         this.collisionEnabled = collisionEnabled;
         this.world = center.getWorld();
-
-        // Initialize particles with random positions
-        for (int i = 0; i < particleCount; i++) {
-            particles.add(getRandomLocationInVortex());
-            velocities.add(new Vector(0, 0, 0));
-        }
     }
 
     @Override
@@ -62,6 +56,15 @@ public class VortexParticleTask implements AnimatedParticle {
         if (world == null || !PerformanceManager.isPlayerNearby(center) || !conditionManager.allConditionsMet(center)) {
             return;
         }
+
+        // Initialize particles if the list is empty
+        if (particles.isEmpty()) {
+            for (int i = 0; i < particleCount; i++) {
+                particles.add(getRandomLocationInVortex());
+                velocities.add(new Vector(0, 0, 0));
+            }
+        }
+
 
         for (int i = 0; i < particleCount; i++) {
             Location p = particles.get(i);
@@ -71,6 +74,14 @@ public class VortexParticleTask implements AnimatedParticle {
             toCenter.setX(center.getX() - p.getX());
             toCenter.setY(0);
             toCenter.setZ(center.getZ() - p.getZ());
+
+            // Prevent division by zero if particle is at the center
+            if (toCenter.lengthSquared() < 0.0001) {
+                particles.set(i, getRandomLocationInVortex());
+                v.zero();
+                continue;
+            }
+
             double distanceToCenter = toCenter.length();
 
             // Gravity towards the center (stronger when further away)
@@ -90,12 +101,12 @@ public class VortexParticleTask implements AnimatedParticle {
             // Apply velocity and some damping
             p.add(v.multiply(0.8));
 
+            // Use the new position to check bounds
+            double newDistanceToCenter = Math.sqrt(Math.pow(center.getX() - p.getX(), 2) + Math.pow(center.getZ() - p.getZ(), 2));
+
             // Reset particles that go too high or too far
-            if (p.getY() > center.getY() + height || distanceToCenter > radius) {
-                Location newLocation = getRandomLocationInVortex();
-                p.setX(newLocation.getX());
-                p.setY(newLocation.getY());
-                p.setZ(newLocation.getZ());
+            if (p.getY() > center.getY() + height || newDistanceToCenter > radius) {
+                particles.set(i, getRandomLocationInVortex());
                 v.zero();
             }
 
@@ -139,3 +150,4 @@ public class VortexParticleTask implements AnimatedParticle {
                 ChatColor.AQUA + "Collision Enabled: " + ParticleUtils.formatBoolean(collisionEnabled);
     }
 }
+
