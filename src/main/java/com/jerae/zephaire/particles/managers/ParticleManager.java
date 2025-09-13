@@ -58,8 +58,15 @@ public class ParticleManager {
     }
 
     public void startAnimationManager() {
-        if (!animationManager.getAnimatedParticles().isEmpty()) {
-            // --- FIX: Switched to runTaskTimer to ensure thread safety with Bukkit API calls ---
+        boolean isScheduled;
+        try {
+            animationManager.getTaskId();
+            isScheduled = true;
+        } catch (IllegalStateException e) {
+            isScheduled = false;
+        }
+
+        if (!isScheduled && !animationManager.getAnimatedParticles().isEmpty()) {
             animationManager.runTaskTimer(plugin, 0L, 1L);
         }
     }
