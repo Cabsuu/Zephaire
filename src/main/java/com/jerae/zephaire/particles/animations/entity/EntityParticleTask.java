@@ -11,4 +11,3 @@ public interface EntityParticleTask extends Debuggable {
     EntityTarget getTarget();
     EntityParticleTask newInstance();
 }
-

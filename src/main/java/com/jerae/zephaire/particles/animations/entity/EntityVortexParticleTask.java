@@ -5,6 +5,7 @@ import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.data.EntityTarget;
+import com.jerae.zephaire.particles.data.SpawnBehavior;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -24,7 +25,7 @@ public class EntityVortexParticleTask implements EntityParticleTask {
     private final Vector offset;
     private final EntityTarget target;
     private final int period;
-    private final boolean spawnWhileMoving;
+    private final SpawnBehavior spawnBehavior;
 
     private final double radius;
     private final double height;
@@ -40,7 +41,7 @@ public class EntityVortexParticleTask implements EntityParticleTask {
     private final Vector rotational = new Vector();
 
 
-    public EntityVortexParticleTask(String effectName, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, boolean spawnWhileMoving) {
+    public EntityVortexParticleTask(String effectName, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior) {
         this.effectName = effectName;
         this.particle = particle;
         this.radius = radius;
@@ -53,12 +54,12 @@ public class EntityVortexParticleTask implements EntityParticleTask {
         this.offset = offset;
         this.target = target;
         this.period = Math.max(1, period);
-        this.spawnWhileMoving = spawnWhileMoving;
+        this.spawnBehavior = spawnBehavior;
     }
 
     @Override
     public EntityParticleTask newInstance() {
-        return new EntityVortexParticleTask(effectName, particle, radius, height, speed, particleCount, options, conditionManager, collisionEnabled, offset, target, period, this.spawnWhileMoving);
+        return new EntityVortexParticleTask(effectName, particle, radius, height, speed, particleCount, options, conditionManager, collisionEnabled, offset, target, period, this.spawnBehavior);
     }
 
     @Override
@@ -68,8 +69,16 @@ public class EntityVortexParticleTask implements EntityParticleTask {
 
     @Override
     public void tick(Entity entity) {
-        if (!spawnWhileMoving && entity.getVelocity().setY(0).lengthSquared() > 0.01) {
-            return;
+        boolean isMoving = entity.getVelocity().setY(0).lengthSquared() > 0.01;
+        switch (spawnBehavior) {
+            case STANDING_STILL:
+                if (isMoving) return;
+                break;
+            case MOVING:
+                if (!isMoving) return;
+                break;
+            case ALWAYS:
+                break;
         }
 
         tickCounter++;
@@ -152,13 +161,18 @@ public class EntityVortexParticleTask implements EntityParticleTask {
 
     @Override
     public String getDebugInfo() {
+        String targetNameInfo = "";
+        if (target.getNames() != null && !target.getNames().isEmpty()) {
+            targetNameInfo = " (" + String.join(", ", target.getNames()) + ")";
+        }
+
         return ChatColor.AQUA + "Type: " + ChatColor.WHITE + "ENTITY_ANIMATED" + "\n" +
                 ChatColor.AQUA + "Shape: " + ChatColor.WHITE + "VORTEX" + "\n" +
                 ChatColor.AQUA + "Radius: " + ChatColor.WHITE + radius + "\n" +
                 ChatColor.AQUA + "Height: " + ChatColor.WHITE + height + "\n" +
                 ChatColor.AQUA + "Speed: " + ChatColor.WHITE + speed + "\n" +
-                ChatColor.AQUA + "Target: " + ChatColor.WHITE + target.getTargetType().name() +
-                (target.getName() != null ? " (" + target.getName() + ")" : "") +
+                ChatColor.AQUA + "Target: " + ChatColor.WHITE + target.getTargetType().name() + targetNameInfo +
                 (target.getEntityType() != null ? " (" + target.getEntityType().name() + ")" : "");
     }
 }
+

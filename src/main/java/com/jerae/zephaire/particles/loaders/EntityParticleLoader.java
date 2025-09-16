@@ -1,8 +1,8 @@
 package com.jerae.zephaire.particles.loaders;
 
 import com.jerae.zephaire.Zephaire;
-import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.data.EntityTarget;
+import com.jerae.zephaire.particles.data.SpawnBehavior;
 import com.jerae.zephaire.particles.factories.EntityParticleFactory;
 import com.jerae.zephaire.particles.managers.EntityParticleManager;
 import com.jerae.zephaire.particles.managers.FactoryManager;
@@ -11,11 +11,10 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.util.Vector;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
-/**
- * Handles the loading and instantiation of entity-targeted particle effects.
- */
 public class EntityParticleLoader {
 
     private final Zephaire plugin;
@@ -47,7 +46,6 @@ public class EntityParticleLoader {
             return;
         }
 
-        // Parse appearance offset and period from the main particle config
         Vector offset = new Vector(
                 config.getDouble("offset-x", 0),
                 config.getDouble("offset-y", 0),
@@ -55,9 +53,16 @@ public class EntityParticleLoader {
         );
         int period = config.getInt("period", 1);
 
+        SpawnBehavior spawnBehavior = SpawnBehavior.ALWAYS;
+        if (config.contains("spawn-condition")) {
+            try {
+                spawnBehavior = SpawnBehavior.valueOf(config.getString("spawn-condition", "ALWAYS").toUpperCase());
+            } catch (IllegalArgumentException e) {
+                plugin.getLogger().warning("Invalid spawn-condition in '" + key + "'. Using ALWAYS.");
+            }
+        }
 
-        // Conditions for entity particles are currently not supported but could be added here.
-        EntityParticleTask task = factoryOpt.get().create(key, config, target, null, offset, period);
+        EntityParticleTask task = factoryOpt.get().create(key, config, target, null, offset, period, spawnBehavior);
 
         if (task != null) {
             entityParticleManager.addEffectTemplate(key, task);
@@ -68,21 +73,24 @@ public class EntityParticleLoader {
         if (targetSection == null) return null;
 
         String typeStr = targetSection.getString("type", "").toUpperCase();
-        String name = targetSection.getString("name");
+        List<String> names = null;
+        if (targetSection.isList("names")) {
+            names = targetSection.getStringList("names");
+        } else if (targetSection.isString("name")) {
+            names = Collections.singletonList(targetSection.getString("name"));
+        }
+
         String tag = targetSection.getString("tag");
 
         EntityTarget.TargetType targetType;
         EntityType entityType = null;
 
         switch (typeStr) {
-            case "ALL_PLAYERS":
-                targetType = EntityTarget.TargetType.ALL_PLAYERS;
-                break;
             case "ALL_HOSTILE_MOBS":
                 targetType = EntityTarget.TargetType.ALL_HOSTILE_MOBS;
                 break;
             case "PLAYER":
-                targetType = name != null ? EntityTarget.TargetType.SPECIFIC_PLAYER : EntityTarget.TargetType.SPECIFIC_TYPE;
+                targetType = (names != null && !names.isEmpty()) ? EntityTarget.TargetType.SPECIFIC_PLAYERS : EntityTarget.TargetType.SPECIFIC_TYPE;
                 entityType = EntityType.PLAYER;
                 break;
             default:
@@ -95,6 +103,7 @@ public class EntityParticleLoader {
                 }
         }
 
-        return new EntityTarget(targetType, entityType, name, tag);
+        return new EntityTarget(targetType, entityType, names, tag);
     }
 }
+

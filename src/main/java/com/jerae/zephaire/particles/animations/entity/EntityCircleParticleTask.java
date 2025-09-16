@@ -5,6 +5,7 @@ import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.data.EntityTarget;
+import com.jerae.zephaire.particles.data.SpawnBehavior;
 import com.jerae.zephaire.particles.util.VectorUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -26,7 +27,7 @@ public class EntityCircleParticleTask implements EntityParticleTask {
     private final Vector offset;
     private final EntityTarget target;
     private final int period;
-    private final boolean spawnWhileMoving;
+    private final SpawnBehavior spawnBehavior;
 
     private double angle = 0;
     private int tickCounter = 0;
@@ -37,7 +38,7 @@ public class EntityCircleParticleTask implements EntityParticleTask {
     private final Vector rotatedPos = new Vector();
 
 
-    public EntityCircleParticleTask(String effectName, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, boolean spawnWhileMoving) {
+    public EntityCircleParticleTask(String effectName, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior) {
         this.effectName = effectName;
         this.particle = particle;
         this.radius = radius;
@@ -51,7 +52,7 @@ public class EntityCircleParticleTask implements EntityParticleTask {
         this.offset = offset;
         this.target = target;
         this.period = Math.max(1, period);
-        this.spawnWhileMoving = spawnWhileMoving;
+        this.spawnBehavior = spawnBehavior;
         this.spawnLocation = new Location(null, 0, 0, 0); // World will be set dynamically
         this.relativePos = new Vector();
     }
@@ -61,7 +62,7 @@ public class EntityCircleParticleTask implements EntityParticleTask {
         return new EntityCircleParticleTask(
                 this.effectName, this.particle, this.radius, this.speed,
                 this.particleCount, this.options, this.pitch, this.yaw,
-                this.conditionManager, this.collisionEnabled, this.offset, this.target, this.period, this.spawnWhileMoving
+                this.conditionManager, this.collisionEnabled, this.offset, this.target, this.period, this.spawnBehavior
         );
     }
 
@@ -72,8 +73,17 @@ public class EntityCircleParticleTask implements EntityParticleTask {
 
     @Override
     public void tick(Entity entity) {
-        if (!spawnWhileMoving && entity.getVelocity().setY(0).lengthSquared() > 0.01) {
-            return;
+        boolean isMoving = entity.getVelocity().setY(0).lengthSquared() > 0.01;
+
+        switch (spawnBehavior) {
+            case STANDING_STILL:
+                if (isMoving) return;
+                break;
+            case MOVING:
+                if (!isMoving) return;
+                break;
+            case ALWAYS:
+                break;
         }
 
         tickCounter++;
@@ -120,12 +130,17 @@ public class EntityCircleParticleTask implements EntityParticleTask {
 
     @Override
     public String getDebugInfo() {
+        String targetNameInfo = "";
+        if (target.getNames() != null && !target.getNames().isEmpty()) {
+            targetNameInfo = " (" + String.join(", ", target.getNames()) + ")";
+        }
+
         return ChatColor.AQUA + "Type: " + ChatColor.WHITE + "ENTITY_ANIMATED" + "\n" +
                 ChatColor.AQUA + "Shape: " + ChatColor.WHITE + "CIRCLE" + "\n" +
                 ChatColor.AQUA + "Radius: " + ChatColor.WHITE + radius + "\n" +
                 ChatColor.AQUA + "Speed: " + ChatColor.WHITE + speed + "\n" +
-                ChatColor.AQUA + "Target: " + ChatColor.WHITE + target.getTargetType().name() +
-                (target.getName() != null ? " (" + target.getName() + ")" : "") +
+                ChatColor.AQUA + "Target: " + ChatColor.WHITE + target.getTargetType().name() + targetNameInfo +
                 (target.getEntityType() != null ? " (" + target.getEntityType().name() + ")" : "");
     }
 }
+

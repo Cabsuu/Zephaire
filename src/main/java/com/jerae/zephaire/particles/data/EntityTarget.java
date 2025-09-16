@@ -1,25 +1,25 @@
 package com.jerae.zephaire.particles.data;
 
 import org.bukkit.entity.EntityType;
+import java.util.List;
 
 public class EntityTarget {
 
     public enum TargetType {
-        ALL_PLAYERS,
-        SPECIFIC_PLAYER,
+        SPECIFIC_PLAYERS,
         ALL_HOSTILE_MOBS,
         SPECIFIC_TYPE
     }
 
     private final TargetType targetType;
     private final EntityType entityType;
-    private final String name;
+    private final List<String> names;
     private final String tag;
 
-    public EntityTarget(TargetType targetType, EntityType entityType, String name, String tag) {
+    public EntityTarget(TargetType targetType, EntityType entityType, List<String> names, String tag) {
         this.targetType = targetType;
         this.entityType = entityType;
-        this.name = name;
+        this.names = names;
         this.tag = tag;
     }
 
@@ -31,8 +31,8 @@ public class EntityTarget {
         return entityType;
     }
 
-    public String getName() {
-        return name;
+    public List<String> getNames() {
+        return names;
     }
 
     public String getTag() {

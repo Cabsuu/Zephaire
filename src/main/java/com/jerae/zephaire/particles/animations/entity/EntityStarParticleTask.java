@@ -5,6 +5,8 @@ import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.data.EntityTarget;
+import com.jerae.zephaire.particles.data.SpawnBehavior;
+import com.jerae.zephaire.particles.util.ParticleDrawingUtils;
 import com.jerae.zephaire.particles.util.VectorUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -32,7 +34,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
     private final double height;
     private final double verticalSpeed;
     private final boolean bounce;
-    private final boolean spawnWhileMoving;
+    private final SpawnBehavior spawnBehavior;
 
     private double rotationAngle = 0;
     private int tickCounter = 0;
@@ -46,7 +48,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
     private final Vector currentLinePoint = new Vector();
     private final Location particleLoc;
 
-    public EntityStarParticleTask(String effectName, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, double height, double verticalSpeed, boolean bounce, boolean spawnWhileMoving) {
+    public EntityStarParticleTask(String effectName, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, double height, double verticalSpeed, boolean bounce, SpawnBehavior spawnBehavior) {
         this.effectName = effectName;
         this.particle = particle;
         this.points = Math.max(2, points);
@@ -65,7 +67,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
         this.height = height;
         this.verticalSpeed = verticalSpeed;
         this.bounce = bounce;
-        this.spawnWhileMoving = spawnWhileMoving;
+        this.spawnBehavior = spawnBehavior;
         this.vertices = new Vector[this.points * 2];
         for (int i = 0; i < vertices.length; i++) {
             vertices[i] = new Vector();
@@ -75,7 +77,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
 
     @Override
     public EntityParticleTask newInstance() {
-        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, conditionManager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce, this.spawnWhileMoving);
+        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, conditionManager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce, this.spawnBehavior);
     }
 
     @Override
@@ -85,9 +87,19 @@ public class EntityStarParticleTask implements EntityParticleTask {
 
     @Override
     public void tick(Entity entity) {
-        if (!spawnWhileMoving && entity.getVelocity().setY(0).lengthSquared() > 0.01) {
-            return;
+        boolean isMoving = entity.getVelocity().setY(0).lengthSquared() > 0.01;
+
+        switch (spawnBehavior) {
+            case STANDING_STILL:
+                if (isMoving) return;
+                break;
+            case MOVING:
+                if (!isMoving) return;
+                break;
+            case ALWAYS:
+                break;
         }
+
 
         tickCounter++;
         if (tickCounter < period) {
@@ -170,13 +182,18 @@ public class EntityStarParticleTask implements EntityParticleTask {
 
     @Override
     public String getDebugInfo() {
+        String targetNameInfo = "";
+        if (target.getNames() != null && !target.getNames().isEmpty()) {
+            targetNameInfo = " (" + String.join(", ", target.getNames()) + ")";
+        }
+
         return ChatColor.AQUA + "Type: " + ChatColor.WHITE + "ENTITY_ANIMATED" + "\n" +
                 ChatColor.AQUA + "Shape: " + ChatColor.WHITE + "STAR" + "\n" +
                 ChatColor.AQUA + "Radii: " + ChatColor.WHITE + String.format("Outer:%.1f, Inner:%.1f", outerRadius, innerRadius) + "\n" +
                 ChatColor.AQUA + "Rotation Speed: " + ChatColor.WHITE + speed + "\n" +
                 ChatColor.AQUA + "Height: " + ChatColor.WHITE + height + "\n" +
-                ChatColor.AQUA + "Target: " + ChatColor.WHITE + target.getTargetType().name() +
-                (target.getName() != null ? " (" + target.getName() + ")" : "") +
+                ChatColor.AQUA + "Target: " + ChatColor.WHITE + target.getTargetType().name() + targetNameInfo +
                 (target.getEntityType() != null ? " (" + target.getEntityType().name() + ")" : "");
     }
 }
+

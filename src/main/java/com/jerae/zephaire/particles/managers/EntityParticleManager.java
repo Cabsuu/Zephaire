@@ -49,10 +49,7 @@ public class EntityParticleManager {
                 tick();
             }
         };
-        // ------------------- THE FIX IS ON THIS LINE -------------------
-        // Switched from runTaskTimerAsynchronously to runTaskTimer to ensure thread safety
         animationTask.runTaskTimer(plugin, 0L, 1L);
-        // -----------------------------------------------------------------
     }
 
     public void addEffectTemplate(String name, EntityParticleTask task) {
@@ -73,13 +70,8 @@ public class EntityParticleManager {
             boolean shouldApply = false;
 
             switch (target.getTargetType()) {
-                case ALL_PLAYERS:
-                    if (entity instanceof Player) {
-                        shouldApply = true;
-                    }
-                    break;
-                case SPECIFIC_PLAYER:
-                    if (entity instanceof Player && entity.getName().equalsIgnoreCase(target.getName())) {
+                case SPECIFIC_PLAYERS:
+                    if (entity instanceof Player && target.getNames() != null && target.getNames().stream().anyMatch(name -> name.equalsIgnoreCase(entity.getName()))) {
                         shouldApply = true;
                     }
                     break;
@@ -95,8 +87,6 @@ public class EntityParticleManager {
                     break;
             }
 
-            // If a tag is specified, the entity must have it for the effect to apply.
-            // This acts as an additional filter on top of the type check.
             if (shouldApply && target.getTag() != null && !target.getTag().isEmpty()) {
                 if (!entity.getScoreboardTags().contains(target.getTag())) {
                     shouldApply = false;

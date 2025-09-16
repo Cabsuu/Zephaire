@@ -4,6 +4,7 @@ import com.jerae.zephaire.particles.animations.entity.EntityCircleParticleTask;
 import com.jerae.zephaire.particles.animations.entity.EntityParticleTask;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.data.EntityTarget;
+import com.jerae.zephaire.particles.data.SpawnBehavior;
 import com.jerae.zephaire.particles.factories.EntityParticleFactory;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.util.ConfigValidator;
@@ -14,7 +15,7 @@ import org.bukkit.util.Vector;
 
 public class EntityCircleParticleFactory implements EntityParticleFactory {
     @Override
-    public EntityParticleTask create(String effectName, ConfigurationSection section, EntityTarget target, ConditionManager manager, Vector offset, int period) {
+    public EntityParticleTask create(String effectName, ConfigurationSection section, EntityTarget target, ConditionManager manager, Vector offset, int period, SpawnBehavior spawnBehavior) {
         Particle particle = ConfigValidator.getParticleType(section, "type", "FLAME");
         int particleCount = ConfigValidator.getPositiveInt(section, "particle-count", 20);
         double radius = ConfigValidator.getPositiveDouble(section, "radius", 1.0);
@@ -23,8 +24,8 @@ public class EntityCircleParticleFactory implements EntityParticleFactory {
         double yaw = section.getDouble("yaw", 0.0);
         Object options = ParticleUtils.parseParticleOptions(particle, section.getConfigurationSection("options"));
         boolean collisionEnabled = CollisionManager.shouldCollide(section);
-        boolean spawnWhileMoving = section.getBoolean("spawn-while-moving", true);
 
-        return new EntityCircleParticleTask(effectName, particle, radius, speed, particleCount, options, pitch, yaw, manager, collisionEnabled, offset, target, period, spawnWhileMoving);
+        return new EntityCircleParticleTask(effectName, particle, radius, speed, particleCount, options, pitch, yaw, manager, collisionEnabled, offset, target, period, spawnBehavior);
     }
 }
+
