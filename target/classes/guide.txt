@@ -35,6 +35,21 @@ static-particles:
       to-color: "#000000" # (Default if 'to-color' is omitted)
       size: 1.0
 
+  entity-effect-example:
+    type: 'ENTITY_EFFECT'
+    options:
+      color: '#00FF00' # A green color for the effect.
+
+  item-particle-example:
+    type: 'ITEM'
+    options:
+      material: "DIAMOND" # The material to show as a particle.
+
+  block-particle-example:
+    type: 'BLOCK' # Can be BLOCK_MARKER, DUST_PILLAR, BLOCK_CRUMBLE, FALLING_DUST, etc.
+    options:
+      material: "GLASS" # The block material to show as a particle.
+
   static_line-name:
     shape: 'STATIC_LINE'
     type: 'FLAME'
