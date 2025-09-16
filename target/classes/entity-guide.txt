@@ -1,0 +1,60 @@
+# Here's a guide how to configure this plugin at 'entity-particles.yml'.
+
+# -------------------------------------------------------------------
+# ENTITY PARTICLES
+# These particles redraw themselves periodically at the location of the entities.
+# This can be considered as Entity cosmetics for best gameplay.
+# -------------------------------------------------------------------
+#
+# 'target' section guide:
+#   type: Can be PLAYER, ZOMBIE, SKELETON, CREEPER, etc. (any valid EntityType name)
+#         or use special types: ALL_PLAYERS, ALL_HOSTILE_MOBS.
+#   name: (Optional) For PLAYER type, you can specify a single player name. Without writing a player name targets all players.
+#   names: (Optional) For PLAYER type, you can specify a list of player names.
+#
+# 'offset' section guide:
+#   x, y, z: (Optional) Offsets the particle effect from the entity's location.
+#            'y' is useful for raising effects above the entity's feet.
+#
+# 'spawn-condition' guide:
+#   ALWAYS: The particle will always spawn.
+#   STANDING_STILL: The particle will only spawn when the entity is not moving.
+#   MOVING: The particle will only spawn when the entity is moving.
+#
+
+entity-particles:
+  entity-circle:
+    target:
+      type: PLAYER
+      name: "Notch"  # Example for a specific player
+      # or (Can't write both 'name' and 'names')
+      names: ["Player1", "Player2"] # Example for multiple players
+    shape: 'CIRCLE'
+    type: 'FLAME'
+    radius: 1.5
+    particle-count: 20
+    speed: 0.1
+    offset-y: 1.0
+    spawn-condition: ALWAYS
+
+  entity-vortex:
+    target:
+      type: ZOMBIE
+      tag: tag-name # Optional, for entities with NBT Tag
+    shape: 'VORTEX'
+    type: 'FLAME'
+    radius: 0.8
+    height: 1.5
+    speed: 0.3
+    particle-count: 10
+
+  entity-star:
+    target:
+      type: ALL_HOSTILE_MOBS
+    shape: 'STAR'
+    type: 'FLAME'
+    points: 5
+    outer-radius: 1.0
+    inner-radius: 0.5
+    speed: 0.02
+    density: 5

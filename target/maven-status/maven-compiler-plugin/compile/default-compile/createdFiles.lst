@@ -15,6 +15,7 @@ com\jerae\zephaire\particles\managers\AnimationManager.class
 com\jerae\zephaire\particles\factories\animated\VortexParticleFactory.class
 com\jerae\zephaire\particles\util\ParticleUtils.class
 com\jerae\zephaire\particles\animations\decorator\SoundDecorator.class
+com\jerae\zephaire\particles\animations\entity\EntityVortexParticleTask$1.class
 com\jerae\zephaire\particles\factories\AnimatedParticleFactory.class
 com\jerae\zephaire\particles\factories\conditions\TimeConditionFactory.class
 com\jerae\zephaire\particles\factories\conditions\WeatherConditionFactory.class
@@ -54,6 +55,7 @@ com\jerae\zephaire\commands\subcommands\ToggleCommand.class
 com\jerae\zephaire\particles\conditions\WeatherCondition.class
 com\jerae\zephaire\particles\factories\decorators\MultiColorTransitionDecoratorFactory.class
 com\jerae\zephaire\particles\loaders\EntityParticleLoader.class
+com\jerae\zephaire\particles\animations\entity\EntityStarParticleTask$1.class
 com\jerae\zephaire\particles\animations\StarParticleTask.class
 com\jerae\zephaire\particles\managers\EntityParticleManager$1.class
 com\jerae\zephaire\particles\factories\statics\RandomBurstRegionFactory.class
@@ -65,6 +67,7 @@ com\jerae\zephaire\particles\animations\MovingStarParticleTask.class
 com\jerae\zephaire\particles\ParticleConfigLoader.class
 com\jerae\zephaire\particles\statics\StaticCuboidParticleTask.class
 com\jerae\zephaire\particles\factories\statics\StaticPointFactory.class
+com\jerae\zephaire\particles\data\SpawnBehavior.class
 com\jerae\zephaire\commands\ZephaireCommand.class
 com\jerae\zephaire\data\DataManager.class
 com\jerae\zephaire\particles\conditions\TimeCondition.class
@@ -87,6 +90,7 @@ com\jerae\zephaire\commands\subcommands\ListCommand.class
 com\jerae\zephaire\particles\factories\statics\StaticLineFactory.class
 com\jerae\zephaire\particles\factories\animated\MovingStarParticleFactory.class
 com\jerae\zephaire\particles\Debuggable.class
+com\jerae\zephaire\particles\animations\entity\EntityCircleParticleTask$1.class
 com\jerae\zephaire\commands\subcommands\ReloadCommand.class
 com\jerae\zephaire\particles\conditions\DelayConditionDecorator.class
 com\jerae\zephaire\particles\animations\HelixParticleTask.class

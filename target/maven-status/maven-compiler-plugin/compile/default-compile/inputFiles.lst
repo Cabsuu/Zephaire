@@ -36,6 +36,7 @@ H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zep
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\conditions\TimerCondition.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\conditions\WeatherCondition.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\data\EntityTarget.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\data\SpawnBehavior.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\Debuggable.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\AbstractParticleFactory.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\animated\AbstractAnimatedParticleFactory.java
