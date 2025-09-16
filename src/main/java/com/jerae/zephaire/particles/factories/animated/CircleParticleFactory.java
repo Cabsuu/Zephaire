@@ -1,31 +1,59 @@
 package com.jerae.zephaire.particles.factories.animated;
 
+import com.jerae.zephaire.Zephaire;
 import com.jerae.zephaire.particles.animations.AnimatedParticle;
 import com.jerae.zephaire.particles.animations.CircleParticleTask;
-import com.jerae.zephaire.particles.conditions.ConditionManager;
-import com.jerae.zephaire.particles.util.ConfigValidator;
+import com.jerae.zephaire.particles.animations.visual.IParticleRenderer;
 import org.bukkit.Location;
-import org.bukkit.Particle;
-import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class CircleParticleFactory extends AbstractAnimatedParticleFactory {
+
+    public CircleParticleFactory(Zephaire plugin) {
+        super(plugin);
+    }
+
     @Override
-    protected AnimatedParticle createParticleTask(ConfigurationSection section, ConditionManager manager, World world) {
-        Location center = parseLocation(world, section, "center");
-        if (center == null) {
+    public AnimatedParticle createParticle(ConfigurationSection config) {
+        // Temporarily moved validation logic inside this class to resolve compiler issues.
+        if (!validateRequiredKeys(config, "center", "radius", "particle-count", "speed")) {
             return null;
         }
 
-        Particle particle = parseParticle(section);
-        int particleCount = ConfigValidator.getPositiveInt(section, "particle-count", 20);
-        double radius = ConfigValidator.getPositiveDouble(section, "radius", 1.0);
-        double speed = section.getDouble("speed", 0.1);
-        double pitch = section.getDouble("pitch", 0.0);
-        double yaw = section.getDouble("yaw", 0.0);
-        Object options = parseOptions(particle, section);
-        boolean collisionEnabled = parseCollision(section);
+        Location center = config.getLocation("center");
+        if (center == null) {
+            plugin.getLogger().warning("Invalid center location for circle particle in config section: " + config.getName());
+            return null;
+        }
 
-        return new CircleParticleTask(center, particle, radius, speed, particleCount, options, pitch, yaw, manager, collisionEnabled);
+        IParticleRenderer renderer = createRenderer(config);
+        if (renderer == null) {
+            // Error already logged by createRenderer
+            return null;
+        }
+
+        double radius = config.getDouble("radius");
+        int particleCount = config.getInt("particle-count");
+        double speed = config.getDouble("speed");
+        long period = config.getLong("period", 1L);
+        double pitch = config.getDouble("pitch", 0.0);
+        double yaw = config.getDouble("yaw", 0.0);
+
+        CircleParticleTask task = new CircleParticleTask(renderer, center, radius, particleCount, speed, pitch, yaw);
+        return new AnimatedParticle(task, period);
+    }
+
+    /**
+     * Internal validation method to bypass external dependency issues.
+     */
+    private boolean validateRequiredKeys(ConfigurationSection config, String... requiredKeys) {
+        for (String key : requiredKeys) {
+            if (!config.contains(key, true)) {
+                plugin.getLogger().warning("Missing required key '" + key + "' in config section: " + config.getName());
+                return false;
+            }
+        }
+        return true;
     }
 }
+

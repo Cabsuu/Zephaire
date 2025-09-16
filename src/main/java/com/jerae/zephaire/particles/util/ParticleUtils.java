@@ -1,107 +1,99 @@
 package com.jerae.zephaire.particles.util;
 
 import com.jerae.zephaire.Zephaire;
-import org.bukkit.*;
-import org.bukkit.block.data.BlockData;
+import com.jerae.zephaire.particles.ParticleSpawnData;
+import org.bukkit.Color;
+import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Map;
 import java.util.logging.Level;
 
-/**
- * A utility class for parsing particle-related data from configurations.
- */
-public final class ParticleUtils {
+public class ParticleUtils {
 
-    private static final Zephaire plugin = JavaPlugin.getPlugin(Zephaire.class);
+    /**
+     * Creates a ParticleSpawnData object from a configuration section.
+     * This method parses particle types and their specific options (like color or material).
+     *
+     * @param config The configuration section for the particle.
+     * @return A new ParticleSpawnData object, or null if the particle type is invalid.
+     */
+    public static ParticleSpawnData createParticleSpawnData(ConfigurationSection config) {
+        String particleName = config.getString("type", "FLAME").toUpperCase();
+        Particle particle;
 
-    public static Location parseLocation(World world, ConfigurationSection section) {
-        if (section == null) return new Location(world, 0, 0, 0);
-        return new Location(world, section.getDouble("x"), section.getDouble("y"), section.getDouble("z"));
-    }
-
-    public static Location parseLocation(World defaultWorld, Map<?, ?> map) {
-        if (map == null) return new Location(defaultWorld, 0, 0, 0);
-
-        World world = defaultWorld;
-        if (map.containsKey("world")) {
-            World specifiedWorld = Bukkit.getWorld((String) map.get("world"));
-            if (specifiedWorld != null) world = specifiedWorld;
+        try {
+            particle = Particle.valueOf(particleName);
+        } catch (IllegalArgumentException e) {
+            Zephaire.getPlugin(Zephaire.class).getLogger().warning("Invalid particle type: '" + particleName + "' in config section: " + config.getName());
+            return null;
         }
 
-        double x = map.containsKey("x") ? ((Number) map.get("x")).doubleValue() : 0;
-        double y = map.containsKey("y") ? ((Number) map.get("y")).doubleValue() : 0;
-        double z = map.containsKey("z") ? ((Number) map.get("z")).doubleValue() : 0;
+        int count = config.getInt("count", 1);
+        double speed = config.getDouble("speed", 0);
+        Object data = null;
 
-        return new Location(world, x, y, z);
+        ConfigurationSection options = config.getConfigurationSection("options");
+        if (options != null) {
+            if (particle.getDataType().equals(Particle.DustOptions.class)) {
+                String colorStr = options.getString("color", "#FFFFFF");
+                float size = (float) options.getDouble("size", 1.0);
+                Color color = hexToColor(colorStr);
+                data = new Particle.DustOptions(color, size);
+            } else if (particle.getDataType().equals(Particle.DustTransition.class)) {
+                String fromColorStr = options.getString("from-color", "#FFFFFF");
+                String toColorStr = options.getString("to-color", "#000000");
+                float size = (float) options.getDouble("size", 1.0);
+                Color fromColor = hexToColor(fromColorStr);
+                Color toColor = hexToColor(toColorStr);
+                data = new Particle.DustTransition(fromColor, toColor, size);
+            } else if (particle.getDataType().equals(ItemStack.class)) {
+                String materialName = options.getString("material");
+                if (materialName != null) {
+                    try {
+                        Material material = Material.valueOf(materialName.toUpperCase());
+                        data = new ItemStack(material);
+                    } catch (IllegalArgumentException e) {
+                        Zephaire.getPlugin(Zephaire.class).getLogger().warning("Invalid material for ITEM particle: '" + materialName + "' in config section: " + config.getName());
+                    }
+                }
+            } else if (particle.getDataType().equals(org.bukkit.block.data.BlockData.class)) {
+                String materialName = options.getString("material");
+                if (materialName != null) {
+                    try {
+                        Material material = Material.valueOf(materialName.toUpperCase());
+                        if (material.isBlock()) {
+                            data = material.createBlockData();
+                        } else {
+                            Zephaire.getPlugin(Zephaire.class).getLogger().warning("Material '" + materialName + "' is not a block for BLOCK particle in config section: " + config.getName());
+                        }
+                    } catch (IllegalArgumentException e) {
+                        Zephaire.getPlugin(Zephaire.class).getLogger().warning("Invalid material for BLOCK particle: '" + materialName + "' in config section: " + config.getName());
+                    }
+                }
+            }
+        }
+
+        return new ParticleSpawnData(particle, count, speed, data);
     }
 
-    public static Color hexToColor(String hex) {
-        hex = hex.startsWith("#") ? hex.substring(1) : hex;
+    /**
+     * Converts a hex color string (e.g., "#FF0000") to a Bukkit Color object.
+     *
+     * @param hex The hex color string.
+     * @return The corresponding Bukkit Color object, or white if invalid.
+     */
+    private static Color hexToColor(String hex) {
+        hex = hex.replace("#", "");
         try {
             int r = Integer.valueOf(hex.substring(0, 2), 16);
             int g = Integer.valueOf(hex.substring(2, 4), 16);
             int b = Integer.valueOf(hex.substring(4, 6), 16);
             return Color.fromRGB(r, g, b);
-        } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-            plugin.getLogger().warning("Invalid hex color format: '" + hex + "'. Using WHITE instead.");
+        } catch (Exception e) {
             return Color.WHITE;
         }
-    }
-
-    public static Object parseParticleOptions(Particle particle, ConfigurationSection optionsSection) {
-        if (optionsSection == null) return null;
-        if (particle == Particle.DUST) {
-            Color color = hexToColor(optionsSection.getString("color", "FFFFFF"));
-            float size = (float) optionsSection.getDouble("size", 1.0);
-            return new Particle.DustOptions(color, size);
-        } else if (particle == Particle.DUST_COLOR_TRANSITION) {
-            Color from = hexToColor(optionsSection.getString("from-color", "FFFFFF"));
-            Color to = hexToColor(optionsSection.getString("to-color", "000000"));
-            float size = (float) optionsSection.getDouble("size", 1.0);
-            return new Particle.DustTransition(from, to, size);
-        } else if (particle == Particle.ITEM) {
-            String materialName = optionsSection.getString("material", "STONE").toUpperCase();
-            try {
-                Material material = Material.valueOf(materialName);
-                return new ItemStack(material);
-            } catch (IllegalArgumentException e) {
-                plugin.getLogger().warning("Invalid material '" + materialName + "' in particle options for '" + optionsSection.getParent().getName() + "'. Using STONE instead.");
-                return new ItemStack(Material.STONE);
-            }
-        } else if (particle == Particle.BLOCK ||
-                particle == Particle.BLOCK_CRUMBLE ||
-                particle == Particle.BLOCK_MARKER ||
-                particle == Particle.DUST_PILLAR ||
-                particle == Particle.FALLING_DUST) {
-            String materialName = optionsSection.getString("material", "STONE").toUpperCase();
-            try {
-                Material material = Material.valueOf(materialName);
-                if (!material.isBlock()) {
-                    plugin.getLogger().warning("Invalid material '" + materialName + "' in particle options for '" + optionsSection.getParent().getName() + "'. Material must be a block. Using STONE instead.");
-                    return Material.STONE.createBlockData();
-                }
-                return material.createBlockData();
-            } catch (IllegalArgumentException e) {
-                plugin.getLogger().warning("Invalid material '" + materialName + "' in particle options for '" + optionsSection.getParent().getName() + "'. Using STONE instead.");
-                return Material.STONE.createBlockData();
-            }
-        } else if (particle == Particle.ENTITY_EFFECT) {
-            // ENTITY_EFFECT uses a Color object for its data
-            return hexToColor(optionsSection.getString("color", "FFFFFF"));
-        }
-        return null;
-    }
-
-    /**
-     * Formats a boolean value into a colored string for debug output.
-     * @param value The boolean value.
-     * @return A green "true" or red "false" string.
-     */
-    public static String formatBoolean(boolean value) {
-        return value ? ChatColor.GREEN + "true" : ChatColor.RED + "false";
     }
 }
 
