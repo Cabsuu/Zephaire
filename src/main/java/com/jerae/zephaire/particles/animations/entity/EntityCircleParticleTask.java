@@ -26,6 +26,7 @@ public class EntityCircleParticleTask implements EntityParticleTask {
     private final Vector offset;
     private final EntityTarget target;
     private final int period;
+    private final boolean spawnWhileMoving;
 
     private double angle = 0;
     private int tickCounter = 0;
@@ -36,7 +37,7 @@ public class EntityCircleParticleTask implements EntityParticleTask {
     private final Vector rotatedPos = new Vector();
 
 
-    public EntityCircleParticleTask(String effectName, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period) {
+    public EntityCircleParticleTask(String effectName, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, boolean spawnWhileMoving) {
         this.effectName = effectName;
         this.particle = particle;
         this.radius = radius;
@@ -50,6 +51,7 @@ public class EntityCircleParticleTask implements EntityParticleTask {
         this.offset = offset;
         this.target = target;
         this.period = Math.max(1, period);
+        this.spawnWhileMoving = spawnWhileMoving;
         this.spawnLocation = new Location(null, 0, 0, 0); // World will be set dynamically
         this.relativePos = new Vector();
     }
@@ -59,7 +61,7 @@ public class EntityCircleParticleTask implements EntityParticleTask {
         return new EntityCircleParticleTask(
                 this.effectName, this.particle, this.radius, this.speed,
                 this.particleCount, this.options, this.pitch, this.yaw,
-                this.conditionManager, this.collisionEnabled, this.offset, this.target, this.period
+                this.conditionManager, this.collisionEnabled, this.offset, this.target, this.period, this.spawnWhileMoving
         );
     }
 
@@ -70,6 +72,10 @@ public class EntityCircleParticleTask implements EntityParticleTask {
 
     @Override
     public void tick(Entity entity) {
+        if (!spawnWhileMoving && entity.getVelocity().setY(0).lengthSquared() > 0.01) {
+            return;
+        }
+
         tickCounter++;
         if (tickCounter < period) {
             return;

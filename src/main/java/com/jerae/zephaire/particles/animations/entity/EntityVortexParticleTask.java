@@ -24,6 +24,7 @@ public class EntityVortexParticleTask implements EntityParticleTask {
     private final Vector offset;
     private final EntityTarget target;
     private final int period;
+    private final boolean spawnWhileMoving;
 
     private final double radius;
     private final double height;
@@ -39,7 +40,7 @@ public class EntityVortexParticleTask implements EntityParticleTask {
     private final Vector rotational = new Vector();
 
 
-    public EntityVortexParticleTask(String effectName, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period) {
+    public EntityVortexParticleTask(String effectName, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, boolean spawnWhileMoving) {
         this.effectName = effectName;
         this.particle = particle;
         this.radius = radius;
@@ -52,11 +53,12 @@ public class EntityVortexParticleTask implements EntityParticleTask {
         this.offset = offset;
         this.target = target;
         this.period = Math.max(1, period);
+        this.spawnWhileMoving = spawnWhileMoving;
     }
 
     @Override
     public EntityParticleTask newInstance() {
-        return new EntityVortexParticleTask(effectName, particle, radius, height, speed, particleCount, options, conditionManager, collisionEnabled, offset, target, period);
+        return new EntityVortexParticleTask(effectName, particle, radius, height, speed, particleCount, options, conditionManager, collisionEnabled, offset, target, period, this.spawnWhileMoving);
     }
 
     @Override
@@ -66,6 +68,10 @@ public class EntityVortexParticleTask implements EntityParticleTask {
 
     @Override
     public void tick(Entity entity) {
+        if (!spawnWhileMoving && entity.getVelocity().setY(0).lengthSquared() > 0.01) {
+            return;
+        }
+
         tickCounter++;
         if (tickCounter < period) {
             return;

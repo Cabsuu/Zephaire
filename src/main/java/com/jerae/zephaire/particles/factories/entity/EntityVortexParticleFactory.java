@@ -22,7 +22,8 @@ public class EntityVortexParticleFactory implements EntityParticleFactory {
         int particleCount = ConfigValidator.getPositiveInt(section, "particle-count", 150);
         Object options = ParticleUtils.parseParticleOptions(particle, section.getConfigurationSection("options"));
         boolean collisionEnabled = CollisionManager.shouldCollide(section);
+        boolean spawnWhileMoving = section.getBoolean("spawn-while-moving", true);
 
-        return new EntityVortexParticleTask(effectName, particle, radius, height, speed, particleCount, options, manager, collisionEnabled, offset, target, period);
+        return new EntityVortexParticleTask(effectName, particle, radius, height, speed, particleCount, options, manager, collisionEnabled, offset, target, period, spawnWhileMoving);
     }
 }

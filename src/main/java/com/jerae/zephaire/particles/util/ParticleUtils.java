@@ -2,10 +2,13 @@ package com.jerae.zephaire.particles.util;
 
 import com.jerae.zephaire.Zephaire;
 import org.bukkit.*;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Map;
+import java.util.logging.Level;
 
 /**
  * A utility class for parsing particle-related data from configurations.
@@ -59,6 +62,35 @@ public final class ParticleUtils {
             Color to = hexToColor(optionsSection.getString("to-color", "000000"));
             float size = (float) optionsSection.getDouble("size", 1.0);
             return new Particle.DustTransition(from, to, size);
+        } else if (particle == Particle.ITEM) {
+            String materialName = optionsSection.getString("material", "STONE").toUpperCase();
+            try {
+                Material material = Material.valueOf(materialName);
+                return new ItemStack(material);
+            } catch (IllegalArgumentException e) {
+                plugin.getLogger().warning("Invalid material '" + materialName + "' in particle options for '" + optionsSection.getParent().getName() + "'. Using STONE instead.");
+                return new ItemStack(Material.STONE);
+            }
+        } else if (particle == Particle.BLOCK ||
+                particle == Particle.BLOCK_CRUMBLE ||
+                particle == Particle.BLOCK_MARKER ||
+                particle == Particle.DUST_PILLAR ||
+                particle == Particle.FALLING_DUST) {
+            String materialName = optionsSection.getString("material", "STONE").toUpperCase();
+            try {
+                Material material = Material.valueOf(materialName);
+                if (!material.isBlock()) {
+                    plugin.getLogger().warning("Invalid material '" + materialName + "' in particle options for '" + optionsSection.getParent().getName() + "'. Material must be a block. Using STONE instead.");
+                    return Material.STONE.createBlockData();
+                }
+                return material.createBlockData();
+            } catch (IllegalArgumentException e) {
+                plugin.getLogger().warning("Invalid material '" + materialName + "' in particle options for '" + optionsSection.getParent().getName() + "'. Using STONE instead.");
+                return Material.STONE.createBlockData();
+            }
+        } else if (particle == Particle.ENTITY_EFFECT) {
+            // ENTITY_EFFECT uses a Color object for its data
+            return hexToColor(optionsSection.getString("color", "FFFFFF"));
         }
         return null;
     }
@@ -72,3 +104,4 @@ public final class ParticleUtils {
         return value ? ChatColor.GREEN + "true" : ChatColor.RED + "false";
     }
 }
+

@@ -69,6 +69,7 @@ public class EntityParticleLoader {
 
         String typeStr = targetSection.getString("type", "").toUpperCase();
         String name = targetSection.getString("name");
+        String tag = targetSection.getString("tag");
 
         EntityTarget.TargetType targetType;
         EntityType entityType = null;
@@ -94,6 +95,6 @@ public class EntityParticleLoader {
                 }
         }
 
-        return new EntityTarget(targetType, entityType, name);
+        return new EntityTarget(targetType, entityType, name, tag);
     }
 }

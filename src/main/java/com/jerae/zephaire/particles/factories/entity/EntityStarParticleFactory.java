@@ -28,8 +28,8 @@ public class EntityStarParticleFactory implements EntityParticleFactory {
         boolean bounce = section.getBoolean("bounce", true);
         Object options = ParticleUtils.parseParticleOptions(particle, section.getConfigurationSection("options"));
         boolean collisionEnabled = CollisionManager.shouldCollide(section);
+        boolean spawnWhileMoving = section.getBoolean("spawn-while-moving", true);
 
-        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, manager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce);
+        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, manager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce, spawnWhileMoving);
     }
 }
-

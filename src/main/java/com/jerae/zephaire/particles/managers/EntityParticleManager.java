@@ -95,6 +95,15 @@ public class EntityParticleManager {
                     break;
             }
 
+            // If a tag is specified, the entity must have it for the effect to apply.
+            // This acts as an additional filter on top of the type check.
+            if (shouldApply && target.getTag() != null && !target.getTag().isEmpty()) {
+                if (!entity.getScoreboardTags().contains(target.getTag())) {
+                    shouldApply = false;
+                }
+            }
+
+
             if (shouldApply) {
                 Map<String, EntityParticleTask> entityEffects = activeEntityEffects.computeIfAbsent(entity.getUniqueId(), k -> new ConcurrentHashMap<>());
                 entityEffects.putIfAbsent(template.getEffectName(), template.newInstance());

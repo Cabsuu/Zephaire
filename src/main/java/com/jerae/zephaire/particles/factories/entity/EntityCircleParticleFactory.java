@@ -23,7 +23,8 @@ public class EntityCircleParticleFactory implements EntityParticleFactory {
         double yaw = section.getDouble("yaw", 0.0);
         Object options = ParticleUtils.parseParticleOptions(particle, section.getConfigurationSection("options"));
         boolean collisionEnabled = CollisionManager.shouldCollide(section);
+        boolean spawnWhileMoving = section.getBoolean("spawn-while-moving", true);
 
-        return new EntityCircleParticleTask(effectName, particle, radius, speed, particleCount, options, pitch, yaw, manager, collisionEnabled, offset, target, period);
+        return new EntityCircleParticleTask(effectName, particle, radius, speed, particleCount, options, pitch, yaw, manager, collisionEnabled, offset, target, period, spawnWhileMoving);
     }
 }
