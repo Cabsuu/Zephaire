@@ -12,6 +12,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 public class EntityStarParticleTask implements EntityParticleTask {
@@ -35,6 +36,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
     private final double verticalSpeed;
     private final boolean bounce;
     private final SpawnBehavior spawnBehavior;
+    private final int despawnTimer;
 
     private double rotationAngle = 0;
     private int tickCounter = 0;
@@ -48,7 +50,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
     private final Vector currentLinePoint = new Vector();
     private final Location particleLoc;
 
-    public EntityStarParticleTask(String effectName, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, double height, double verticalSpeed, boolean bounce, SpawnBehavior spawnBehavior) {
+    public EntityStarParticleTask(String effectName, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, double height, double verticalSpeed, boolean bounce, SpawnBehavior spawnBehavior, int despawnTimer) {
         this.effectName = effectName;
         this.particle = particle;
         this.points = Math.max(2, points);
@@ -68,6 +70,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
         this.verticalSpeed = verticalSpeed;
         this.bounce = bounce;
         this.spawnBehavior = spawnBehavior;
+        this.despawnTimer = despawnTimer;
         this.vertices = new Vector[this.points * 2];
         for (int i = 0; i < vertices.length; i++) {
             vertices[i] = new Vector();
@@ -77,7 +80,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
 
     @Override
     public EntityParticleTask newInstance() {
-        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, conditionManager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce, this.spawnBehavior);
+        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, conditionManager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce, this.spawnBehavior, despawnTimer);
     }
 
     @Override
@@ -166,7 +169,11 @@ public class EntityStarParticleTask implements EntityParticleTask {
             if (collisionEnabled && CollisionManager.isColliding(particleLoc)) {
                 continue;
             }
-            ParticleScheduler.queueParticle(new ParticleSpawnData(particle, particleLoc, 1, 0, 0, 0, 0, options));
+            if (particle == null && options instanceof ItemStack) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(particleLoc, (ItemStack) options, despawnTimer));
+            } else if (particle != null) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(particle, particleLoc, 1, 0, 0, 0, 0, options));
+            }
         }
     }
 

@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 public class CircleParticleTask implements AnimatedParticle {
@@ -26,6 +27,7 @@ public class CircleParticleTask implements AnimatedParticle {
     private final int particleCount;
     private final boolean collisionEnabled;
     private final World world;
+    private final int despawnTimer;
 
     private double angle = 0;
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
@@ -33,7 +35,7 @@ public class CircleParticleTask implements AnimatedParticle {
     private final Vector relativePos;
     private final Vector rotatedPos = new Vector();
 
-    public CircleParticleTask(Location center, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled) {
+    public CircleParticleTask(Location center, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer) {
         this.center = center;
         this.particle = particle;
         this.radius = radius;
@@ -45,6 +47,7 @@ public class CircleParticleTask implements AnimatedParticle {
         this.conditionManager = conditionManager;
         this.collisionEnabled = collisionEnabled;
         this.world = center.getWorld();
+        this.despawnTimer = despawnTimer;
         // --- PERFORMANCE: Initialize reusable objects in the constructor ---
         this.spawnLocation = center.clone();
         this.relativePos = new Vector();
@@ -80,7 +83,11 @@ public class CircleParticleTask implements AnimatedParticle {
             if (collisionEnabled && CollisionManager.isColliding(spawnLocation)) {
                 continue;
             }
-            ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, 1, 0, 0, 0, 0, options));
+            if (particle == null && options instanceof ItemStack) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(spawnLocation, (ItemStack) options, despawnTimer));
+            } else if (particle != null) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, 1, 0, 0, 0, 0, options));
+            }
         }
     }
 

@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -28,8 +29,9 @@ public class StaticRegionParticleTask extends BukkitRunnable implements Debuggab
     private final ConditionManager conditionManager;
     private final boolean collisionEnabled;
     private final Location center;
+    private final int despawnTimer;
 
-    public StaticRegionParticleTask(Location corner1, Location corner2, Particle particle, int particleCount, Object particleOptions, ConditionManager conditionManager, boolean collisionEnabled) {
+    public StaticRegionParticleTask(Location corner1, Location corner2, Particle particle, int particleCount, Object particleOptions, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer) {
         this.corner1 = corner1;
         this.corner2 = corner2;
         this.particle = particle;
@@ -44,6 +46,7 @@ public class StaticRegionParticleTask extends BukkitRunnable implements Debuggab
         this.reusableLocation = new Location(corner1.getWorld(), 0, 0, 0);
         this.conditionManager = conditionManager;
         this.collisionEnabled = collisionEnabled;
+        this.despawnTimer = despawnTimer;
         // Pre-calculate the center of the region to avoid recalculating it on every run.
         this.center = new Location(corner1.getWorld(), (minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2);
     }
@@ -71,8 +74,11 @@ public class StaticRegionParticleTask extends BukkitRunnable implements Debuggab
             if (collisionEnabled && CollisionManager.isColliding(reusableLocation)) {
                 continue;
             }
-
-            ParticleScheduler.queueParticle(new ParticleSpawnData(particle, reusableLocation, 1, 0, 0, 0, 0, particleOptions));
+            if (particle == null && particleOptions instanceof ItemStack) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(reusableLocation, (ItemStack) particleOptions, despawnTimer));
+            } else if (particle != null) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(particle, reusableLocation, 1, 0, 0, 0, 0, particleOptions));
+            }
         }
     }
 

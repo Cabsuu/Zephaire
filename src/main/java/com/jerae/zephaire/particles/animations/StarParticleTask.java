@@ -10,6 +10,7 @@ import com.jerae.zephaire.particles.util.VectorUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 public class StarParticleTask implements AnimatedParticle {
@@ -26,6 +27,7 @@ public class StarParticleTask implements AnimatedParticle {
     private final double yaw;
     private final ConditionManager conditionManager;
     private final boolean collisionEnabled;
+    private final int despawnTimer;
 
     private double rotationAngle = 0;
 
@@ -38,7 +40,7 @@ public class StarParticleTask implements AnimatedParticle {
     private final Vector rotatedPos = new Vector();
 
 
-    public StarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled) {
+    public StarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer) {
         this.center = center;
         this.particle = particle;
         this.points = Math.max(2, points); // A star must have at least 2 points
@@ -51,6 +53,7 @@ public class StarParticleTask implements AnimatedParticle {
         this.yaw = yaw;
         this.conditionManager = conditionManager;
         this.collisionEnabled = collisionEnabled;
+        this.despawnTimer = despawnTimer;
         this.vertices = new Vector[this.points * 2];
         for (int i = 0; i < vertices.length; i++) {
             vertices[i] = new Vector();
@@ -103,7 +106,11 @@ public class StarParticleTask implements AnimatedParticle {
             if (collisionEnabled && CollisionManager.isColliding(particleLoc)) {
                 continue;
             }
-            ParticleScheduler.queueParticle(new ParticleSpawnData(particle, particleLoc, 1, 0, 0, 0, 0, options));
+            if (particle == null && options instanceof ItemStack) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(particleLoc, (ItemStack) options, despawnTimer));
+            } else if (particle != null) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(particle, particleLoc, 1, 0, 0, 0, 0, options));
+            }
         }
     }
 

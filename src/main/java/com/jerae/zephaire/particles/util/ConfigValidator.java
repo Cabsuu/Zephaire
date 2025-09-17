@@ -40,6 +40,9 @@ public final class ConfigValidator {
 
     public static Particle getParticleType(ConfigurationSection section, String key, String defaultValue) {
         String particleName = section.getString(key, defaultValue).toUpperCase();
+        if (particleName.equals("VISUAL_ITEM")) {
+            return null; // This is our custom type
+        }
         try {
             return Particle.valueOf(particleName);
         } catch (IllegalArgumentException e) {

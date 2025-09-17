@@ -25,6 +25,10 @@ public abstract class AbstractStaticParticleFactory extends AbstractParticleFact
     protected abstract BukkitRunnable createParticleTask(ConfigurationSection section, ConditionManager manager, World world);
 
     protected Particle parseParticle(ConfigurationSection section) {
+        String particleName = section.getString("type", "FLAME").toUpperCase();
+        if ("VISUAL_ITEM".equals(particleName)) {
+            return null;
+        }
         return ConfigValidator.getParticleType(section, "type", "FLAME");
     }
 

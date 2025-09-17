@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 public class CurveParticleTask implements AnimatedParticle {
@@ -22,6 +23,7 @@ public class CurveParticleTask implements AnimatedParticle {
     private final boolean bounce;
     private final World world;
     private final boolean collisionEnabled;
+    private final int despawnTimer;
 
     private double t = 0.0;
     private int direction = 1;
@@ -32,7 +34,7 @@ public class CurveParticleTask implements AnimatedParticle {
     private final Vector term2 = new Vector();
     private final Vector term3 = new Vector();
 
-    public CurveParticleTask(Location start, Location control, Location end, Particle particle, double speed, boolean bounce, Object options, ConditionManager conditionManager, boolean collisionEnabled) {
+    public CurveParticleTask(Location start, Location control, Location end, Particle particle, double speed, boolean bounce, Object options, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer) {
         this.world = start.getWorld();
         this.p0 = start.toVector();
         this.p1 = control.toVector();
@@ -44,6 +46,7 @@ public class CurveParticleTask implements AnimatedParticle {
         this.conditionManager = conditionManager;
         this.currentLocation = start.clone();
         this.collisionEnabled = collisionEnabled;
+        this.despawnTimer = despawnTimer;
     }
 
     @Override
@@ -81,7 +84,11 @@ public class CurveParticleTask implements AnimatedParticle {
         if (collisionEnabled && CollisionManager.isColliding(currentLocation)) {
             return;
         }
-        ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, 1, 0, 0, 0, 0, options));
+        if (particle == null && options instanceof ItemStack) {
+            ParticleScheduler.queueParticle(new ParticleSpawnData(currentLocation, (ItemStack) options, despawnTimer));
+        } else if (particle != null) {
+            ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, 1, 0, 0, 0, 0, options));
+        }
     }
 
     @Override

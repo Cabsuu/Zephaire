@@ -29,7 +29,8 @@ public class HelixParticleFactory extends AbstractAnimatedParticleFactory {
         boolean bounce = section.getBoolean("bounce", false);
         Object options = parseOptions(particle, section);
         boolean collisionEnabled = parseCollision(section);
+        int despawnTimer = section.getInt("despawn-timer", 100);
 
-        return new HelixParticleTask(base, particle, radius, height, speed, verticalSpeed, period, startAngle, options, pitch, yaw, bounce, manager, collisionEnabled);
+        return new HelixParticleTask(base, particle, radius, height, speed, verticalSpeed, period, startAngle, options, pitch, yaw, bounce, manager, collisionEnabled, despawnTimer);
     }
 }

@@ -53,6 +53,16 @@ public final class ParticleUtils {
 
     public static Object parseParticleOptions(Particle particle, ConfigurationSection optionsSection) {
         if (optionsSection == null) return null;
+        if (particle == null) { // This indicates a VISUAL_ITEM
+            String materialName = optionsSection.getString("material", "STONE").toUpperCase();
+            try {
+                Material material = Material.valueOf(materialName);
+                return new ItemStack(material);
+            } catch (IllegalArgumentException e) {
+                plugin.getLogger().warning("Invalid material '" + materialName + "' in particle options for '" + optionsSection.getParent().getName() + "'. Using STONE instead.");
+                return new ItemStack(Material.STONE);
+            }
+        }
         if (particle == Particle.DUST) {
             Color color = hexToColor(optionsSection.getString("color", "FFFFFF"));
             float size = (float) optionsSection.getDouble("size", 1.0);

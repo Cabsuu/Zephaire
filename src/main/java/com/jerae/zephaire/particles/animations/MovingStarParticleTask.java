@@ -31,6 +31,7 @@ public class MovingStarParticleTask implements AnimatedParticle {
     private final double height;
     private final double verticalSpeed;
     private final boolean bounce;
+    private final int despawnTimer;
 
     private double rotationAngle = 0;
     private double currentYOffset = 0;
@@ -39,7 +40,7 @@ public class MovingStarParticleTask implements AnimatedParticle {
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Vector[] vertices;
 
-    public MovingStarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, Vector velocity, boolean collisionEnabled, double height, double verticalSpeed, boolean bounce) {
+    public MovingStarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, Vector velocity, boolean collisionEnabled, double height, double verticalSpeed, boolean bounce, int despawnTimer) {
         this.center = center;
         this.particle = particle;
         this.points = Math.max(2, points);
@@ -56,6 +57,7 @@ public class MovingStarParticleTask implements AnimatedParticle {
         this.height = height;
         this.verticalSpeed = verticalSpeed;
         this.bounce = bounce;
+        this.despawnTimer = despawnTimer;
         this.vertices = new Vector[this.points * 2];
         for (int i = 0; i < vertices.length; i++) {
             vertices[i] = new Vector();
@@ -111,7 +113,7 @@ public class MovingStarParticleTask implements AnimatedParticle {
         for (int i = 0; i < totalVertices; i++) {
             Vector start = vertices[i];
             Vector end = vertices[(i + 1) % totalVertices];
-            ParticleDrawingUtils.drawParticleLine(center, start, end, density, particle, options);
+            ParticleDrawingUtils.drawParticleLine(center, start, end, density, particle, options, despawnTimer);
         }
     }
 

@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class EntityVortexParticleTask implements EntityParticleTask {
     private final EntityTarget target;
     private final int period;
     private final SpawnBehavior spawnBehavior;
+    private final int despawnTimer;
 
     private final double radius;
     private final double height;
@@ -41,7 +43,7 @@ public class EntityVortexParticleTask implements EntityParticleTask {
     private final Vector rotational = new Vector();
 
 
-    public EntityVortexParticleTask(String effectName, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior) {
+    public EntityVortexParticleTask(String effectName, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer) {
         this.effectName = effectName;
         this.particle = particle;
         this.radius = radius;
@@ -55,11 +57,12 @@ public class EntityVortexParticleTask implements EntityParticleTask {
         this.target = target;
         this.period = Math.max(1, period);
         this.spawnBehavior = spawnBehavior;
+        this.despawnTimer = despawnTimer;
     }
 
     @Override
     public EntityParticleTask newInstance() {
-        return new EntityVortexParticleTask(effectName, particle, radius, height, speed, particleCount, options, conditionManager, collisionEnabled, offset, target, period, this.spawnBehavior);
+        return new EntityVortexParticleTask(effectName, particle, radius, height, speed, particleCount, options, conditionManager, collisionEnabled, offset, target, period, this.spawnBehavior, despawnTimer);
     }
 
     @Override
@@ -125,7 +128,11 @@ public class EntityVortexParticleTask implements EntityParticleTask {
             if (collisionEnabled && CollisionManager.isColliding(p)) {
                 continue;
             }
-            ParticleScheduler.queueParticle(new ParticleSpawnData(particle, p, 1, 0, 0, 0, 0, options));
+            if (particle == null && options instanceof ItemStack) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(p, (ItemStack) options, despawnTimer));
+            } else if (particle != null) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(particle, p, 1, 0, 0, 0, 0, options));
+            }
         }
     }
 

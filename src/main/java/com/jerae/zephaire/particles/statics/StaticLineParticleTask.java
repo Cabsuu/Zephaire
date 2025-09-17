@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -27,8 +28,9 @@ public class StaticLineParticleTask extends BukkitRunnable implements Debuggable
     private final boolean collisionEnabled;
     private final double density;
     private final Location end;
+    private final int despawnTimer;
 
-    public StaticLineParticleTask(Location start, Location end, Particle particle, double density, Object particleOptions, ConditionManager conditionManager, boolean collisionEnabled) {
+    public StaticLineParticleTask(Location start, Location end, Particle particle, double density, Object particleOptions, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer) {
         this.start = start;
         this.end = end;
         this.particle = particle;
@@ -37,6 +39,7 @@ public class StaticLineParticleTask extends BukkitRunnable implements Debuggable
         this.conditionManager = conditionManager;
         this.collisionEnabled = collisionEnabled;
         this.density = density;
+        this.despawnTimer = despawnTimer;
 
         Vector vector = end.toVector().subtract(start.toVector());
         double length = vector.length();
@@ -63,7 +66,11 @@ public class StaticLineParticleTask extends BukkitRunnable implements Debuggable
             if (collisionEnabled && CollisionManager.isColliding(loc)) {
                 continue;
             }
-            ParticleScheduler.queueParticle(new ParticleSpawnData(particle, loc, 1, 0, 0, 0, 0, particleOptions));
+            if (particle == null && particleOptions instanceof ItemStack) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(loc, (ItemStack) particleOptions, despawnTimer));
+            } else if (particle != null) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(particle, loc, 1, 0, 0, 0, 0, particleOptions));
+            }
         }
     }
 

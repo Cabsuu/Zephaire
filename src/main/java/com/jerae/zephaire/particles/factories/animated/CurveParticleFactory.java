@@ -24,7 +24,8 @@ public class CurveParticleFactory extends AbstractAnimatedParticleFactory {
         boolean bounce = section.getBoolean("bounce", false);
         Object options = parseOptions(particle, section);
         boolean collisionEnabled = parseCollision(section);
+        int despawnTimer = section.getInt("despawn-timer", 100);
 
-        return new CurveParticleTask(start, control, end, particle, speed, bounce, options, manager, collisionEnabled);
+        return new CurveParticleTask(start, control, end, particle, speed, bounce, options, manager, collisionEnabled, despawnTimer);
     }
 }

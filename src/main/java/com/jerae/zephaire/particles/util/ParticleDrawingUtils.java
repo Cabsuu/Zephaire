@@ -4,6 +4,7 @@ import com.jerae.zephaire.particles.ParticleScheduler;
 import com.jerae.zephaire.particles.ParticleSpawnData;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 public class ParticleDrawingUtils {
@@ -20,7 +21,7 @@ public class ParticleDrawingUtils {
         }
     }
 
-    public static void drawParticleLine(Location center, Vector start, Vector end, double density, Particle particle, Object options) {
+    public static void drawParticleLine(Location center, Vector start, Vector end, double density, Particle particle, Object options, int despawnTimer) {
         Vector lineDirection = new Vector();
         Vector currentLinePoint = new Vector();
         Location particleLoc = center.clone();
@@ -34,7 +35,12 @@ public class ParticleDrawingUtils {
             particleLoc.setX(center.getX() + currentLinePoint.getX());
             particleLoc.setY(center.getY() + currentLinePoint.getY());
             particleLoc.setZ(center.getZ() + currentLinePoint.getZ());
-            ParticleScheduler.queueParticle(new ParticleSpawnData(particle, particleLoc, 1, 0, 0, 0, 0, options));
+
+            if (particle == null && options instanceof ItemStack) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(particleLoc, (ItemStack) options, despawnTimer));
+            } else if (particle != null) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(particle, particleLoc, 1, 0, 0, 0, 0, options));
+            }
         }
     }
 }

@@ -8,7 +8,7 @@
 #
 # 'target' section guide:
 #   type: Can be PLAYER, ZOMBIE, SKELETON, CREEPER, etc. (any valid EntityType name)
-#         or use special types: ALL_PLAYERS, ALL_HOSTILE_MOBS.
+#         or ALL_HOSTILE_MOBS.
 #   name: (Optional) For PLAYER type, you can specify a single player name. Without writing a player name targets all players.
 #   names: (Optional) For PLAYER type, you can specify a list of player names.
 #
@@ -26,7 +26,7 @@ entity-particles:
   entity-circle:
     target:
       type: PLAYER
-      name: "Notch"  # Example for a specific player
+      name: "Jerae"  # Example for a specific player
       # or (Can't write both 'name' and 'names')
       names: ["Player1", "Player2"] # Example for multiple players
     shape: 'CIRCLE'
@@ -36,6 +36,7 @@ entity-particles:
     speed: 0.1
     offset-y: 1.0
     spawn-condition: ALWAYS
+    period: 1 # Optional. Ticks to wait before spawning the next particle. Defaults to 1. Higher values improve performance.
 
   entity-vortex:
     target:
@@ -58,3 +59,19 @@ entity-particles:
     inner-radius: 0.5
     speed: 0.02
     density: 5
+
+  cosmetic-item-example:
+    target:
+      type: PLAYER
+      name: "Cabsuu"
+    shape: 'CIRCLE'
+    type: 'VISUAL_ITEM'
+    radius: 1.0
+    particle-count: 1
+    speed: 0
+    offset-y: 1.5
+    options:
+      material: "DIAMOND_SWORD"
+      despawn-timer: 60 # 3 seconds. The lower the tick, the better.
+    period: 20 # Recommended: Set a higher period for VISUAL_ITEM to avoid entity spam. This is 1 item per second.
+    # Caution: Setting period below 10 may cause server lag performance as dropped items are considered as entities.

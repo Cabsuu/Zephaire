@@ -28,6 +28,7 @@ public class MovingStarParticleFactory extends AbstractAnimatedParticleFactory {
         double yaw = section.getDouble("yaw", 0.0);
         Object options = parseOptions(particle, section);
         boolean collisionEnabled = parseCollision(section);
+        int despawnTimer = section.getInt("despawn-timer", 100);
 
         double height = section.getDouble("height", 0.0);
         double verticalSpeed = section.getDouble("vertical-speed", 0.1);
@@ -41,6 +42,6 @@ public class MovingStarParticleFactory extends AbstractAnimatedParticleFactory {
             velocity.setZ(velocitySection.getDouble("z", 0.0));
         }
 
-        return new MovingStarParticleTask(center, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, manager, velocity, collisionEnabled, height, verticalSpeed, bounce);
+        return new MovingStarParticleTask(center, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, manager, velocity, collisionEnabled, height, verticalSpeed, bounce, despawnTimer);
     }
 }
