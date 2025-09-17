@@ -23,7 +23,8 @@ public class StaticRegionFactory extends AbstractStaticParticleFactory {
         int particleCount = ConfigValidator.getPositiveInt(section, "particle-count", 50);
         Object options = parseOptions(particle, section);
         boolean collisionEnabled = parseCollision(section);
+        int despawnTimer = section.getInt("despawn-timer", 100);
 
-        return new StaticRegionParticleTask(corner1, corner2, particle, particleCount, options, manager, collisionEnabled);
+        return new StaticRegionParticleTask(corner1, corner2, particle, particleCount, options, manager, collisionEnabled, despawnTimer);
     }
 }

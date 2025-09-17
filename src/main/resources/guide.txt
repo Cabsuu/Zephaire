@@ -50,6 +50,13 @@ static-particles:
     options:
       material: "GLASS" # The block material to show as a particle.
 
+  visual-item-example:
+    type: 'VISUAL_ITEM'
+    options:
+      material: "DIAMOND_SWORD"
+      despawn-timer: 60 # 3 seconds. The lower the tick, the better.
+      period: 20 # Recommended: Set a higher period for VISUAL_ITEM to avoid entity spam. This is 1 item per second.
+
   static_line-name:
     shape: 'STATIC_LINE'
     type: 'FLAME'

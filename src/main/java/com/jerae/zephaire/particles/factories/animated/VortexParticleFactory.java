@@ -24,7 +24,8 @@ public class VortexParticleFactory extends AbstractAnimatedParticleFactory {
         int particleCount = ConfigValidator.getPositiveInt(section, "particle-count", 150);
         Object options = parseOptions(particle, section);
         boolean collisionEnabled = parseCollision(section);
+        int despawnTimer = section.getInt("despawn-timer", 100);
 
-        return new VortexParticleTask(center, particle, radius, height, speed, particleCount, options, manager, collisionEnabled);
+        return new VortexParticleTask(center, particle, radius, height, speed, particleCount, options, manager, collisionEnabled, despawnTimer);
     }
 }

@@ -27,7 +27,8 @@ public class RandomBurstRegionFactory extends AbstractStaticParticleFactory {
         long spawnPeriod = ConfigValidator.getPositiveInt(section, "spawn-period", 1);
         Object options = parseOptions(particle, section);
         boolean collisionEnabled = parseCollision(section);
+        int despawnTimer = section.getInt("despawn-timer", 100);
 
-        return new RandomBurstRegionParticleTask(corner1, corner2, particle, options, manager, activeDuration, cooldownDuration, burstRadius, spawnRate, spawnPeriod, collisionEnabled);
+        return new RandomBurstRegionParticleTask(corner1, corner2, particle, options, manager, activeDuration, cooldownDuration, burstRadius, spawnRate, spawnPeriod, collisionEnabled, despawnTimer);
     }
 }

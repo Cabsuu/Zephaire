@@ -12,6 +12,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -27,8 +28,9 @@ public class StaticCuboidParticleTask extends BukkitRunnable implements Debuggab
     private final ConditionManager conditionManager;
     private final boolean collisionEnabled;
     private final double width, height, depth;
+    private final int despawnTimer;
 
-    public StaticCuboidParticleTask(Location center, Particle particle, double width, double height, double depth, double density, Object particleOptions, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled) {
+    public StaticCuboidParticleTask(Location center, Particle particle, double width, double height, double depth, double density, Object particleOptions, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer) {
         this.center = center;
         this.particle = particle;
         this.particleOptions = particleOptions;
@@ -38,6 +40,7 @@ public class StaticCuboidParticleTask extends BukkitRunnable implements Debuggab
         this.width = width;
         this.height = height;
         this.depth = depth;
+        this.despawnTimer = despawnTimer;
 
         double halfWidth = width / 2.0;
         double halfHeight = height / 2.0;
@@ -99,7 +102,11 @@ public class StaticCuboidParticleTask extends BukkitRunnable implements Debuggab
             if (collisionEnabled && CollisionManager.isColliding(loc)) {
                 continue;
             }
-            ParticleScheduler.queueParticle(new ParticleSpawnData(particle, loc, 1, 0, 0, 0, 0, particleOptions));
+            if (particle == null && particleOptions instanceof ItemStack) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(loc, (ItemStack) particleOptions, despawnTimer));
+            } else if (particle != null) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(particle, loc, 1, 0, 0, 0, 0, particleOptions));
+            }
         }
     }
 

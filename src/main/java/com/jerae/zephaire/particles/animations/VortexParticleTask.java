@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class VortexParticleTask implements AnimatedParticle {
     private final Object options;
     private final ConditionManager conditionManager;
     private final boolean collisionEnabled;
+    private final int despawnTimer;
     private final World world;
 
     private final double radius;
@@ -38,7 +40,7 @@ public class VortexParticleTask implements AnimatedParticle {
     private final Vector rotational = new Vector();
 
 
-    public VortexParticleTask(Location center, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled) {
+    public VortexParticleTask(Location center, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer) {
         this.center = center;
         this.particle = particle;
         this.radius = radius;
@@ -48,6 +50,7 @@ public class VortexParticleTask implements AnimatedParticle {
         this.options = options;
         this.conditionManager = conditionManager;
         this.collisionEnabled = collisionEnabled;
+        this.despawnTimer = despawnTimer;
         this.world = center.getWorld();
     }
 
@@ -113,7 +116,11 @@ public class VortexParticleTask implements AnimatedParticle {
             if (collisionEnabled && CollisionManager.isColliding(p)) {
                 continue;
             }
-            ParticleScheduler.queueParticle(new ParticleSpawnData(particle, p, 1, 0, 0, 0, 0, options));
+            if (particle == null && options instanceof ItemStack) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(p, (ItemStack) options, despawnTimer));
+            } else if (particle != null) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(particle, p, 1, 0, 0, 0, 0, options));
+            }
         }
     }
 

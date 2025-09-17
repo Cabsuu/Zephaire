@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -27,8 +28,9 @@ public class StaticCurveParticleTask extends BukkitRunnable implements Debuggabl
     private final boolean collisionEnabled;
     private final Location start, control, end;
     private final double density;
+    private final int despawnTimer;
 
-    public StaticCurveParticleTask(Location start, Location control, Location end, Particle particle, double density, Object particleOptions, ConditionManager conditionManager, boolean collisionEnabled) {
+    public StaticCurveParticleTask(Location start, Location control, Location end, Particle particle, double density, Object particleOptions, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer) {
         this.centerReference = start; // Use start as the reference for checks
         this.particle = particle;
         this.particleOptions = particleOptions;
@@ -39,6 +41,7 @@ public class StaticCurveParticleTask extends BukkitRunnable implements Debuggabl
         this.control = control;
         this.end = end;
         this.density = density;
+        this.despawnTimer = despawnTimer;
 
         Vector p0 = start.toVector();
         Vector p1 = control.toVector();
@@ -76,7 +79,11 @@ public class StaticCurveParticleTask extends BukkitRunnable implements Debuggabl
             if (collisionEnabled && CollisionManager.isColliding(loc)) {
                 continue;
             }
-            ParticleScheduler.queueParticle(new ParticleSpawnData(particle, loc, 1, 0, 0, 0, 0, particleOptions));
+            if (particle == null && particleOptions instanceof ItemStack) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(loc, (ItemStack) particleOptions, despawnTimer));
+            } else if (particle != null) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(particle, loc, 1, 0, 0, 0, 0, particleOptions));
+            }
         }
     }
 

@@ -56,6 +56,8 @@ public final class Zephaire extends JavaPlugin {
 
         // Make the particle manager globally accessible
         ParticleRegistry.initialize(this.particleManager);
+        ParticleScheduler.initialize(this);
+
 
         // --- LOAD DATA AND PARTICLES ---
         this.dataManager.load();

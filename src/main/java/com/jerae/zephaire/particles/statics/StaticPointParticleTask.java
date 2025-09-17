@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class StaticPointParticleTask extends BukkitRunnable implements Debuggable {
@@ -24,8 +25,9 @@ public class StaticPointParticleTask extends BukkitRunnable implements Debuggabl
     private final ConditionManager conditionManager;
     private final boolean collisionEnabled;
     private final World world;
+    private final int despawnTimer;
 
-    public StaticPointParticleTask(Location location, Particle particle, int count, double offsetX, double offsetY, double offsetZ, double speed, Object particleOptions, ConditionManager conditionManager, boolean collisionEnabled) {
+    public StaticPointParticleTask(Location location, Particle particle, int count, double offsetX, double offsetY, double offsetZ, double speed, Object particleOptions, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer) {
         this.location = location;
         this.particle = particle;
         this.count = count;
@@ -37,6 +39,7 @@ public class StaticPointParticleTask extends BukkitRunnable implements Debuggabl
         this.conditionManager = conditionManager;
         this.collisionEnabled = collisionEnabled;
         this.world = location.getWorld();
+        this.despawnTimer = despawnTimer;
     }
 
     @Override
@@ -54,13 +57,15 @@ public class StaticPointParticleTask extends BukkitRunnable implements Debuggabl
             return;
         }
 
-        // --- PERFORMANCE: Queue particle spawning to be handled on the main thread ---
-        ParticleSpawnData data = new ParticleSpawnData(
-                particle, location, count,
-                offsetX, offsetY, offsetZ,
-                speed, particleOptions
-        );
-        ParticleScheduler.queueParticle(data);
+        if (particle == null && particleOptions instanceof ItemStack) {
+            ParticleScheduler.queueParticle(new ParticleSpawnData(location, (ItemStack) particleOptions, despawnTimer));
+        } else if (particle != null) {
+            ParticleScheduler.queueParticle(new ParticleSpawnData(
+                    particle, location, count,
+                    offsetX, offsetY, offsetZ,
+                    speed, particleOptions
+            ));
+        }
     }
 
     @Override
@@ -69,7 +74,14 @@ public class StaticPointParticleTask extends BukkitRunnable implements Debuggabl
         info.append(ChatColor.AQUA).append("Type: ").append(ChatColor.WHITE).append("STATIC").append("\n");
         info.append(ChatColor.AQUA).append("Shape: ").append(ChatColor.WHITE).append("POINT").append("\n");
         info.append(ChatColor.AQUA).append("Location: ").append(ChatColor.WHITE).append(String.format("%.2f, %.2f, %.2f", location.getX(), location.getY(), location.getZ())).append("\n");
-        info.append(ChatColor.AQUA).append("Particle: ").append(ChatColor.WHITE).append(particle.name()).append("\n");
+        if (particle != null) {
+            info.append(ChatColor.AQUA).append("Particle: ").append(ChatColor.WHITE).append(particle.name()).append("\n");
+        } else {
+            info.append(ChatColor.AQUA).append("Particle: ").append(ChatColor.WHITE).append("VISUAL_ITEM").append("\n");
+            if (particleOptions instanceof ItemStack) {
+                info.append(ChatColor.AQUA).append("Material: ").append(ChatColor.WHITE).append(((ItemStack) particleOptions).getType().name()).append("\n");
+            }
+        }
         info.append(ChatColor.AQUA).append("Count: ").append(ChatColor.WHITE).append(count).append("\n");
         info.append(ChatColor.DARK_AQUA).append("--- Status ---").append("\n");
         info.append(ChatColor.AQUA).append("Player Nearby: ").append(ParticleUtils.formatBoolean(PerformanceManager.isPlayerNearby(location))).append("\n");

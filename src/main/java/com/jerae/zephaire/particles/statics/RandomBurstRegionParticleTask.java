@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -29,13 +30,14 @@ public class RandomBurstRegionParticleTask extends BukkitRunnable implements Deb
     private final int spawnRate;
     private final long spawnPeriod;
     private final boolean collisionEnabled;
+    private final int despawnTimer;
 
     private long timer;
     private long spawnTickCounter = 0;
     private final Location currentBurstLocation; // Reusable location object
     private final Location spawnLoc; // Reusable location for spawning particles
 
-    public RandomBurstRegionParticleTask(Location corner1, Location corner2, Particle particle, Object particleOptions, ConditionManager conditionManager, long activeDuration, long cooldownDuration, double burstRadius, int spawnRate, long spawnPeriod, boolean collisionEnabled) {
+    public RandomBurstRegionParticleTask(Location corner1, Location corner2, Particle particle, Object particleOptions, ConditionManager conditionManager, long activeDuration, long cooldownDuration, double burstRadius, int spawnRate, long spawnPeriod, boolean collisionEnabled, int despawnTimer) {
         this.particle = particle;
         this.particleOptions = particleOptions;
         this.conditionManager = conditionManager;
@@ -55,6 +57,7 @@ public class RandomBurstRegionParticleTask extends BukkitRunnable implements Deb
         this.timer = 0;
         this.currentBurstLocation = new Location(world, 0, 0, 0);
         this.spawnLoc = new Location(world, 0, 0, 0);
+        this.despawnTimer = despawnTimer;
         pickNewLocation();
     }
 
@@ -94,7 +97,11 @@ public class RandomBurstRegionParticleTask extends BukkitRunnable implements Deb
                         continue;
                     }
 
-                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLoc, 1, 0, 0, 0, 0, particleOptions));
+                    if (particle == null && particleOptions instanceof ItemStack) {
+                        ParticleScheduler.queueParticle(new ParticleSpawnData(spawnLoc, (ItemStack) particleOptions, despawnTimer));
+                    } else if (particle != null) {
+                        ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLoc, 1, 0, 0, 0, 0, particleOptions));
+                    }
                 }
             }
         } else if (timer > activeDuration + cooldownDuration) {

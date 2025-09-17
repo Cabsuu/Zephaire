@@ -10,6 +10,7 @@ import com.jerae.zephaire.particles.util.VectorUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 public class WaveParticleTask implements AnimatedParticle {
@@ -25,6 +26,7 @@ public class WaveParticleTask implements AnimatedParticle {
     private final double yaw;
     private final ConditionManager conditionManager;
     private final boolean collisionEnabled;
+    private final int despawnTimer;
 
     private double progress = 0;
     private int tickCounter = 0;
@@ -35,7 +37,7 @@ public class WaveParticleTask implements AnimatedParticle {
     private final Vector rotatedVector = new Vector();
 
 
-    public WaveParticleTask(Location base, Particle particle, double amplitude, double length, double speed, int period, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled) {
+    public WaveParticleTask(Location base, Particle particle, double amplitude, double length, double speed, int period, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer) {
         this.base = base;
         this.particle = particle;
         this.amplitude = amplitude;
@@ -47,6 +49,7 @@ public class WaveParticleTask implements AnimatedParticle {
         this.yaw = yaw;
         this.conditionManager = conditionManager;
         this.collisionEnabled = collisionEnabled;
+        this.despawnTimer = despawnTimer;
         this.currentLocation = base.clone();
     }
 
@@ -80,7 +83,11 @@ public class WaveParticleTask implements AnimatedParticle {
             if (collisionEnabled && CollisionManager.isColliding(currentLocation)) {
                 return;
             }
-            ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, 1, 0, 0, 0, 0, options));
+            if (particle == null && options instanceof ItemStack) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(currentLocation, (ItemStack) options, despawnTimer));
+            } else if (particle != null) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, 1, 0, 0, 0, 0, options));
+            }
         }
     }
 

@@ -1,33 +1,53 @@
 package com.jerae.zephaire.particles;
 
+import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.inventory.ItemStack;
 
+/**
+ * A simple data class to hold all the necessary information for spawning a particle or a visual item.
+ * This is used to pass data from asynchronous calculation threads to a synchronous spawning task.
+ */
 public class ParticleSpawnData {
-    private final Particle particle;
-    private final int count;
-    private final double speed;
-    private final Object data;
+    public final ParticleType particleType;
+    public final Particle particle;
+    public final Location location;
+    public final int count;
+    public final double offsetX, offsetY, offsetZ;
+    public final double speed;
+    public final Object data;
+    public final int despawnTimer;
 
-    public ParticleSpawnData(Particle particle, int count, double speed, Object data) {
+    /**
+     * Constructor for standard Bukkit particles.
+     */
+    public ParticleSpawnData(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ, double speed, Object data) {
+        this.particleType = ParticleType.BUKKIT;
         this.particle = particle;
+        this.location = location.clone();
         this.count = count;
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
+        this.offsetZ = offsetZ;
         this.speed = speed;
         this.data = data;
+        this.despawnTimer = 0;
     }
 
-    public Particle getParticle() {
-        return particle;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public double getSpeed() {
-        return speed;
-    }
-
-    public Object getData() {
-        return data;
+    /**
+     * Constructor for VISUAL_ITEM particles.
+     * The `data` field will hold the ItemStack.
+     */
+    public ParticleSpawnData(Location location, ItemStack itemStack, int despawnTimer) {
+        this.particleType = ParticleType.VISUAL_ITEM;
+        this.particle = null; // Not a real Bukkit particle
+        this.location = location.clone();
+        this.count = 1;
+        this.offsetX = 0;
+        this.offsetY = 0;
+        this.offsetZ = 0;
+        this.speed = 0;
+        this.data = itemStack;
+        this.despawnTimer = despawnTimer;
     }
 }

@@ -24,7 +24,8 @@ public class StaticCircleFactory extends AbstractStaticParticleFactory {
         double yaw = section.getDouble("yaw", 0.0);
         Object options = parseOptions(particle, section);
         boolean collisionEnabled = parseCollision(section);
+        int despawnTimer = section.getInt("despawn-timer", 100);
 
-        return new StaticCircleParticleTask(center, particle, radius, particleCount, options, pitch, yaw, manager, collisionEnabled);
+        return new StaticCircleParticleTask(center, particle, radius, particleCount, options, pitch, yaw, manager, collisionEnabled, despawnTimer);
     }
 }

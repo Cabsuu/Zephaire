@@ -23,7 +23,8 @@ public class StaticLineFactory extends AbstractStaticParticleFactory {
         double density = ConfigValidator.getPositiveDouble(section, "density", 0.5);
         Object options = parseOptions(particle, section);
         boolean collisionEnabled = parseCollision(section);
+        int despawnTimer = section.getInt("despawn-timer", 100);
 
-        return new StaticLineParticleTask(start, end, particle, density, options, manager, collisionEnabled);
+        return new StaticLineParticleTask(start, end, particle, density, options, manager, collisionEnabled, despawnTimer);
     }
 }

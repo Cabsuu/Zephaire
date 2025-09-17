@@ -1,44 +1,46 @@
 package com.jerae.zephaire.particles.util;
 
-import com.jerae.zephaire.particles.animations.AnimatedParticle;
+import com.jerae.zephaire.particles.ParticleScheduler;
+import com.jerae.zephaire.particles.ParticleSpawnData;
 import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-/**
- * Utility class for drawing particle shapes.
- */
 public class ParticleDrawingUtils {
 
-    /**
-     * Draws a circle of particles.
-     *
-     * @param animatedParticle The particle object to render.
-     * @param center           The center of the circle.
-     * @param radius           The radius of the circle.
-     * @param particleCount    The number of particles to draw.
-     * @param rotationAngle    The current rotation angle of the circle.
-     * @param pitch            The pitch (x-axis rotation) in degrees.
-     * @param yaw              The yaw (y-axis rotation) in degrees.
-     */
-    public static void drawCircle(AnimatedParticle animatedParticle, Location center, double radius, int particleCount, double rotationAngle, double pitch, double yaw) {
-        if (center.getWorld() == null) return;
+    public static void drawStar(Location center, int points, double outerRadius, double innerRadius, double rotationAngle, double pitch, double yaw, Vector[] vertices) {
+        int totalVertices = points * 2;
+        Vector reusableVertex = new Vector();
 
-        for (int i = 0; i < particleCount; i++) {
-            double angle = 2 * Math.PI * i / particleCount + rotationAngle;
-            double x = Math.cos(angle) * radius;
-            double z = Math.sin(angle) * radius;
+        for (int i = 0; i < totalVertices; i++) {
+            double angle = rotationAngle + (i * Math.PI / points);
+            double radius = (i % 2 == 0) ? outerRadius : innerRadius;
+            reusableVertex.setX(Math.cos(angle) * radius).setY(0).setZ(Math.sin(angle) * radius);
+            VectorUtils.rotateVector(reusableVertex, pitch, yaw, vertices[i]);
+        }
+    }
 
-            Vector particleVec = new Vector(x, 0, z);
+    public static void drawParticleLine(Location center, Vector start, Vector end, double density, Particle particle, Object options, int despawnTimer) {
+        Vector lineDirection = new Vector();
+        Vector currentLinePoint = new Vector();
+        Location particleLoc = center.clone();
 
-            // Using Bukkit's built-in vector rotation methods.
-            // These methods require the angle in radians, so we convert from degrees.
-            particleVec.rotateAroundX(Math.toRadians(pitch));
-            // We negate the yaw to match the behavior of your original VectorUtils class.
-            particleVec.rotateAroundY(Math.toRadians(-yaw));
+        lineDirection.copy(end).subtract(start);
+        double length = lineDirection.length();
+        lineDirection.normalize();
 
-            Location particleLoc = center.clone().add(particleVec);
-            animatedParticle.render(particleLoc);
+        for (double d = 0; d < length; d += (1.0 / density)) {
+            currentLinePoint.copy(lineDirection).multiply(d).add(start);
+            particleLoc.setX(center.getX() + currentLinePoint.getX());
+            particleLoc.setY(center.getY() + currentLinePoint.getY());
+            particleLoc.setZ(center.getZ() + currentLinePoint.getZ());
+
+            if (particle == null && options instanceof ItemStack) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(particleLoc, (ItemStack) options, despawnTimer));
+            } else if (particle != null) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(particle, particleLoc, 1, 0, 0, 0, 0, options));
+            }
         }
     }
 }
-

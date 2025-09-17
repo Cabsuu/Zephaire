@@ -34,7 +34,8 @@ public class StaticCuboidFactory extends AbstractStaticParticleFactory {
         double yaw = section.getDouble("yaw", 0.0);
         Object options = parseOptions(particle, section);
         boolean collisionEnabled = parseCollision(section);
+        int despawnTimer = section.getInt("despawn-timer", 100);
 
-        return new StaticCuboidParticleTask(center, particle, width, height, depth, density, options, pitch, yaw, manager, collisionEnabled);
+        return new StaticCuboidParticleTask(center, particle, width, height, depth, density, options, pitch, yaw, manager, collisionEnabled, despawnTimer);
     }
 }

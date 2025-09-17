@@ -24,8 +24,9 @@ public class EntityCircleParticleFactory implements EntityParticleFactory {
         double yaw = section.getDouble("yaw", 0.0);
         Object options = ParticleUtils.parseParticleOptions(particle, section.getConfigurationSection("options"));
         boolean collisionEnabled = CollisionManager.shouldCollide(section);
+        int despawnTimer = section.getInt("despawn-timer", 100);
 
-        return new EntityCircleParticleTask(effectName, particle, radius, speed, particleCount, options, pitch, yaw, manager, collisionEnabled, offset, target, period, spawnBehavior);
+        return new EntityCircleParticleTask(effectName, particle, radius, speed, particleCount, options, pitch, yaw, manager, collisionEnabled, offset, target, period, spawnBehavior, despawnTimer);
     }
 }
 

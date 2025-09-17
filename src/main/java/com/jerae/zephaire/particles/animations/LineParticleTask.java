@@ -9,6 +9,7 @@ import com.jerae.zephaire.particles.util.ParticleUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 public class LineParticleTask implements AnimatedParticle {
@@ -22,12 +23,13 @@ public class LineParticleTask implements AnimatedParticle {
     private final ConditionManager conditionManager;
     private final Vector directionVector;
     private final boolean collisionEnabled;
+    private final int despawnTimer;
     private double currentProgress = 0.0;
     private int direction = 1;
     private int tickCounter = 0;
     private final Location currentLocation;
 
-    public LineParticleTask(Location startPoint, Location endPoint, Particle particle, double speed, int period, Object options, boolean resetOnEnd, ConditionManager conditionManager, boolean collisionEnabled) {
+    public LineParticleTask(Location startPoint, Location endPoint, Particle particle, double speed, int period, Object options, boolean resetOnEnd, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer) {
         this.startPoint = startPoint;
         this.particle = particle;
         this.speed = speed;
@@ -38,6 +40,7 @@ public class LineParticleTask implements AnimatedParticle {
         this.directionVector = endPoint.toVector().subtract(startPoint.toVector());
         this.currentLocation = startPoint.clone();
         this.collisionEnabled = collisionEnabled;
+        this.despawnTimer = despawnTimer;
     }
 
     @Override
@@ -75,7 +78,11 @@ public class LineParticleTask implements AnimatedParticle {
             if (collisionEnabled && CollisionManager.isColliding(currentLocation)) {
                 return;
             }
-            ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, 1, 0, 0, 0, 0, options));
+            if (particle == null && options instanceof ItemStack) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(currentLocation, (ItemStack) options, despawnTimer));
+            } else if (particle != null) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, 1, 0, 0, 0, 0, options));
+            }
         }
     }
 
