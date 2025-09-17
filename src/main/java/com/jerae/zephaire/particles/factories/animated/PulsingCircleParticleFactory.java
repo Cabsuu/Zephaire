@@ -28,7 +28,8 @@ public class PulsingCircleParticleFactory extends AbstractAnimatedParticleFactor
         Object options = parseOptions(particle, section);
         boolean collisionEnabled = parseCollision(section);
         int despawnTimer = section.getInt("despawn-timer", 100);
+        boolean hasGravity = section.getBoolean("options.gravity", false);
 
-        return new PulsingCircleParticleTask(center, particle, maxRadius, pulseSpeed, particleCount, pitch, yaw, expand, options, manager, period, collisionEnabled, despawnTimer);
+        return new PulsingCircleParticleTask(center, particle, maxRadius, pulseSpeed, particleCount, pitch, yaw, expand, options, manager, period, collisionEnabled, despawnTimer, hasGravity);
     }
 }

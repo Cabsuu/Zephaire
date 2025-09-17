@@ -65,7 +65,6 @@ com\jerae\zephaire\particles\factories\statics\RandomBurstRegionFactory.class
 com\jerae\zephaire\particles\animations\CurveParticleTask.class
 com\jerae\zephaire\particles\animations\decorator\TrailDecorator.class
 com\jerae\zephaire\particles\managers\ParticleManager.class
-com\jerae\zephaire\particles\AbstractParticleTask.class
 com\jerae\zephaire\particles\animations\MovingStarParticleTask.class
 com\jerae\zephaire\particles\ParticleConfigLoader.class
 com\jerae\zephaire\particles\statics\StaticCuboidParticleTask.class

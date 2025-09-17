@@ -31,8 +31,9 @@ public class StaticCircleParticleTask extends BukkitRunnable implements Debuggab
     private final int particleCount;
     private final World world;
     private final int despawnTimer;
+    private final boolean hasGravity;
 
-    public StaticCircleParticleTask(Location center, Particle particle, double radius, int particleCount, Object particleOptions, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer) {
+    public StaticCircleParticleTask(Location center, Particle particle, double radius, int particleCount, Object particleOptions, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
         this.center = center;
         this.particle = particle;
         this.particleOptions = particleOptions;
@@ -43,6 +44,7 @@ public class StaticCircleParticleTask extends BukkitRunnable implements Debuggab
         this.particleCount = particleCount;
         this.world = center.getWorld();
         this.despawnTimer = despawnTimer;
+        this.hasGravity = hasGravity;
 
         for (int i = 0; i < particleCount; i++) {
             double angle = (2 * Math.PI * i) / particleCount;
@@ -72,7 +74,7 @@ public class StaticCircleParticleTask extends BukkitRunnable implements Debuggab
                 continue;
             }
             if (particle == null && particleOptions instanceof ItemStack) {
-                ParticleScheduler.queueParticle(new ParticleSpawnData(loc, (ItemStack) particleOptions, despawnTimer));
+                ParticleScheduler.queueParticle(new ParticleSpawnData(loc, (ItemStack) particleOptions, despawnTimer, hasGravity));
             } else if (particle != null) {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(particle, loc, 1, 0, 0, 0, 0, particleOptions));
             }

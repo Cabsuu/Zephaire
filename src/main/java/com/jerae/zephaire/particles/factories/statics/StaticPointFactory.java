@@ -26,7 +26,8 @@ public class StaticPointFactory extends AbstractStaticParticleFactory {
         Object options = parseOptions(particle, section);
         boolean collisionEnabled = parseCollision(section);
         int despawnTimer = section.getInt("despawn-timer", 100);
+        boolean hasGravity = section.getBoolean("options.gravity", false);
 
-        return new StaticPointParticleTask(loc, particle, count, offsetX, offsetY, offsetZ, speed, options, manager, collisionEnabled, despawnTimer);
+        return new StaticPointParticleTask(loc, particle, count, offsetX, offsetY, offsetZ, speed, options, manager, collisionEnabled, despawnTimer, hasGravity);
     }
 }

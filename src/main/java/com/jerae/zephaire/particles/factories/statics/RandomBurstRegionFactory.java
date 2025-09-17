@@ -28,7 +28,8 @@ public class RandomBurstRegionFactory extends AbstractStaticParticleFactory {
         Object options = parseOptions(particle, section);
         boolean collisionEnabled = parseCollision(section);
         int despawnTimer = section.getInt("despawn-timer", 100);
+        boolean hasGravity = section.getBoolean("options.gravity", false);
 
-        return new RandomBurstRegionParticleTask(corner1, corner2, particle, options, manager, activeDuration, cooldownDuration, burstRadius, spawnRate, spawnPeriod, collisionEnabled, despawnTimer);
+        return new RandomBurstRegionParticleTask(corner1, corner2, particle, options, manager, activeDuration, cooldownDuration, burstRadius, spawnRate, spawnPeriod, collisionEnabled, despawnTimer, hasGravity);
     }
 }

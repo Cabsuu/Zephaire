@@ -25,6 +25,7 @@ public class VortexParticleTask implements AnimatedParticle {
     private final ConditionManager conditionManager;
     private final boolean collisionEnabled;
     private final int despawnTimer;
+    private final boolean hasGravity;
     private final World world;
 
     private final double radius;
@@ -40,7 +41,7 @@ public class VortexParticleTask implements AnimatedParticle {
     private final Vector rotational = new Vector();
 
 
-    public VortexParticleTask(Location center, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer) {
+    public VortexParticleTask(Location center, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
         this.center = center;
         this.particle = particle;
         this.radius = radius;
@@ -51,6 +52,7 @@ public class VortexParticleTask implements AnimatedParticle {
         this.conditionManager = conditionManager;
         this.collisionEnabled = collisionEnabled;
         this.despawnTimer = despawnTimer;
+        this.hasGravity = hasGravity;
         this.world = center.getWorld();
     }
 
@@ -117,7 +119,7 @@ public class VortexParticleTask implements AnimatedParticle {
                 continue;
             }
             if (particle == null && options instanceof ItemStack) {
-                ParticleScheduler.queueParticle(new ParticleSpawnData(p, (ItemStack) options, despawnTimer));
+                ParticleScheduler.queueParticle(new ParticleSpawnData(p, (ItemStack) options, despawnTimer, hasGravity));
             } else if (particle != null) {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(particle, p, 1, 0, 0, 0, 0, options));
             }
@@ -157,4 +159,3 @@ public class VortexParticleTask implements AnimatedParticle {
                 ChatColor.AQUA + "Collision Enabled: " + ParticleUtils.formatBoolean(collisionEnabled);
     }
 }
-

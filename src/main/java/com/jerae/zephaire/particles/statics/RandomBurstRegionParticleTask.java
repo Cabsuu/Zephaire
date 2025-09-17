@@ -31,13 +31,14 @@ public class RandomBurstRegionParticleTask extends BukkitRunnable implements Deb
     private final long spawnPeriod;
     private final boolean collisionEnabled;
     private final int despawnTimer;
+    private final boolean hasGravity;
 
     private long timer;
     private long spawnTickCounter = 0;
     private final Location currentBurstLocation; // Reusable location object
     private final Location spawnLoc; // Reusable location for spawning particles
 
-    public RandomBurstRegionParticleTask(Location corner1, Location corner2, Particle particle, Object particleOptions, ConditionManager conditionManager, long activeDuration, long cooldownDuration, double burstRadius, int spawnRate, long spawnPeriod, boolean collisionEnabled, int despawnTimer) {
+    public RandomBurstRegionParticleTask(Location corner1, Location corner2, Particle particle, Object particleOptions, ConditionManager conditionManager, long activeDuration, long cooldownDuration, double burstRadius, int spawnRate, long spawnPeriod, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
         this.particle = particle;
         this.particleOptions = particleOptions;
         this.conditionManager = conditionManager;
@@ -58,6 +59,7 @@ public class RandomBurstRegionParticleTask extends BukkitRunnable implements Deb
         this.currentBurstLocation = new Location(world, 0, 0, 0);
         this.spawnLoc = new Location(world, 0, 0, 0);
         this.despawnTimer = despawnTimer;
+        this.hasGravity = hasGravity;
         pickNewLocation();
     }
 

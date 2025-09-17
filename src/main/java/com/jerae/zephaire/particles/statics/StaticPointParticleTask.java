@@ -26,8 +26,9 @@ public class StaticPointParticleTask extends BukkitRunnable implements Debuggabl
     private final boolean collisionEnabled;
     private final World world;
     private final int despawnTimer;
+    private final boolean hasGravity;
 
-    public StaticPointParticleTask(Location location, Particle particle, int count, double offsetX, double offsetY, double offsetZ, double speed, Object particleOptions, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer) {
+    public StaticPointParticleTask(Location location, Particle particle, int count, double offsetX, double offsetY, double offsetZ, double speed, Object particleOptions, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
         this.location = location;
         this.particle = particle;
         this.count = count;
@@ -40,6 +41,7 @@ public class StaticPointParticleTask extends BukkitRunnable implements Debuggabl
         this.collisionEnabled = collisionEnabled;
         this.world = location.getWorld();
         this.despawnTimer = despawnTimer;
+        this.hasGravity = hasGravity;
     }
 
     @Override
@@ -58,7 +60,7 @@ public class StaticPointParticleTask extends BukkitRunnable implements Debuggabl
         }
 
         if (particle == null && particleOptions instanceof ItemStack) {
-            ParticleScheduler.queueParticle(new ParticleSpawnData(location, (ItemStack) particleOptions, despawnTimer));
+            ParticleScheduler.queueParticle(new ParticleSpawnData(location, (ItemStack) particleOptions, despawnTimer, hasGravity));
         } else if (particle != null) {
             ParticleScheduler.queueParticle(new ParticleSpawnData(
                     particle, location, count,

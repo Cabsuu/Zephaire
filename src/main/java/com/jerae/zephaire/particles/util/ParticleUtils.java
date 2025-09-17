@@ -114,4 +114,3 @@ public final class ParticleUtils {
         return value ? ChatColor.GREEN + "true" : ChatColor.RED + "false";
     }
 }
-

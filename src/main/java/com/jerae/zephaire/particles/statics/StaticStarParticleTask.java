@@ -35,8 +35,9 @@ public class StaticStarParticleTask extends BukkitRunnable implements Debuggable
     private final double yaw;
     private final Vector[] vertices;
     private final int despawnTimer;
+    private final boolean hasGravity;
 
-    public StaticStarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer) {
+    public StaticStarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
         this.center = center;
         this.particle = particle;
         this.particleOptions = options;
@@ -51,6 +52,7 @@ public class StaticStarParticleTask extends BukkitRunnable implements Debuggable
         this.yaw = yaw;
         this.vertices = new Vector[this.points * 2];
         this.despawnTimer = despawnTimer;
+        this.hasGravity = hasGravity;
         for (int i = 0; i < vertices.length; i++) {
             vertices[i] = new Vector();
         }
@@ -91,7 +93,7 @@ public class StaticStarParticleTask extends BukkitRunnable implements Debuggable
                 continue;
             }
             if (particle == null && particleOptions instanceof ItemStack) {
-                ParticleScheduler.queueParticle(new ParticleSpawnData(loc, (ItemStack) particleOptions, despawnTimer));
+                ParticleScheduler.queueParticle(new ParticleSpawnData(loc, (ItemStack) particleOptions, despawnTimer, hasGravity));
             } else if (particle != null) {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(particle, loc, 1, 0, 0, 0, 0, particleOptions));
             }

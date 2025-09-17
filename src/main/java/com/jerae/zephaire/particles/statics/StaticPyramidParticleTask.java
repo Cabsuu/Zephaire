@@ -31,8 +31,9 @@ public class StaticPyramidParticleTask extends BukkitRunnable implements Debugga
     private final double height;
     private final int sides;
     private final int despawnTimer;
+    private final boolean hasGravity;
 
-    public StaticPyramidParticleTask(Location center, Particle particle, double baseSize, double height, int sides, double density, Object particleOptions, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer) {
+    public StaticPyramidParticleTask(Location center, Particle particle, double baseSize, double height, int sides, double density, Object particleOptions, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
         this.center = center;
         this.particle = particle;
         this.particleOptions = particleOptions;
@@ -43,6 +44,7 @@ public class StaticPyramidParticleTask extends BukkitRunnable implements Debugga
         this.sides = sides;
         this.particleLocations = new ArrayList<>();
         this.despawnTimer = despawnTimer;
+        this.hasGravity = hasGravity;
 
         // The apex of the pyramid is at the top center
         Vector apex = new Vector(0, height, 0);
@@ -99,7 +101,7 @@ public class StaticPyramidParticleTask extends BukkitRunnable implements Debugga
                 continue;
             }
             if (particle == null && particleOptions instanceof ItemStack) {
-                ParticleScheduler.queueParticle(new ParticleSpawnData(loc, (ItemStack) particleOptions, despawnTimer));
+                ParticleScheduler.queueParticle(new ParticleSpawnData(loc, (ItemStack) particleOptions, despawnTimer, hasGravity));
             } else if (particle != null) {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(particle, loc, 1, 0, 0, 0, 0, particleOptions));
             }

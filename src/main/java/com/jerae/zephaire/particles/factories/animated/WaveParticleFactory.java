@@ -27,7 +27,8 @@ public class WaveParticleFactory extends AbstractAnimatedParticleFactory {
         Object options = parseOptions(particle, section);
         boolean collisionEnabled = parseCollision(section);
         int despawnTimer = section.getInt("despawn-timer", 100);
+        boolean hasGravity = section.getBoolean("options.gravity", false);
 
-        return new WaveParticleTask(base, particle, amplitude, length, speed, period, options, pitch, yaw, manager, collisionEnabled, despawnTimer);
+        return new WaveParticleTask(base, particle, amplitude, length, speed, period, options, pitch, yaw, manager, collisionEnabled, despawnTimer, hasGravity);
     }
 }

@@ -17,6 +17,7 @@ public class ParticleSpawnData {
     public final double speed;
     public final Object data;
     public final int despawnTimer;
+    public final boolean hasGravity;
 
     /**
      * Constructor for standard Bukkit particles.
@@ -32,13 +33,24 @@ public class ParticleSpawnData {
         this.speed = speed;
         this.data = data;
         this.despawnTimer = 0;
+        this.hasGravity = false;
+    }
+
+    /**
+     * @deprecated Use the constructor with the hasGravity parameter instead.
+     * Constructor for VISUAL_ITEM particles.
+     * The `data` field will hold the ItemStack.
+     */
+    @Deprecated
+    public ParticleSpawnData(Location location, ItemStack itemStack, int despawnTimer) {
+        this(location, itemStack, despawnTimer, false);
     }
 
     /**
      * Constructor for VISUAL_ITEM particles.
      * The `data` field will hold the ItemStack.
      */
-    public ParticleSpawnData(Location location, ItemStack itemStack, int despawnTimer) {
+    public ParticleSpawnData(Location location, ItemStack itemStack, int despawnTimer, boolean hasGravity) {
         this.particleType = ParticleType.VISUAL_ITEM;
         this.particle = null; // Not a real Bukkit particle
         this.location = location.clone();
@@ -49,5 +61,7 @@ public class ParticleSpawnData {
         this.speed = 0;
         this.data = itemStack;
         this.despawnTimer = despawnTimer;
+        this.hasGravity = hasGravity;
     }
 }
+

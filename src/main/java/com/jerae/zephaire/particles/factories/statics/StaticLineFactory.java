@@ -24,7 +24,8 @@ public class StaticLineFactory extends AbstractStaticParticleFactory {
         Object options = parseOptions(particle, section);
         boolean collisionEnabled = parseCollision(section);
         int despawnTimer = section.getInt("despawn-timer", 100);
+        boolean hasGravity = section.getBoolean("options.gravity", false);
 
-        return new StaticLineParticleTask(start, end, particle, density, options, manager, collisionEnabled, despawnTimer);
+        return new StaticLineParticleTask(start, end, particle, density, options, manager, collisionEnabled, despawnTimer, hasGravity);
     }
 }

@@ -27,7 +27,8 @@ public class StaticPyramidFactory extends AbstractStaticParticleFactory {
         Object options = parseOptions(particle, section);
         boolean collisionEnabled = parseCollision(section);
         int despawnTimer = section.getInt("despawn-timer", 100);
+        boolean hasGravity = section.getBoolean("options.gravity", false);
 
-        return new StaticPyramidParticleTask(center, particle, baseSize, height, sides, density, options, pitch, yaw, manager, collisionEnabled, despawnTimer);
+        return new StaticPyramidParticleTask(center, particle, baseSize, height, sides, density, options, pitch, yaw, manager, collisionEnabled, despawnTimer, hasGravity);
     }
 }

@@ -28,6 +28,7 @@ public class PulsingCircleParticleTask implements AnimatedParticle {
     private final int period;
     private final boolean collisionEnabled;
     private final int despawnTimer;
+    private final boolean hasGravity;
 
     private double currentRadius;
     private int tickCounter = 0;
@@ -35,10 +36,10 @@ public class PulsingCircleParticleTask implements AnimatedParticle {
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Location currentLocation;
     private final Vector particleVector;
-    private final Vector rotatedVector = new Vector();
+    private final Vector rotatedPos = new Vector();
 
 
-    public PulsingCircleParticleTask(Location center, Particle particle, double maxRadius, double pulseSpeed, int particleCount, double pitch, double yaw, boolean expand, Object options, ConditionManager conditionManager, int period, boolean collisionEnabled, int despawnTimer) {
+    public PulsingCircleParticleTask(Location center, Particle particle, double maxRadius, double pulseSpeed, int particleCount, double pitch, double yaw, boolean expand, Object options, ConditionManager conditionManager, int period, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
         this.center = center;
         this.particle = particle;
         this.maxRadius = maxRadius;
@@ -52,6 +53,7 @@ public class PulsingCircleParticleTask implements AnimatedParticle {
         this.period = Math.max(1, period);
         this.collisionEnabled = collisionEnabled;
         this.despawnTimer = despawnTimer;
+        this.hasGravity = hasGravity;
 
         // --- PERFORMANCE: Initialize reusable objects in the constructor ---
         this.currentLocation = center.clone();
@@ -91,18 +93,18 @@ public class PulsingCircleParticleTask implements AnimatedParticle {
 
             // --- PERFORMANCE: Reuse the particleVector object ---
             particleVector.setX(xOffset).setY(0).setZ(zOffset);
-            VectorUtils.rotateVector(particleVector, pitch, yaw, rotatedVector);
+            VectorUtils.rotateVector(particleVector, pitch, yaw, rotatedPos);
 
             // --- PERFORMANCE: Reuse the currentLocation object ---
-            currentLocation.setX(center.getX() + rotatedVector.getX());
-            currentLocation.setY(center.getY() + rotatedVector.getY());
-            currentLocation.setZ(center.getZ() + rotatedVector.getZ());
+            currentLocation.setX(center.getX() + rotatedPos.getX());
+            currentLocation.setY(center.getY() + rotatedPos.getY());
+            currentLocation.setZ(center.getZ() + rotatedPos.getZ());
 
             if (collisionEnabled && CollisionManager.isColliding(currentLocation)) {
                 continue;
             }
             if (particle == null && options instanceof ItemStack) {
-                ParticleScheduler.queueParticle(new ParticleSpawnData(currentLocation, (ItemStack) options, despawnTimer));
+                ParticleScheduler.queueParticle(new ParticleSpawnData(currentLocation, (ItemStack) options, despawnTimer, hasGravity));
             } else if (particle != null) {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, 1, 0, 0, 0, 0, options));
             }
@@ -132,6 +134,7 @@ public class PulsingCircleParticleTask implements AnimatedParticle {
         info.append(ChatColor.AQUA).append("Player Nearby: ").append(ParticleUtils.formatBoolean(PerformanceManager.isPlayerNearby(center))).append("\n");
         info.append(ChatColor.AQUA).append("Conditions Met: ").append(ParticleUtils.formatBoolean(conditionManager.allConditionsMet(center))).append("\n");
         info.append(ChatColor.AQUA).append("Collision Enabled: ").append(ParticleUtils.formatBoolean(collisionEnabled));
+
         return info.toString();
     }
 }

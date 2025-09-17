@@ -29,8 +29,9 @@ public class StaticCurveParticleTask extends BukkitRunnable implements Debuggabl
     private final Location start, control, end;
     private final double density;
     private final int despawnTimer;
+    private final boolean hasGravity;
 
-    public StaticCurveParticleTask(Location start, Location control, Location end, Particle particle, double density, Object particleOptions, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer) {
+    public StaticCurveParticleTask(Location start, Location control, Location end, Particle particle, double density, Object particleOptions, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
         this.centerReference = start; // Use start as the reference for checks
         this.particle = particle;
         this.particleOptions = particleOptions;
@@ -42,6 +43,7 @@ public class StaticCurveParticleTask extends BukkitRunnable implements Debuggabl
         this.end = end;
         this.density = density;
         this.despawnTimer = despawnTimer;
+        this.hasGravity = hasGravity;
 
         Vector p0 = start.toVector();
         Vector p1 = control.toVector();
@@ -80,7 +82,7 @@ public class StaticCurveParticleTask extends BukkitRunnable implements Debuggabl
                 continue;
             }
             if (particle == null && particleOptions instanceof ItemStack) {
-                ParticleScheduler.queueParticle(new ParticleSpawnData(loc, (ItemStack) particleOptions, despawnTimer));
+                ParticleScheduler.queueParticle(new ParticleSpawnData(loc, (ItemStack) particleOptions, despawnTimer, hasGravity));
             } else if (particle != null) {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(particle, loc, 1, 0, 0, 0, 0, particleOptions));
             }

@@ -24,12 +24,13 @@ public class LineParticleTask implements AnimatedParticle {
     private final Vector directionVector;
     private final boolean collisionEnabled;
     private final int despawnTimer;
+    private final boolean hasGravity;
     private double currentProgress = 0.0;
     private int direction = 1;
     private int tickCounter = 0;
     private final Location currentLocation;
 
-    public LineParticleTask(Location startPoint, Location endPoint, Particle particle, double speed, int period, Object options, boolean resetOnEnd, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer) {
+    public LineParticleTask(Location startPoint, Location endPoint, Particle particle, double speed, int period, Object options, boolean resetOnEnd, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
         this.startPoint = startPoint;
         this.particle = particle;
         this.speed = speed;
@@ -41,6 +42,7 @@ public class LineParticleTask implements AnimatedParticle {
         this.currentLocation = startPoint.clone();
         this.collisionEnabled = collisionEnabled;
         this.despawnTimer = despawnTimer;
+        this.hasGravity = hasGravity;
     }
 
     @Override
@@ -79,7 +81,7 @@ public class LineParticleTask implements AnimatedParticle {
                 return;
             }
             if (particle == null && options instanceof ItemStack) {
-                ParticleScheduler.queueParticle(new ParticleSpawnData(currentLocation, (ItemStack) options, despawnTimer));
+                ParticleScheduler.queueParticle(new ParticleSpawnData(currentLocation, (ItemStack) options, despawnTimer, hasGravity));
             } else if (particle != null) {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, 1, 0, 0, 0, 0, options));
             }
