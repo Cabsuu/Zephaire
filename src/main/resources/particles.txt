@@ -115,6 +115,9 @@
 
 - ELDER_GUARDIAN -- Note: You can still put this but it won't work, as it only target players.
 
+### Special Particle Type ###
+- VISUAL_ITEM
+
 ### List of Particles that are not yet implemented ###
 ( Do not use, as these particles doesn't work yet )
 

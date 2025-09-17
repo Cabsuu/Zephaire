@@ -10,7 +10,7 @@ static-particles:
   point-particle-name: # (A variable name for the particle)
     shape: 'POINT' # (Default if 'shape' is omitted)
     type: 'FLAME' # (Default if 'type' is omitted)
-    period: 20 # (Default if 'period' is omitted)
+    period: 20 # (Default if 'period' is omitted, and only available for 'POINT' in static-particles.)
     world: 'world' # (Default if 'world' is omitted)
     location: # (Default if 'location' is omitted)
       x: 0
