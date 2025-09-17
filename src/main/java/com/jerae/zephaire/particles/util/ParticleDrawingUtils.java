@@ -21,7 +21,7 @@ public class ParticleDrawingUtils {
         }
     }
 
-    public static void drawParticleLine(Location center, Vector start, Vector end, double density, Particle particle, Object options, int despawnTimer) {
+    public static void drawParticleLine(Location center, Vector start, Vector end, double density, Particle particle, Object options, int despawnTimer, boolean hasGravity) {
         Vector lineDirection = new Vector();
         Vector currentLinePoint = new Vector();
         Location particleLoc = center.clone();
@@ -37,7 +37,7 @@ public class ParticleDrawingUtils {
             particleLoc.setZ(center.getZ() + currentLinePoint.getZ());
 
             if (particle == null && options instanceof ItemStack) {
-                ParticleScheduler.queueParticle(new ParticleSpawnData(particleLoc, (ItemStack) options, despawnTimer));
+                ParticleScheduler.queueParticle(new ParticleSpawnData(particleLoc, (ItemStack) options, despawnTimer, hasGravity));
             } else if (particle != null) {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(particle, particleLoc, 1, 0, 0, 0, 0, options));
             }

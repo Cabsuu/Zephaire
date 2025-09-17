@@ -29,8 +29,9 @@ public class StaticCuboidParticleTask extends BukkitRunnable implements Debuggab
     private final boolean collisionEnabled;
     private final double width, height, depth;
     private final int despawnTimer;
+    private final boolean hasGravity;
 
-    public StaticCuboidParticleTask(Location center, Particle particle, double width, double height, double depth, double density, Object particleOptions, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer) {
+    public StaticCuboidParticleTask(Location center, Particle particle, double width, double height, double depth, double density, Object particleOptions, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
         this.center = center;
         this.particle = particle;
         this.particleOptions = particleOptions;
@@ -41,6 +42,7 @@ public class StaticCuboidParticleTask extends BukkitRunnable implements Debuggab
         this.height = height;
         this.depth = depth;
         this.despawnTimer = despawnTimer;
+        this.hasGravity = hasGravity;
 
         double halfWidth = width / 2.0;
         double halfHeight = height / 2.0;
@@ -103,7 +105,7 @@ public class StaticCuboidParticleTask extends BukkitRunnable implements Debuggab
                 continue;
             }
             if (particle == null && particleOptions instanceof ItemStack) {
-                ParticleScheduler.queueParticle(new ParticleSpawnData(loc, (ItemStack) particleOptions, despawnTimer));
+                ParticleScheduler.queueParticle(new ParticleSpawnData(loc, (ItemStack) particleOptions, despawnTimer, hasGravity));
             } else if (particle != null) {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(particle, loc, 1, 0, 0, 0, 0, particleOptions));
             }

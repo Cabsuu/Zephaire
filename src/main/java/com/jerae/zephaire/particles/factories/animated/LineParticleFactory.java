@@ -26,7 +26,8 @@ public class LineParticleFactory extends AbstractAnimatedParticleFactory {
         Object options = parseOptions(particle, section);
         boolean collisionEnabled = parseCollision(section);
         int despawnTimer = section.getInt("despawn-timer", 100);
+        boolean hasGravity = section.getBoolean("options.gravity", false);
 
-        return new LineParticleTask(start, end, particle, speed, period, options, resetOnEnd, manager, collisionEnabled, despawnTimer);
+        return new LineParticleTask(start, end, particle, speed, period, options, resetOnEnd, manager, collisionEnabled, despawnTimer, hasGravity);
     }
 }

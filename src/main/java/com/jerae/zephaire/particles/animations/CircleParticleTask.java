@@ -28,6 +28,7 @@ public class CircleParticleTask implements AnimatedParticle {
     private final boolean collisionEnabled;
     private final World world;
     private final int despawnTimer;
+    private final boolean hasGravity;
 
     private double angle = 0;
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
@@ -35,7 +36,7 @@ public class CircleParticleTask implements AnimatedParticle {
     private final Vector relativePos;
     private final Vector rotatedPos = new Vector();
 
-    public CircleParticleTask(Location center, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer) {
+    public CircleParticleTask(Location center, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
         this.center = center;
         this.particle = particle;
         this.radius = radius;
@@ -48,6 +49,7 @@ public class CircleParticleTask implements AnimatedParticle {
         this.collisionEnabled = collisionEnabled;
         this.world = center.getWorld();
         this.despawnTimer = despawnTimer;
+        this.hasGravity = hasGravity;
         // --- PERFORMANCE: Initialize reusable objects in the constructor ---
         this.spawnLocation = center.clone();
         this.relativePos = new Vector();
@@ -84,7 +86,7 @@ public class CircleParticleTask implements AnimatedParticle {
                 continue;
             }
             if (particle == null && options instanceof ItemStack) {
-                ParticleScheduler.queueParticle(new ParticleSpawnData(spawnLocation, (ItemStack) options, despawnTimer));
+                ParticleScheduler.queueParticle(new ParticleSpawnData(spawnLocation, (ItemStack) options, despawnTimer, hasGravity));
             } else if (particle != null) {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, 1, 0, 0, 0, 0, options));
             }

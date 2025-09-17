@@ -24,8 +24,8 @@ public class EntityVortexParticleFactory implements EntityParticleFactory {
         Object options = ParticleUtils.parseParticleOptions(particle, section.getConfigurationSection("options"));
         boolean collisionEnabled = CollisionManager.shouldCollide(section);
         int despawnTimer = section.getInt("despawn-timer", 100);
+        boolean hasGravity = section.getBoolean("options.gravity", false);
 
-        return new EntityVortexParticleTask(effectName, particle, radius, height, speed, particleCount, options, manager, collisionEnabled, offset, target, period, spawnBehavior, despawnTimer);
+        return new EntityVortexParticleTask(effectName, particle, radius, height, speed, particleCount, options, manager, collisionEnabled, offset, target, period, spawnBehavior, despawnTimer, hasGravity);
     }
 }
-

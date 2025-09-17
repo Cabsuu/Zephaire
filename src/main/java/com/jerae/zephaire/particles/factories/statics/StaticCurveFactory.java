@@ -25,7 +25,8 @@ public class StaticCurveFactory extends AbstractStaticParticleFactory {
         Object options = parseOptions(particle, section);
         boolean collisionEnabled = parseCollision(section);
         int despawnTimer = section.getInt("despawn-timer", 100);
+        boolean hasGravity = section.getBoolean("options.gravity", false);
 
-        return new StaticCurveParticleTask(start, control, end, particle, density, options, manager, collisionEnabled, despawnTimer);
+        return new StaticCurveParticleTask(start, control, end, particle, density, options, manager, collisionEnabled, despawnTimer, hasGravity);
     }
 }

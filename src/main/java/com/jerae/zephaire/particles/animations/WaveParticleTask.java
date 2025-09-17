@@ -27,6 +27,7 @@ public class WaveParticleTask implements AnimatedParticle {
     private final ConditionManager conditionManager;
     private final boolean collisionEnabled;
     private final int despawnTimer;
+    private final boolean hasGravity;
 
     private double progress = 0;
     private int tickCounter = 0;
@@ -37,7 +38,7 @@ public class WaveParticleTask implements AnimatedParticle {
     private final Vector rotatedVector = new Vector();
 
 
-    public WaveParticleTask(Location base, Particle particle, double amplitude, double length, double speed, int period, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer) {
+    public WaveParticleTask(Location base, Particle particle, double amplitude, double length, double speed, int period, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
         this.base = base;
         this.particle = particle;
         this.amplitude = amplitude;
@@ -51,6 +52,7 @@ public class WaveParticleTask implements AnimatedParticle {
         this.collisionEnabled = collisionEnabled;
         this.despawnTimer = despawnTimer;
         this.currentLocation = base.clone();
+        this.hasGravity = hasGravity;
     }
 
     @Override
@@ -84,7 +86,7 @@ public class WaveParticleTask implements AnimatedParticle {
                 return;
             }
             if (particle == null && options instanceof ItemStack) {
-                ParticleScheduler.queueParticle(new ParticleSpawnData(currentLocation, (ItemStack) options, despawnTimer));
+                ParticleScheduler.queueParticle(new ParticleSpawnData(currentLocation, (ItemStack) options, despawnTimer, hasGravity));
             } else if (particle != null) {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, 1, 0, 0, 0, 0, options));
             }

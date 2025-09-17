@@ -37,6 +37,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
     private final boolean bounce;
     private final SpawnBehavior spawnBehavior;
     private final int despawnTimer;
+    private final boolean hasGravity;
 
     private double rotationAngle = 0;
     private int tickCounter = 0;
@@ -50,7 +51,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
     private final Vector currentLinePoint = new Vector();
     private final Location particleLoc;
 
-    public EntityStarParticleTask(String effectName, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, double height, double verticalSpeed, boolean bounce, SpawnBehavior spawnBehavior, int despawnTimer) {
+    public EntityStarParticleTask(String effectName, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, double height, double verticalSpeed, boolean bounce, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity) {
         this.effectName = effectName;
         this.particle = particle;
         this.points = Math.max(2, points);
@@ -71,6 +72,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
         this.bounce = bounce;
         this.spawnBehavior = spawnBehavior;
         this.despawnTimer = despawnTimer;
+        this.hasGravity = hasGravity;
         this.vertices = new Vector[this.points * 2];
         for (int i = 0; i < vertices.length; i++) {
             vertices[i] = new Vector();
@@ -80,7 +82,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
 
     @Override
     public EntityParticleTask newInstance() {
-        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, conditionManager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce, this.spawnBehavior, despawnTimer);
+        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, conditionManager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce, this.spawnBehavior, despawnTimer, hasGravity);
     }
 
     @Override
@@ -141,6 +143,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
     private void drawStar(Location center) {
         int totalVertices = points * 2;
 
+        // Calculate all the vertices of the star with the vertical offset
         for (int i = 0; i < totalVertices; i++) {
             double angle = rotationAngle + (i * Math.PI / points);
             double radius = (i % 2 == 0) ? outerRadius : innerRadius;
@@ -148,6 +151,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
             VectorUtils.rotateVector(reusableVertex, pitch, yaw, vertices[i]);
         }
 
+        // Draw lines between the vertices
         for (int i = 0; i < totalVertices; i++) {
             Vector start = vertices[i];
             Vector end = vertices[(i + 1) % totalVertices];
@@ -170,7 +174,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
                 continue;
             }
             if (particle == null && options instanceof ItemStack) {
-                ParticleScheduler.queueParticle(new ParticleSpawnData(particleLoc, (ItemStack) options, despawnTimer));
+                ParticleScheduler.queueParticle(new ParticleSpawnData(particleLoc, (ItemStack) options, despawnTimer, hasGravity));
             } else if (particle != null) {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(particle, particleLoc, 1, 0, 0, 0, 0, options));
             }
@@ -203,4 +207,3 @@ public class EntityStarParticleTask implements EntityParticleTask {
                 (target.getEntityType() != null ? " (" + target.getEntityType().name() + ")" : "");
     }
 }
-

@@ -30,6 +30,7 @@ public class EntityCircleParticleTask implements EntityParticleTask {
     private final int period;
     private final SpawnBehavior spawnBehavior;
     private final int despawnTimer;
+    private final boolean hasGravity;
 
     private double angle = 0;
     private int tickCounter = 0;
@@ -40,7 +41,7 @@ public class EntityCircleParticleTask implements EntityParticleTask {
     private final Vector rotatedPos = new Vector();
 
 
-    public EntityCircleParticleTask(String effectName, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer) {
+    public EntityCircleParticleTask(String effectName, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity) {
         this.effectName = effectName;
         this.particle = particle;
         this.radius = radius;
@@ -56,6 +57,7 @@ public class EntityCircleParticleTask implements EntityParticleTask {
         this.period = Math.max(1, period);
         this.spawnBehavior = spawnBehavior;
         this.despawnTimer = despawnTimer;
+        this.hasGravity = hasGravity;
         this.spawnLocation = new Location(null, 0, 0, 0); // World will be set dynamically
         this.relativePos = new Vector();
     }
@@ -65,7 +67,7 @@ public class EntityCircleParticleTask implements EntityParticleTask {
         return new EntityCircleParticleTask(
                 this.effectName, this.particle, this.radius, this.speed,
                 this.particleCount, this.options, this.pitch, this.yaw,
-                this.conditionManager, this.collisionEnabled, this.offset, this.target, this.period, this.spawnBehavior, this.despawnTimer
+                this.conditionManager, this.collisionEnabled, this.offset, this.target, this.period, this.spawnBehavior, this.despawnTimer, this.hasGravity
         );
     }
 
@@ -118,7 +120,7 @@ public class EntityCircleParticleTask implements EntityParticleTask {
             }
 
             if (particle == null && options instanceof ItemStack) {
-                ParticleScheduler.queueParticle(new ParticleSpawnData(spawnLocation, (ItemStack) options, despawnTimer));
+                ParticleScheduler.queueParticle(new ParticleSpawnData(spawnLocation, (ItemStack) options, despawnTimer, hasGravity));
             } else if (particle != null) {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, 1, 0, 0, 0, 0, options));
             }
@@ -150,4 +152,3 @@ public class EntityCircleParticleTask implements EntityParticleTask {
                 (target.getEntityType() != null ? " (" + target.getEntityType().name() + ")" : "");
     }
 }
-

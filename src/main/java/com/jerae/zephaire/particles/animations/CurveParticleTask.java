@@ -24,6 +24,7 @@ public class CurveParticleTask implements AnimatedParticle {
     private final World world;
     private final boolean collisionEnabled;
     private final int despawnTimer;
+    private final boolean hasGravity;
 
     private double t = 0.0;
     private int direction = 1;
@@ -34,7 +35,7 @@ public class CurveParticleTask implements AnimatedParticle {
     private final Vector term2 = new Vector();
     private final Vector term3 = new Vector();
 
-    public CurveParticleTask(Location start, Location control, Location end, Particle particle, double speed, boolean bounce, Object options, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer) {
+    public CurveParticleTask(Location start, Location control, Location end, Particle particle, double speed, boolean bounce, Object options, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
         this.world = start.getWorld();
         this.p0 = start.toVector();
         this.p1 = control.toVector();
@@ -47,6 +48,7 @@ public class CurveParticleTask implements AnimatedParticle {
         this.currentLocation = start.clone();
         this.collisionEnabled = collisionEnabled;
         this.despawnTimer = despawnTimer;
+        this.hasGravity = hasGravity;
     }
 
     @Override
@@ -85,7 +87,7 @@ public class CurveParticleTask implements AnimatedParticle {
             return;
         }
         if (particle == null && options instanceof ItemStack) {
-            ParticleScheduler.queueParticle(new ParticleSpawnData(currentLocation, (ItemStack) options, despawnTimer));
+            ParticleScheduler.queueParticle(new ParticleSpawnData(currentLocation, (ItemStack) options, despawnTimer, hasGravity));
         } else if (particle != null) {
             ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, 1, 0, 0, 0, 0, options));
         }

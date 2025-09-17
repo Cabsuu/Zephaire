@@ -30,8 +30,9 @@ public class StaticRegionParticleTask extends BukkitRunnable implements Debuggab
     private final boolean collisionEnabled;
     private final Location center;
     private final int despawnTimer;
+    private final boolean hasGravity;
 
-    public StaticRegionParticleTask(Location corner1, Location corner2, Particle particle, int particleCount, Object particleOptions, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer) {
+    public StaticRegionParticleTask(Location corner1, Location corner2, Particle particle, int particleCount, Object particleOptions, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
         this.corner1 = corner1;
         this.corner2 = corner2;
         this.particle = particle;
@@ -47,6 +48,7 @@ public class StaticRegionParticleTask extends BukkitRunnable implements Debuggab
         this.conditionManager = conditionManager;
         this.collisionEnabled = collisionEnabled;
         this.despawnTimer = despawnTimer;
+        this.hasGravity = hasGravity;
         // Pre-calculate the center of the region to avoid recalculating it on every run.
         this.center = new Location(corner1.getWorld(), (minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2);
     }
@@ -75,7 +77,7 @@ public class StaticRegionParticleTask extends BukkitRunnable implements Debuggab
                 continue;
             }
             if (particle == null && particleOptions instanceof ItemStack) {
-                ParticleScheduler.queueParticle(new ParticleSpawnData(reusableLocation, (ItemStack) particleOptions, despawnTimer));
+                ParticleScheduler.queueParticle(new ParticleSpawnData(reusableLocation, (ItemStack) particleOptions, despawnTimer, hasGravity));
             } else if (particle != null) {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(particle, reusableLocation, 1, 0, 0, 0, 0, particleOptions));
             }
