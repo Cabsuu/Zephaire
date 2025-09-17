@@ -12,6 +12,7 @@ com\jerae\zephaire\commands\subcommands\SubCommand.class
 com\jerae\zephaire\particles\factories\conditions\BlockInteractConditionFactory.class
 com\jerae\zephaire\particles\conditions\BlockInteractCondition.class
 com\jerae\zephaire\particles\managers\AnimationManager.class
+com\jerae\zephaire\particles\ParticleType.class
 com\jerae\zephaire\particles\factories\animated\VortexParticleFactory.class
 com\jerae\zephaire\particles\util\ParticleUtils.class
 com\jerae\zephaire\particles\animations\decorator\SoundDecorator.class
@@ -26,6 +27,7 @@ com\jerae\zephaire\particles\statics\StaticPyramidParticleTask.class
 com\jerae\zephaire\particles\util\ConfigValidator.class
 com\jerae\zephaire\commands\CommandManager.class
 com\jerae\zephaire\particles\factories\statics\AbstractStaticParticleFactory.class
+com\jerae\zephaire\particles\ParticleScheduler$1.class
 com\jerae\zephaire\particles\managers\FactoryManager.class
 com\jerae\zephaire\particles\factories\statics\StaticPyramidFactory.class
 com\jerae\zephaire\listeners\PlayerInteractListener.class
@@ -54,6 +56,7 @@ com\jerae\zephaire\particles\util\ParticleDrawingUtils.class
 com\jerae\zephaire\commands\subcommands\ToggleCommand.class
 com\jerae\zephaire\particles\conditions\WeatherCondition.class
 com\jerae\zephaire\particles\factories\decorators\MultiColorTransitionDecoratorFactory.class
+com\jerae\zephaire\listeners\ItemListener.class
 com\jerae\zephaire\particles\loaders\EntityParticleLoader.class
 com\jerae\zephaire\particles\animations\entity\EntityStarParticleTask$1.class
 com\jerae\zephaire\particles\animations\StarParticleTask.class

@@ -109,6 +109,10 @@
 - WHITE_SMOKE
 - WITCH
 
+### Special Particle Type ###
+
+- VISUAL_ITEM
+
 - ELDER_GUARDIAN -- Note: You can still put this but it won't work, as it only target players.
 
 ### List of Particles that are not yet implemented ###
