@@ -62,6 +62,11 @@ public class SoundDecorator implements AnimatedParticle {
     }
 
     @Override
+    public void reset() {
+        // This task is continuous, so there is nothing to reset.
+    }
+
+    @Override
     public String getDebugInfo() {
         // A decorator passes the debug call to the particle it's wrapping,
         // but adds its own information to the output.

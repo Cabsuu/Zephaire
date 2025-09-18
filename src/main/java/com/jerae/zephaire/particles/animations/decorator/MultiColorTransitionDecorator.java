@@ -84,6 +84,11 @@ public class MultiColorTransitionDecorator implements AnimatedParticle {
     }
 
     @Override
+    public void reset() {
+        // This task is continuous, so there is nothing to reset.
+    }
+
+    @Override
     public String getDebugInfo() {
         StringBuilder info = new StringBuilder();
         info.append(ChatColor.YELLOW).append("--- Decorator: Multi-Color Transition ---").append("\n");

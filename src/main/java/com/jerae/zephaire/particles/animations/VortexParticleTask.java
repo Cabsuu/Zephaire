@@ -27,12 +27,12 @@ public class VortexParticleTask implements AnimatedParticle {
     private final int despawnTimer;
     private final boolean hasGravity;
     private final World world;
+    private final LoopDelay loopDelay;
 
     private final double radius;
     private final double height;
     private final double speed;
     private final int particleCount;
-    private final LoopDelay loopDelay;
 
     private final List<Location> particles = new ArrayList<>();
     private final List<Vector> velocities = new ArrayList<>();
@@ -159,6 +159,11 @@ public class VortexParticleTask implements AnimatedParticle {
     @Override
     public LoopDelay getLoopDelay() {
         return loopDelay;
+    }
+
+    @Override
+    public void reset() {
+        // This task is continuous, so there is nothing to reset.
     }
 
     @Override

@@ -238,4 +238,9 @@ public class EntityStarParticleTask implements EntityParticleTask {
     public LoopDelay getLoopDelay() {
         return loopDelay;
     }
+
+    @Override
+    public void reset() {
+        // This task is continuous, so there is nothing to reset.
+    }
 }
