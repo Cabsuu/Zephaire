@@ -150,6 +150,13 @@ public class MovingStarParticleTask implements AnimatedParticle {
     }
 
     @Override
+    public void reset() {
+        rotationAngle = 0;
+        currentYOffset = 0;
+        verticalDirection = 1;
+    }
+
+    @Override
     public String getDebugInfo() {
         StringBuilder info = new StringBuilder();
         info.append(ChatColor.AQUA).append("Type: ").append(ChatColor.WHITE).append("ANIMATED").append("\n");
