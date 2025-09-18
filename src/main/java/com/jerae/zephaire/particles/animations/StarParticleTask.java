@@ -134,16 +134,17 @@ public class StarParticleTask implements AnimatedParticle {
 
     @Override
     public boolean isLoopComplete() {
-        boolean complete = rotationAngle >= 2 * Math.PI;
-        if (complete) {
-            rotationAngle = 0;
-        }
-        return complete;
+        return rotationAngle >= 2 * Math.PI;
     }
 
     @Override
     public LoopDelay getLoopDelay() {
         return loopDelay;
+    }
+
+    @Override
+    public void reset() {
+        rotationAngle = 0;
     }
 
     @Override
