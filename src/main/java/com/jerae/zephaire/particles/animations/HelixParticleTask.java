@@ -30,6 +30,7 @@ public class HelixParticleTask implements AnimatedParticle {
     private final boolean collisionEnabled;
     private final int despawnTimer;
     private final boolean hasGravity;
+    private final LoopDelay loopDelay;
 
     private double angle;
     private double currentYOffset;
@@ -42,7 +43,7 @@ public class HelixParticleTask implements AnimatedParticle {
     private final Vector rotatedVector = new Vector();
 
 
-    public HelixParticleTask(Location base, Particle particle, double radius, double height, double speed, double verticalSpeed, int period, double startAngle, Object options, double pitch, double yaw, boolean bounce, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
+    public HelixParticleTask(Location base, Particle particle, double radius, double height, double speed, double verticalSpeed, int period, double startAngle, Object options, double pitch, double yaw, boolean bounce, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, LoopDelay loopDelay) {
         this.base = base;
         this.particle = particle;
         this.radius = radius;
@@ -61,10 +62,21 @@ public class HelixParticleTask implements AnimatedParticle {
         this.currentYOffset = 0;
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
+        this.loopDelay = loopDelay;
+    }
+
+    @Override
+    public void reset() {
+        currentYOffset = 0;
+        verticalDirection = 1;
     }
 
     @Override
     public void tick() {
+        if (loopDelay.isWaiting()) {
+            return;
+        }
+
         if (!conditionManager.allConditionsMet(base)) {
             return;
         }
@@ -121,6 +133,20 @@ public class HelixParticleTask implements AnimatedParticle {
     @Override
     public boolean shouldCollide() {
         return collisionEnabled;
+    }
+
+    @Override
+    public boolean isLoopComplete() {
+        if (bounce) {
+            return (currentYOffset >= height && verticalDirection == -1) || (currentYOffset <= 0 && verticalDirection == 1);
+        } else {
+            return currentYOffset >= height;
+        }
+    }
+
+    @Override
+    public LoopDelay getLoopDelay() {
+        return loopDelay;
     }
 
     @Override

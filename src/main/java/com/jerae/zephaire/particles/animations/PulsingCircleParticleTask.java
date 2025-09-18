@@ -29,6 +29,7 @@ public class PulsingCircleParticleTask implements AnimatedParticle {
     private final boolean collisionEnabled;
     private final int despawnTimer;
     private final boolean hasGravity;
+    private final LoopDelay loopDelay;
 
     private double currentRadius;
     private int tickCounter = 0;
@@ -39,7 +40,7 @@ public class PulsingCircleParticleTask implements AnimatedParticle {
     private final Vector rotatedPos = new Vector();
 
 
-    public PulsingCircleParticleTask(Location center, Particle particle, double maxRadius, double pulseSpeed, int particleCount, double pitch, double yaw, boolean expand, Object options, ConditionManager conditionManager, int period, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
+    public PulsingCircleParticleTask(Location center, Particle particle, double maxRadius, double pulseSpeed, int particleCount, double pitch, double yaw, boolean expand, Object options, ConditionManager conditionManager, int period, boolean collisionEnabled, int despawnTimer, boolean hasGravity, LoopDelay loopDelay) {
         this.center = center;
         this.particle = particle;
         this.maxRadius = maxRadius;
@@ -54,6 +55,7 @@ public class PulsingCircleParticleTask implements AnimatedParticle {
         this.collisionEnabled = collisionEnabled;
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
+        this.loopDelay = loopDelay;
 
         // --- PERFORMANCE: Initialize reusable objects in the constructor ---
         this.currentLocation = center.clone();
@@ -64,6 +66,10 @@ public class PulsingCircleParticleTask implements AnimatedParticle {
 
     @Override
     public void tick() {
+        if (loopDelay.isWaiting()) {
+            return;
+        }
+
         if (!conditionManager.allConditionsMet(center)) {
             return;
         }
@@ -119,6 +125,25 @@ public class PulsingCircleParticleTask implements AnimatedParticle {
     @Override
     public boolean shouldCollide() {
         return collisionEnabled;
+    }
+
+    @Override
+    public boolean isLoopComplete() {
+        if (expand) {
+            return currentRadius >= maxRadius;
+        } else {
+            return currentRadius <= 0;
+        }
+    }
+
+    @Override
+    public LoopDelay getLoopDelay() {
+        return loopDelay;
+    }
+
+    @Override
+    public void reset() {
+        this.currentRadius = expand ? 0 : maxRadius;
     }
 
     @Override

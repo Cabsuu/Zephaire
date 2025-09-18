@@ -2,6 +2,7 @@ package com.jerae.zephaire.particles.factories.animated;
 
 import com.jerae.zephaire.particles.animations.AnimatedParticle;
 import com.jerae.zephaire.particles.animations.StarParticleTask;
+import com.jerae.zephaire.particles.animations.LoopDelay;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.util.ConfigValidator;
 import org.bukkit.Location;
@@ -29,7 +30,9 @@ public class StarParticleFactory extends AbstractAnimatedParticleFactory {
         boolean collisionEnabled = parseCollision(section);
         int despawnTimer = section.getInt("despawn-timer", 100);
         boolean hasGravity = section.getBoolean("options.gravity", false);
+        int loopDelayTicks = section.getInt("loop-delay", 0);
+        LoopDelay loopDelay = new LoopDelay(loopDelayTicks, System::currentTimeMillis);
 
-        return new StarParticleTask(center, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, manager, collisionEnabled, despawnTimer, hasGravity);
+        return new StarParticleTask(center, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, manager, collisionEnabled, despawnTimer, hasGravity, loopDelay);
     }
 }

@@ -27,6 +27,7 @@ public class VortexParticleTask implements AnimatedParticle {
     private final int despawnTimer;
     private final boolean hasGravity;
     private final World world;
+    private final LoopDelay loopDelay;
 
     private final double radius;
     private final double height;
@@ -41,7 +42,7 @@ public class VortexParticleTask implements AnimatedParticle {
     private final Vector rotational = new Vector();
 
 
-    public VortexParticleTask(Location center, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
+    public VortexParticleTask(Location center, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, LoopDelay loopDelay) {
         this.center = center;
         this.particle = particle;
         this.radius = radius;
@@ -54,10 +55,15 @@ public class VortexParticleTask implements AnimatedParticle {
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
         this.world = center.getWorld();
+        this.loopDelay = loopDelay;
     }
 
     @Override
     public void tick() {
+        if (loopDelay.isWaiting()) {
+            return;
+        }
+
         if (world == null || !PerformanceManager.isPlayerNearby(center) || !conditionManager.allConditionsMet(center)) {
             return;
         }
@@ -143,6 +149,21 @@ public class VortexParticleTask implements AnimatedParticle {
     @Override
     public boolean shouldCollide() {
         return collisionEnabled;
+    }
+
+    @Override
+    public boolean isLoopComplete() {
+        return false;
+    }
+
+    @Override
+    public LoopDelay getLoopDelay() {
+        return loopDelay;
+    }
+
+    @Override
+    public void reset() {
+        // This task is continuous, so there is nothing to reset.
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.jerae.zephaire.particles.animations.entity;
 
+import com.jerae.zephaire.particles.animations.LoopDelay;
 import com.jerae.zephaire.particles.ParticleScheduler;
 import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
@@ -35,6 +36,7 @@ public class EntityVortexParticleTask implements EntityParticleTask {
     private final SpawnBehavior spawnBehavior;
     private final int despawnTimer;
     private final boolean hasGravity;
+    private final LoopDelay loopDelay;
 
     private final List<Location> particles = new ArrayList<>();
     private final List<Vector> velocities = new ArrayList<>();
@@ -45,7 +47,7 @@ public class EntityVortexParticleTask implements EntityParticleTask {
     private final Vector rotational = new Vector();
 
 
-    public EntityVortexParticleTask(String effectName, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity) {
+    public EntityVortexParticleTask(String effectName, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, LoopDelay loopDelay) {
         this.effectName = effectName;
         this.particle = particle;
         this.radius = radius;
@@ -61,6 +63,7 @@ public class EntityVortexParticleTask implements EntityParticleTask {
         this.spawnBehavior = spawnBehavior;
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
+        this.loopDelay = loopDelay;
     }
 
     @Override
@@ -68,7 +71,7 @@ public class EntityVortexParticleTask implements EntityParticleTask {
         return new EntityVortexParticleTask(
                 effectName, particle, radius, height, speed, particleCount, options,
                 conditionManager, collisionEnabled, offset, target, period, spawnBehavior,
-                despawnTimer, hasGravity
+                despawnTimer, hasGravity, loopDelay
         );
     }
 
@@ -79,6 +82,10 @@ public class EntityVortexParticleTask implements EntityParticleTask {
 
     @Override
     public void tick(Entity entity) {
+        if (loopDelay.isWaiting()) {
+            return;
+        }
+
         boolean isMoving = entity.getVelocity().setY(0).lengthSquared() > 0.01;
         switch (spawnBehavior) {
             case STANDING_STILL:
@@ -179,5 +186,31 @@ public class EntityVortexParticleTask implements EntityParticleTask {
                 ChatColor.AQUA + "Speed: " + ChatColor.WHITE + speed + "\n" +
                 ChatColor.AQUA + "Target: " + ChatColor.WHITE + target.getTargetType().name() + targetNameInfo +
                 (target.getEntityType() != null ? " (" + target.getEntityType().name() + ")" : "");
+    }
+
+    @Override
+    public void tick() {
+        // This task is ticked with an entity context, so this method is not used.
+    }
+
+    @Override
+    public Location getCurrentLocation() {
+        // Not applicable for entity particles in the same way as static ones.
+        return null;
+    }
+
+    @Override
+    public boolean isLoopComplete() {
+        return false;
+    }
+
+    @Override
+    public LoopDelay getLoopDelay() {
+        return loopDelay;
+    }
+
+    @Override
+    public void reset() {
+        // This task is continuous, so there is nothing to reset.
     }
 }

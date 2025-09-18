@@ -21,9 +21,11 @@ H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zep
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\entity\EntityVortexParticleTask.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\HelixParticleTask.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\LineParticleTask.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\LoopDelay.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\MovingStarParticleTask.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\PulsingCircleParticleTask.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\StarParticleTask.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\Ticker.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\VortexParticleTask.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\WaveParticleTask.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\conditions\BlockInteractCondition.java
