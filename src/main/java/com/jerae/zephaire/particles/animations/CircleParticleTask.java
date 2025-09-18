@@ -29,6 +29,7 @@ public class CircleParticleTask implements AnimatedParticle {
     private final World world;
     private final int despawnTimer;
     private final boolean hasGravity;
+    private final LoopDelay loopDelay;
 
     private double angle = 0;
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
@@ -36,7 +37,7 @@ public class CircleParticleTask implements AnimatedParticle {
     private final Vector relativePos;
     private final Vector rotatedPos = new Vector();
 
-    public CircleParticleTask(Location center, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
+    public CircleParticleTask(Location center, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, LoopDelay loopDelay) {
         this.center = center;
         this.particle = particle;
         this.radius = radius;
@@ -50,6 +51,7 @@ public class CircleParticleTask implements AnimatedParticle {
         this.world = center.getWorld();
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
+        this.loopDelay = loopDelay;
         // --- PERFORMANCE: Initialize reusable objects in the constructor ---
         this.spawnLocation = center.clone();
         this.relativePos = new Vector();
@@ -58,6 +60,10 @@ public class CircleParticleTask implements AnimatedParticle {
     @Override
     public void tick() {
         if (world == null) {
+            return;
+        }
+
+        if (loopDelay.isWaiting()) {
             return;
         }
 
@@ -101,6 +107,21 @@ public class CircleParticleTask implements AnimatedParticle {
     @Override
     public boolean shouldCollide() {
         return collisionEnabled;
+    }
+
+    @Override
+    public boolean isLoopComplete() {
+        return angle >= 2 * Math.PI;
+    }
+
+    @Override
+    public LoopDelay getLoopDelay() {
+        return loopDelay;
+    }
+
+    @Override
+    public void reset() {
+        angle = 0;
     }
 
     @Override

@@ -28,6 +28,7 @@ public class WaveParticleTask implements AnimatedParticle {
     private final boolean collisionEnabled;
     private final int despawnTimer;
     private final boolean hasGravity;
+    private final LoopDelay loopDelay;
 
     private double progress = 0;
     private int tickCounter = 0;
@@ -38,7 +39,7 @@ public class WaveParticleTask implements AnimatedParticle {
     private final Vector rotatedVector = new Vector();
 
 
-    public WaveParticleTask(Location base, Particle particle, double amplitude, double length, double speed, int period, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
+    public WaveParticleTask(Location base, Particle particle, double amplitude, double length, double speed, int period, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, LoopDelay loopDelay) {
         this.base = base;
         this.particle = particle;
         this.amplitude = amplitude;
@@ -53,10 +54,15 @@ public class WaveParticleTask implements AnimatedParticle {
         this.despawnTimer = despawnTimer;
         this.currentLocation = base.clone();
         this.hasGravity = hasGravity;
+        this.loopDelay = loopDelay;
     }
 
     @Override
     public void tick() {
+        if (loopDelay.isWaiting()) {
+            return;
+        }
+
         if (!conditionManager.allConditionsMet(base)) {
             return;
         }
@@ -101,6 +107,20 @@ public class WaveParticleTask implements AnimatedParticle {
     @Override
     public boolean shouldCollide() {
         return collisionEnabled;
+    }
+
+    @Override
+    public boolean isLoopComplete() {
+        boolean complete = progress >= length;
+        if (complete) {
+            progress = 0;
+        }
+        return complete;
+    }
+
+    @Override
+    public LoopDelay getLoopDelay() {
+        return loopDelay;
     }
 
     @Override

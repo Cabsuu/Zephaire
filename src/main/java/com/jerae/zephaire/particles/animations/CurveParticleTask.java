@@ -25,6 +25,7 @@ public class CurveParticleTask implements AnimatedParticle {
     private final boolean collisionEnabled;
     private final int despawnTimer;
     private final boolean hasGravity;
+    private final LoopDelay loopDelay;
 
     private double t = 0.0;
     private int direction = 1;
@@ -35,7 +36,7 @@ public class CurveParticleTask implements AnimatedParticle {
     private final Vector term2 = new Vector();
     private final Vector term3 = new Vector();
 
-    public CurveParticleTask(Location start, Location control, Location end, Particle particle, double speed, boolean bounce, Object options, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
+    public CurveParticleTask(Location start, Location control, Location end, Particle particle, double speed, boolean bounce, Object options, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, LoopDelay loopDelay) {
         this.world = start.getWorld();
         this.p0 = start.toVector();
         this.p1 = control.toVector();
@@ -49,10 +50,15 @@ public class CurveParticleTask implements AnimatedParticle {
         this.collisionEnabled = collisionEnabled;
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
+        this.loopDelay = loopDelay;
     }
 
     @Override
     public void tick() {
+        if (loopDelay.isWaiting()) {
+            return;
+        }
+
         if (!conditionManager.allConditionsMet(currentLocation) || !PerformanceManager.isPlayerNearby(currentLocation)) {
             return;
         }
@@ -101,6 +107,22 @@ public class CurveParticleTask implements AnimatedParticle {
     @Override
     public boolean shouldCollide() {
         return collisionEnabled;
+    }
+
+    @Override
+    public boolean isLoopComplete() {
+        return (t >= 1.0 && direction == 1) || (t <= 0.0 && direction == -1);
+    }
+
+    @Override
+    public LoopDelay getLoopDelay() {
+        return loopDelay;
+    }
+
+    @Override
+    public void reset() {
+        t = 0.0;
+        direction = 1;
     }
 
     @Override

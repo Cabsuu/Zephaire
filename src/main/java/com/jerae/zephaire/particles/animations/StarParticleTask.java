@@ -29,6 +29,7 @@ public class StarParticleTask implements AnimatedParticle {
     private final boolean collisionEnabled;
     private final int despawnTimer;
     private final boolean hasGravity;
+    private final LoopDelay loopDelay;
 
     private double rotationAngle = 0;
 
@@ -41,7 +42,7 @@ public class StarParticleTask implements AnimatedParticle {
     private final Vector rotatedPos = new Vector();
 
 
-    public StarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
+    public StarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, LoopDelay loopDelay) {
         this.center = center;
         this.particle = particle;
         this.points = Math.max(2, points); // A star must have at least 2 points
@@ -56,6 +57,7 @@ public class StarParticleTask implements AnimatedParticle {
         this.collisionEnabled = collisionEnabled;
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
+        this.loopDelay = loopDelay;
         this.vertices = new Vector[this.points * 2];
         for (int i = 0; i < vertices.length; i++) {
             vertices[i] = new Vector();
@@ -65,6 +67,10 @@ public class StarParticleTask implements AnimatedParticle {
 
     @Override
     public void tick() {
+        if (loopDelay.isWaiting()) {
+            return;
+        }
+
         if (!conditionManager.allConditionsMet(center) || !PerformanceManager.isPlayerNearby(center)) {
             return;
         }
@@ -124,6 +130,20 @@ public class StarParticleTask implements AnimatedParticle {
     @Override
     public boolean shouldCollide() {
         return collisionEnabled;
+    }
+
+    @Override
+    public boolean isLoopComplete() {
+        boolean complete = rotationAngle >= 2 * Math.PI;
+        if (complete) {
+            rotationAngle = 0;
+        }
+        return complete;
+    }
+
+    @Override
+    public LoopDelay getLoopDelay() {
+        return loopDelay;
     }
 
     @Override

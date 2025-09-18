@@ -1,5 +1,6 @@
 package com.jerae.zephaire.particles.factories.entity;
 
+import com.jerae.zephaire.particles.animations.LoopDelay;
 import com.jerae.zephaire.particles.animations.entity.EntityParticleTask;
 import com.jerae.zephaire.particles.animations.entity.EntityStarParticleTask;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
@@ -31,7 +32,9 @@ public class EntityStarParticleFactory implements EntityParticleFactory {
         boolean collisionEnabled = CollisionManager.shouldCollide(section);
         int despawnTimer = section.getInt("despawn-timer", 100);
         boolean hasGravity = section.getBoolean("options.gravity", false);
+        int loopDelayTicks = section.getInt("loop-delay", 0);
+        LoopDelay loopDelay = new LoopDelay(loopDelayTicks, System::currentTimeMillis);
 
-        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, manager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce, spawnBehavior, despawnTimer, hasGravity);
+        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, manager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce, spawnBehavior, despawnTimer, hasGravity, loopDelay);
     }
 }

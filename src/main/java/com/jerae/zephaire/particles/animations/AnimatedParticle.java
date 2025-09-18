@@ -7,4 +7,7 @@ public interface AnimatedParticle extends Debuggable {
     void tick();
     Location getCurrentLocation();
     boolean shouldCollide();
+    boolean isLoopComplete();
+    LoopDelay getLoopDelay();
+    void reset();
 }

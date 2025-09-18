@@ -1,5 +1,6 @@
 package com.jerae.zephaire.particles.animations.entity;
 
+import com.jerae.zephaire.particles.animations.LoopDelay;
 import com.jerae.zephaire.particles.ParticleScheduler;
 import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.managers.CollisionManager;
@@ -38,6 +39,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
     private final SpawnBehavior spawnBehavior;
     private final int despawnTimer;
     private final boolean hasGravity;
+    private final LoopDelay loopDelay;
 
     private double rotationAngle = 0;
     private int tickCounter = 0;
@@ -51,7 +53,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
     private final Vector currentLinePoint = new Vector();
     private final Location particleLoc;
 
-    public EntityStarParticleTask(String effectName, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, double height, double verticalSpeed, boolean bounce, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity) {
+    public EntityStarParticleTask(String effectName, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, double height, double verticalSpeed, boolean bounce, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, LoopDelay loopDelay) {
         this.effectName = effectName;
         this.particle = particle;
         this.points = Math.max(2, points);
@@ -73,6 +75,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
         this.spawnBehavior = spawnBehavior;
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
+        this.loopDelay = loopDelay;
         this.vertices = new Vector[this.points * 2];
         for (int i = 0; i < vertices.length; i++) {
             vertices[i] = new Vector();
@@ -82,7 +85,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
 
     @Override
     public EntityParticleTask newInstance() {
-        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, conditionManager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce, this.spawnBehavior, despawnTimer, hasGravity);
+        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, conditionManager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce, this.spawnBehavior, despawnTimer, hasGravity, loopDelay);
     }
 
     @Override
@@ -92,6 +95,10 @@ public class EntityStarParticleTask implements EntityParticleTask {
 
     @Override
     public void tick(Entity entity) {
+        if (loopDelay.isWaiting()) {
+            return;
+        }
+
         boolean isMoving = entity.getVelocity().setY(0).lengthSquared() > 0.01;
 
         switch (spawnBehavior) {
@@ -205,5 +212,30 @@ public class EntityStarParticleTask implements EntityParticleTask {
                 ChatColor.AQUA + "Height: " + ChatColor.WHITE + height + "\n" +
                 ChatColor.AQUA + "Target: " + ChatColor.WHITE + target.getTargetType().name() + targetNameInfo +
                 (target.getEntityType() != null ? " (" + target.getEntityType().name() + ")" : "");
+    }
+
+    @Override
+    public void tick() {
+        // This task is ticked with an entity context, so this method is not used.
+    }
+
+    @Override
+    public Location getCurrentLocation() {
+        // Not applicable for entity particles in the same way as static ones.
+        return null;
+    }
+
+    @Override
+    public boolean isLoopComplete() {
+        boolean complete = rotationAngle >= 2 * Math.PI;
+        if (complete) {
+            rotationAngle = 0;
+        }
+        return complete;
+    }
+
+    @Override
+    public LoopDelay getLoopDelay() {
+        return loopDelay;
     }
 }

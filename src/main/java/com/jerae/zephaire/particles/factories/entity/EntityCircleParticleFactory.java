@@ -1,5 +1,6 @@
 package com.jerae.zephaire.particles.factories.entity;
 
+import com.jerae.zephaire.particles.animations.LoopDelay;
 import com.jerae.zephaire.particles.animations.entity.EntityCircleParticleTask;
 import com.jerae.zephaire.particles.animations.entity.EntityParticleTask;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
@@ -26,7 +27,9 @@ public class EntityCircleParticleFactory implements EntityParticleFactory {
         boolean collisionEnabled = CollisionManager.shouldCollide(section);
         int despawnTimer = section.getInt("despawn-timer", 100);
         boolean hasGravity = section.getBoolean("options.gravity", false);
+        int loopDelayTicks = section.getInt("loop-delay", 0);
+        LoopDelay loopDelay = new LoopDelay(loopDelayTicks, System::currentTimeMillis);
 
-        return new EntityCircleParticleTask(effectName, particle, radius, speed, particleCount, options, pitch, yaw, manager, collisionEnabled, offset, target, period, spawnBehavior, despawnTimer, hasGravity);
+        return new EntityCircleParticleTask(effectName, particle, radius, speed, particleCount, options, pitch, yaw, manager, collisionEnabled, offset, target, period, spawnBehavior, despawnTimer, hasGravity, loopDelay);
     }
 }

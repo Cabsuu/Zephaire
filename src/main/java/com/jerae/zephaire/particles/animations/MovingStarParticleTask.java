@@ -33,6 +33,7 @@ public class MovingStarParticleTask implements AnimatedParticle {
     private final boolean bounce;
     private final int despawnTimer;
     private final boolean hasGravity;
+    private final LoopDelay loopDelay;
 
     private double rotationAngle = 0;
     private double currentYOffset = 0;
@@ -41,7 +42,7 @@ public class MovingStarParticleTask implements AnimatedParticle {
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Vector[] vertices;
 
-    public MovingStarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, Vector velocity, boolean collisionEnabled, double height, double verticalSpeed, boolean bounce, int despawnTimer, boolean hasGravity) {
+    public MovingStarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, Vector velocity, boolean collisionEnabled, double height, double verticalSpeed, boolean bounce, int despawnTimer, boolean hasGravity, LoopDelay loopDelay) {
         this.center = center;
         this.particle = particle;
         this.points = Math.max(2, points);
@@ -60,6 +61,7 @@ public class MovingStarParticleTask implements AnimatedParticle {
         this.bounce = bounce;
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
+        this.loopDelay = loopDelay;
         this.vertices = new Vector[this.points * 2];
         for (int i = 0; i < vertices.length; i++) {
             vertices[i] = new Vector();
@@ -68,6 +70,10 @@ public class MovingStarParticleTask implements AnimatedParticle {
 
     @Override
     public void tick() {
+        if (loopDelay.isWaiting()) {
+            return;
+        }
+
         if (!conditionManager.allConditionsMet(center) || !PerformanceManager.isPlayerNearby(center)) {
             return;
         }
@@ -127,6 +133,20 @@ public class MovingStarParticleTask implements AnimatedParticle {
     @Override
     public boolean shouldCollide() {
         return collisionEnabled;
+    }
+
+    @Override
+    public boolean isLoopComplete() {
+        boolean complete = rotationAngle >= 2 * Math.PI;
+        if (complete) {
+            rotationAngle = 0;
+        }
+        return complete;
+    }
+
+    @Override
+    public LoopDelay getLoopDelay() {
+        return loopDelay;
     }
 
     @Override
