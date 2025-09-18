@@ -142,6 +142,11 @@ public class PulsingCircleParticleTask implements AnimatedParticle {
     }
 
     @Override
+    public void reset() {
+        this.currentRadius = expand ? 0 : maxRadius;
+    }
+
+    @Override
     public String getDebugInfo() {
         StringBuilder info = new StringBuilder();
         info.append(ChatColor.AQUA).append("Type: ").append(ChatColor.WHITE).append("ANIMATED").append("\n");
