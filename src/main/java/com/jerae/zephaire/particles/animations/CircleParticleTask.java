@@ -29,14 +29,16 @@ public class CircleParticleTask implements AnimatedParticle {
     private final World world;
     private final int despawnTimer;
     private final boolean hasGravity;
+    private final int loopDelay;
 
     private double angle = 0;
+    private int loopDelayCounter = 0;
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Location spawnLocation;
     private final Vector relativePos;
     private final Vector rotatedPos = new Vector();
 
-    public CircleParticleTask(Location center, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
+    public CircleParticleTask(Location center, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, int loopDelay) {
         this.center = center;
         this.particle = particle;
         this.radius = radius;
@@ -50,6 +52,7 @@ public class CircleParticleTask implements AnimatedParticle {
         this.world = center.getWorld();
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
+        this.loopDelay = loopDelay;
         // --- PERFORMANCE: Initialize reusable objects in the constructor ---
         this.spawnLocation = center.clone();
         this.relativePos = new Vector();
@@ -65,7 +68,17 @@ public class CircleParticleTask implements AnimatedParticle {
             return;
         }
 
+        if (loopDelayCounter > 0) {
+            loopDelayCounter--;
+            return;
+        }
+
         angle += speed;
+
+        if (angle >= 2 * Math.PI) {
+            angle = 0;
+            loopDelayCounter = loopDelay;
+        }
 
         for (int i = 0; i < particleCount; i++) {
             double particleAngle = angle + (2 * Math.PI * i) / particleCount;

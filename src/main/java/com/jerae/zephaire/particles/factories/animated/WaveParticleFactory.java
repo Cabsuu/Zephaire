@@ -11,7 +11,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 public class WaveParticleFactory extends AbstractAnimatedParticleFactory {
     @Override
-    protected AnimatedParticle createParticleTask(ConfigurationSection section, ConditionManager manager, World world) {
+    protected AnimatedParticle createParticleTask(ConfigurationSection section, ConditionManager manager, World world, int loopDelay) {
         Location base = parseLocation(world, section, "base");
         if (base == null) {
             return null;
@@ -29,6 +29,6 @@ public class WaveParticleFactory extends AbstractAnimatedParticleFactory {
         int despawnTimer = section.getInt("despawn-timer", 100);
         boolean hasGravity = section.getBoolean("options.gravity", false);
 
-        return new WaveParticleTask(base, particle, amplitude, length, speed, period, options, pitch, yaw, manager, collisionEnabled, despawnTimer, hasGravity);
+        return new WaveParticleTask(base, particle, amplitude, length, speed, period, options, pitch, yaw, manager, collisionEnabled, despawnTimer, hasGravity, loopDelay);
     }
 }

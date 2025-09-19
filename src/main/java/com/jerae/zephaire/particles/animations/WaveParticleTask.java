@@ -28,9 +28,11 @@ public class WaveParticleTask implements AnimatedParticle {
     private final boolean collisionEnabled;
     private final int despawnTimer;
     private final boolean hasGravity;
+    private final int loopDelay;
 
     private double progress = 0;
     private int tickCounter = 0;
+    private int loopDelayCounter = 0;
 
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Location currentLocation;
@@ -38,7 +40,7 @@ public class WaveParticleTask implements AnimatedParticle {
     private final Vector rotatedVector = new Vector();
 
 
-    public WaveParticleTask(Location base, Particle particle, double amplitude, double length, double speed, int period, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
+    public WaveParticleTask(Location base, Particle particle, double amplitude, double length, double speed, int period, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, int loopDelay) {
         this.base = base;
         this.particle = particle;
         this.amplitude = amplitude;
@@ -53,6 +55,7 @@ public class WaveParticleTask implements AnimatedParticle {
         this.despawnTimer = despawnTimer;
         this.currentLocation = base.clone();
         this.hasGravity = hasGravity;
+        this.loopDelay = loopDelay;
     }
 
     @Override
@@ -61,10 +64,16 @@ public class WaveParticleTask implements AnimatedParticle {
             return;
         }
 
+        if (loopDelayCounter > 0) {
+            loopDelayCounter--;
+            return;
+        }
+
         progress += speed;
 
         if (progress > length) {
             progress = 0;
+            loopDelayCounter = loopDelay;
         }
 
         double angle = (progress / length) * 2 * Math.PI;

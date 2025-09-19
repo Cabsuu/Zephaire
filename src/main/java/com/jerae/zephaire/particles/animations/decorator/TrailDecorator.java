@@ -75,6 +75,11 @@ public class TrailDecorator implements AnimatedParticle {
     }
 
     @Override
+    public int getLoopDelayCounter() {
+        return wrappedParticle.getLoopDelayCounter();
+    }
+
+    @Override
     public String getDebugInfo() {
         StringBuilder info = new StringBuilder();
         info.append(ChatColor.YELLOW).append("--- Decorator: Trail ---").append("\n");

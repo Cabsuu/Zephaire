@@ -31,9 +31,11 @@ public class EntityCircleParticleTask implements EntityParticleTask {
     private final SpawnBehavior spawnBehavior;
     private final int despawnTimer;
     private final boolean hasGravity;
+    private final int loopDelay;
 
     private double angle = 0;
     private int tickCounter = 0;
+    private int loopDelayCounter = 0;
 
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Location spawnLocation;
@@ -41,7 +43,7 @@ public class EntityCircleParticleTask implements EntityParticleTask {
     private final Vector rotatedPos = new Vector();
 
 
-    public EntityCircleParticleTask(String effectName, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity) {
+    public EntityCircleParticleTask(String effectName, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay) {
         this.effectName = effectName;
         this.particle = particle;
         this.radius = radius;
@@ -58,6 +60,7 @@ public class EntityCircleParticleTask implements EntityParticleTask {
         this.spawnBehavior = spawnBehavior;
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
+        this.loopDelay = loopDelay;
         this.spawnLocation = new Location(null, 0, 0, 0); // World will be set dynamically
         this.relativePos = new Vector();
     }
@@ -67,7 +70,7 @@ public class EntityCircleParticleTask implements EntityParticleTask {
         return new EntityCircleParticleTask(
                 this.effectName, this.particle, this.radius, this.speed,
                 this.particleCount, this.options, this.pitch, this.yaw,
-                this.conditionManager, this.collisionEnabled, this.offset, this.target, this.period, this.spawnBehavior, this.despawnTimer, this.hasGravity
+                this.conditionManager, this.collisionEnabled, this.offset, this.target, this.period, this.spawnBehavior, this.despawnTimer, this.hasGravity, this.loopDelay
         );
     }
 
@@ -91,6 +94,11 @@ public class EntityCircleParticleTask implements EntityParticleTask {
                 break;
         }
 
+        if (loopDelayCounter > 0) {
+            loopDelayCounter--;
+            return;
+        }
+
         tickCounter++;
         if (tickCounter < period) {
             return;
@@ -101,6 +109,11 @@ public class EntityCircleParticleTask implements EntityParticleTask {
         spawnLocation.setWorld(entity.getWorld()); // Ensure world is correct
 
         angle += speed;
+
+        if (angle >= 2 * Math.PI) {
+            angle = 0;
+            loopDelayCounter = loopDelay;
+        }
 
         for (int i = 0; i < particleCount; i++) {
             double particleAngle = angle + (2 * Math.PI * i) / particleCount;

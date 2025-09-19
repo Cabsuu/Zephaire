@@ -11,7 +11,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 public class LineParticleFactory extends AbstractAnimatedParticleFactory {
     @Override
-    protected AnimatedParticle createParticleTask(ConfigurationSection section, ConditionManager manager, World world) {
+    protected AnimatedParticle createParticleTask(ConfigurationSection section, ConditionManager manager, World world, int loopDelay) {
         Location start = parseLocation(world, section, "start");
         Location end = parseLocation(world, section, "end");
 
@@ -28,6 +28,6 @@ public class LineParticleFactory extends AbstractAnimatedParticleFactory {
         int despawnTimer = section.getInt("despawn-timer", 100);
         boolean hasGravity = section.getBoolean("options.gravity", false);
 
-        return new LineParticleTask(start, end, particle, speed, period, options, resetOnEnd, manager, collisionEnabled, despawnTimer, hasGravity);
+        return new LineParticleTask(start, end, particle, speed, period, options, resetOnEnd, manager, collisionEnabled, despawnTimer, hasGravity, loopDelay);
     }
 }

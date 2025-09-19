@@ -11,7 +11,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 public class CircleParticleFactory extends AbstractAnimatedParticleFactory {
     @Override
-    protected AnimatedParticle createParticleTask(ConfigurationSection section, ConditionManager manager, World world) {
+    protected AnimatedParticle createParticleTask(ConfigurationSection section, ConditionManager manager, World world, int loopDelay) {
         Location center = parseLocation(world, section, "center");
         if (center == null) {
             return null;
@@ -28,6 +28,6 @@ public class CircleParticleFactory extends AbstractAnimatedParticleFactory {
         int despawnTimer = section.getInt("despawn-timer", 100);
         boolean hasGravity = section.getBoolean("options.gravity", false);
 
-        return new CircleParticleTask(center, particle, radius, speed, particleCount, options, pitch, yaw, manager, collisionEnabled, despawnTimer, hasGravity);
+        return new CircleParticleTask(center, particle, radius, speed, particleCount, options, pitch, yaw, manager, collisionEnabled, despawnTimer, hasGravity, loopDelay);
     }
 }

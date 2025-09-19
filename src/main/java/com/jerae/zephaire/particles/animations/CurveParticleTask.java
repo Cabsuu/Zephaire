@@ -25,9 +25,11 @@ public class CurveParticleTask implements AnimatedParticle {
     private final boolean collisionEnabled;
     private final int despawnTimer;
     private final boolean hasGravity;
+    private final int loopDelay;
 
     private double t = 0.0;
     private int direction = 1;
+    private int loopDelayCounter = 0;
 
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Location currentLocation;
@@ -35,7 +37,7 @@ public class CurveParticleTask implements AnimatedParticle {
     private final Vector term2 = new Vector();
     private final Vector term3 = new Vector();
 
-    public CurveParticleTask(Location start, Location control, Location end, Particle particle, double speed, boolean bounce, Object options, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
+    public CurveParticleTask(Location start, Location control, Location end, Particle particle, double speed, boolean bounce, Object options, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, int loopDelay) {
         this.world = start.getWorld();
         this.p0 = start.toVector();
         this.p1 = control.toVector();
@@ -49,11 +51,17 @@ public class CurveParticleTask implements AnimatedParticle {
         this.collisionEnabled = collisionEnabled;
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
+        this.loopDelay = loopDelay;
     }
 
     @Override
     public void tick() {
         if (!conditionManager.allConditionsMet(currentLocation) || !PerformanceManager.isPlayerNearby(currentLocation)) {
+            return;
+        }
+
+        if (loopDelayCounter > 0) {
+            loopDelayCounter--;
             return;
         }
 
@@ -63,12 +71,15 @@ public class CurveParticleTask implements AnimatedParticle {
             t = 1.0;
             if (bounce) {
                 direction = -1;
+                loopDelayCounter = loopDelay;
             } else {
                 t = 0.0;
+                loopDelayCounter = loopDelay;
             }
         } else if (t <= 0.0) {
             t = 0.0;
             direction = 1;
+            loopDelayCounter = loopDelay;
         }
 
         // --- PERFORMANCE: Reuse vectors for calculation ---

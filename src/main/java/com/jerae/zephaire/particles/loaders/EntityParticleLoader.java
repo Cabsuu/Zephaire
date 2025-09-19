@@ -62,7 +62,8 @@ public class EntityParticleLoader {
             }
         }
 
-        EntityParticleTask task = factoryOpt.get().create(key, config, target, null, offset, period, spawnBehavior);
+        int loopDelay = config.getInt("loop-delay", 0);
+        EntityParticleTask task = factoryOpt.get().create(key, config, target, null, offset, period, spawnBehavior, loopDelay);
 
         if (task != null) {
             entityParticleManager.addEffectTemplate(key, task);

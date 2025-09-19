@@ -29,8 +29,10 @@ public class StarParticleTask implements AnimatedParticle {
     private final boolean collisionEnabled;
     private final int despawnTimer;
     private final boolean hasGravity;
+    private final int loopDelay;
 
     private double rotationAngle = 0;
+    private int loopDelayCounter = 0;
 
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Vector[] vertices;
@@ -41,7 +43,7 @@ public class StarParticleTask implements AnimatedParticle {
     private final Vector rotatedPos = new Vector();
 
 
-    public StarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
+    public StarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, int loopDelay) {
         this.center = center;
         this.particle = particle;
         this.points = Math.max(2, points); // A star must have at least 2 points
@@ -56,6 +58,7 @@ public class StarParticleTask implements AnimatedParticle {
         this.collisionEnabled = collisionEnabled;
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
+        this.loopDelay = loopDelay;
         this.vertices = new Vector[this.points * 2];
         for (int i = 0; i < vertices.length; i++) {
             vertices[i] = new Vector();
@@ -69,7 +72,17 @@ public class StarParticleTask implements AnimatedParticle {
             return;
         }
 
+        if (loopDelayCounter > 0) {
+            loopDelayCounter--;
+            return;
+        }
+
         rotationAngle += speed;
+
+        if (rotationAngle >= 2 * Math.PI) {
+            rotationAngle = 0;
+            loopDelayCounter = loopDelay;
+        }
 
         int totalVertices = points * 2;
 

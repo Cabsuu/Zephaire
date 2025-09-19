@@ -12,7 +12,7 @@ import org.bukkit.util.Vector;
 
 public class MovingStarParticleFactory extends AbstractAnimatedParticleFactory {
     @Override
-    protected AnimatedParticle createParticleTask(ConfigurationSection section, ConditionManager manager, World world) {
+    protected AnimatedParticle createParticleTask(ConfigurationSection section, ConditionManager manager, World world, int loopDelay) {
         Location center = parseLocation(world, section, "center");
         if (center == null) {
             return null;
@@ -43,6 +43,6 @@ public class MovingStarParticleFactory extends AbstractAnimatedParticleFactory {
             velocity.setZ(velocitySection.getDouble("z", 0.0));
         }
 
-        return new MovingStarParticleTask(center, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, manager, velocity, collisionEnabled, height, verticalSpeed, bounce, despawnTimer, hasGravity);
+        return new MovingStarParticleTask(center, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, manager, velocity, collisionEnabled, height, verticalSpeed, bounce, despawnTimer, hasGravity, loopDelay);
     }
 }

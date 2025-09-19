@@ -32,6 +32,7 @@ public class VortexParticleTask implements AnimatedParticle {
     private final double height;
     private final double speed;
     private final int particleCount;
+    private final int loopDelay;
 
     private final List<Location> particles = new ArrayList<>();
     private final List<Vector> velocities = new ArrayList<>();
@@ -40,8 +41,10 @@ public class VortexParticleTask implements AnimatedParticle {
     private final Vector toCenter = new Vector();
     private final Vector rotational = new Vector();
 
+    private int loopDelayCounter = 0;
 
-    public VortexParticleTask(Location center, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
+
+    public VortexParticleTask(Location center, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, int loopDelay) {
         this.center = center;
         this.particle = particle;
         this.radius = radius;
@@ -54,11 +57,17 @@ public class VortexParticleTask implements AnimatedParticle {
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
         this.world = center.getWorld();
+        this.loopDelay = loopDelay;
     }
 
     @Override
     public void tick() {
         if (world == null || !PerformanceManager.isPlayerNearby(center) || !conditionManager.allConditionsMet(center)) {
+            return;
+        }
+
+        if (loopDelayCounter > 0) {
+            loopDelayCounter--;
             return;
         }
 
@@ -113,6 +122,7 @@ public class VortexParticleTask implements AnimatedParticle {
             if (p.getY() > center.getY() + height || newDistanceToCenter > radius) {
                 particles.set(i, getRandomLocationInVortex());
                 v.zero();
+                loopDelayCounter = loopDelay;
             }
 
             if (collisionEnabled && CollisionManager.isColliding(p)) {

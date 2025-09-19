@@ -19,10 +19,15 @@ public abstract class AbstractAnimatedParticleFactory extends AbstractParticleFa
         if (world == null) {
             return null;
         }
-        return createParticleTask(section, manager, world);
+        int loopDelay = parseLoopDelay(section);
+        return createParticleTask(section, manager, world, loopDelay);
     }
 
-    protected abstract AnimatedParticle createParticleTask(ConfigurationSection section, ConditionManager manager, World world);
+    protected abstract AnimatedParticle createParticleTask(ConfigurationSection section, ConditionManager manager, World world, int loopDelay);
+
+    protected int parseLoopDelay(ConfigurationSection section) {
+        return section.getInt("loop-delay", 0);
+    }
 
     protected Particle parseParticle(ConfigurationSection section) {
         String particleName = section.getString("type", "FLAME").toUpperCase();

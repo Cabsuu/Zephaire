@@ -38,11 +38,13 @@ public class EntityStarParticleTask implements EntityParticleTask {
     private final SpawnBehavior spawnBehavior;
     private final int despawnTimer;
     private final boolean hasGravity;
+    private final int loopDelay;
 
     private double rotationAngle = 0;
     private int tickCounter = 0;
     private double currentYOffset = 0;
     private int verticalDirection = 1;
+    private int loopDelayCounter = 0;
 
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Vector[] vertices;
@@ -51,7 +53,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
     private final Vector currentLinePoint = new Vector();
     private final Location particleLoc;
 
-    public EntityStarParticleTask(String effectName, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, double height, double verticalSpeed, boolean bounce, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity) {
+    public EntityStarParticleTask(String effectName, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, double height, double verticalSpeed, boolean bounce, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay) {
         this.effectName = effectName;
         this.particle = particle;
         this.points = Math.max(2, points);
@@ -73,6 +75,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
         this.spawnBehavior = spawnBehavior;
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
+        this.loopDelay = loopDelay;
         this.vertices = new Vector[this.points * 2];
         for (int i = 0; i < vertices.length; i++) {
             vertices[i] = new Vector();
@@ -82,7 +85,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
 
     @Override
     public EntityParticleTask newInstance() {
-        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, conditionManager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce, this.spawnBehavior, despawnTimer, hasGravity);
+        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, conditionManager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce, this.spawnBehavior, despawnTimer, hasGravity, loopDelay);
     }
 
     @Override
@@ -105,6 +108,10 @@ public class EntityStarParticleTask implements EntityParticleTask {
                 break;
         }
 
+        if (loopDelayCounter > 0) {
+            loopDelayCounter--;
+            return;
+        }
 
         tickCounter++;
         if (tickCounter < period) {
@@ -124,15 +131,19 @@ public class EntityStarParticleTask implements EntityParticleTask {
                 if (currentYOffset >= height) {
                     currentYOffset = height;
                     verticalDirection = -1;
+                    loopDelayCounter = loopDelay;
                 } else if (currentYOffset <= 0) {
                     currentYOffset = 0;
                     verticalDirection = 1;
+                    loopDelayCounter = loopDelay;
                 }
             } else {
                 if (currentYOffset >= height) {
                     currentYOffset = 0;
+                    loopDelayCounter = loopDelay;
                 } else if (currentYOffset < 0) {
                     currentYOffset = 0;
+                    loopDelayCounter = loopDelay;
                 }
             }
         }

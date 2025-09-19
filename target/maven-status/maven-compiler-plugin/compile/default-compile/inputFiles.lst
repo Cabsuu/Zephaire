@@ -1,108 +1,108 @@
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\commands\CommandManager.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\commands\subcommands\DebugCommand.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\commands\subcommands\ListCommand.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\commands\subcommands\ReloadCommand.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\commands\subcommands\SubCommand.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\commands\subcommands\ToggleCommand.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\commands\ZephaireCommand.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\data\DataManager.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\listeners\EntityListener.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\listeners\ItemListener.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\listeners\PlayerInteractListener.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\AnimatedParticle.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\CircleParticleTask.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\CurveParticleTask.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\decorator\MultiColorTransitionDecorator.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\decorator\SoundDecorator.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\decorator\TrailDecorator.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\entity\EntityCircleParticleTask.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\entity\EntityParticleTask.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\entity\EntityStarParticleTask.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\entity\EntityVortexParticleTask.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\HelixParticleTask.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\LineParticleTask.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\MovingStarParticleTask.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\PulsingCircleParticleTask.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\StarParticleTask.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\VortexParticleTask.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\WaveParticleTask.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\conditions\BlockInteractCondition.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\conditions\BlockMatchCondition.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\conditions\CachedParticleCondition.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\conditions\ConditionManager.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\conditions\DelayConditionDecorator.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\conditions\ParticleCondition.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\conditions\TimeCondition.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\conditions\TimerCondition.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\conditions\WeatherCondition.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\data\EntityTarget.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\data\SpawnBehavior.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\Debuggable.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\AbstractParticleFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\animated\AbstractAnimatedParticleFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\animated\CircleParticleFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\animated\CurveParticleFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\animated\HelixParticleFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\animated\LineParticleFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\animated\MovingStarParticleFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\animated\PulsingCircleParticleFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\animated\StarParticleFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\animated\VortexParticleFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\animated\WaveParticleFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\AnimatedParticleFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\conditions\BlockInteractConditionFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\conditions\BlockMatchConditionFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\conditions\ConditionFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\conditions\DelayConditionFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\conditions\TimeConditionFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\conditions\TimerConditionFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\conditions\WeatherConditionFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\decorators\DecoratorFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\decorators\MultiColorTransitionDecoratorFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\decorators\SoundDecoratorFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\decorators\TrailDecoratorFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\entity\EntityCircleParticleFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\entity\EntityStarParticleFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\entity\EntityVortexParticleFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\EntityParticleFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\StaticParticleFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\statics\AbstractStaticParticleFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\statics\RandomBurstRegionFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\statics\StaticCircleFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\statics\StaticCuboidFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\statics\StaticCurveFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\statics\StaticLineFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\statics\StaticPointFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\statics\StaticPyramidFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\statics\StaticRegionFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\statics\StaticStarFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\loaders\AnimatedParticleLoader.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\loaders\ConditionParser.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\loaders\EntityParticleLoader.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\loaders\StaticParticleLoader.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\managers\AnimationManager.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\managers\CollisionManager.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\managers\EntityParticleManager.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\managers\FactoryManager.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\managers\ParticleManager.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\managers\PerformanceManager.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\ParticleConfigLoader.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\ParticleRegistry.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\ParticleScheduler.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\ParticleSpawnData.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\ParticleType.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\SoundPlayData.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\statics\RandomBurstRegionParticleTask.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\statics\StaticCircleParticleTask.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\statics\StaticCuboidParticleTask.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\statics\StaticCurveParticleTask.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\statics\StaticLineParticleTask.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\statics\StaticPointParticleTask.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\statics\StaticPyramidParticleTask.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\statics\StaticRegionParticleTask.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\statics\StaticStarParticleTask.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\util\ConfigValidator.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\util\ParticleDrawingUtils.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\util\ParticleUtils.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\util\VectorUtils.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\Zephaire.java
+/app/src/main/java/com/jerae/zephaire/Zephaire.java
+/app/src/main/java/com/jerae/zephaire/commands/CommandManager.java
+/app/src/main/java/com/jerae/zephaire/commands/ZephaireCommand.java
+/app/src/main/java/com/jerae/zephaire/commands/subcommands/DebugCommand.java
+/app/src/main/java/com/jerae/zephaire/commands/subcommands/ListCommand.java
+/app/src/main/java/com/jerae/zephaire/commands/subcommands/ReloadCommand.java
+/app/src/main/java/com/jerae/zephaire/commands/subcommands/SubCommand.java
+/app/src/main/java/com/jerae/zephaire/commands/subcommands/ToggleCommand.java
+/app/src/main/java/com/jerae/zephaire/data/DataManager.java
+/app/src/main/java/com/jerae/zephaire/listeners/EntityListener.java
+/app/src/main/java/com/jerae/zephaire/listeners/ItemListener.java
+/app/src/main/java/com/jerae/zephaire/listeners/PlayerInteractListener.java
+/app/src/main/java/com/jerae/zephaire/particles/Debuggable.java
+/app/src/main/java/com/jerae/zephaire/particles/ParticleConfigLoader.java
+/app/src/main/java/com/jerae/zephaire/particles/ParticleRegistry.java
+/app/src/main/java/com/jerae/zephaire/particles/ParticleScheduler.java
+/app/src/main/java/com/jerae/zephaire/particles/ParticleSpawnData.java
+/app/src/main/java/com/jerae/zephaire/particles/ParticleType.java
+/app/src/main/java/com/jerae/zephaire/particles/SoundPlayData.java
+/app/src/main/java/com/jerae/zephaire/particles/animations/AnimatedParticle.java
+/app/src/main/java/com/jerae/zephaire/particles/animations/CircleParticleTask.java
+/app/src/main/java/com/jerae/zephaire/particles/animations/CurveParticleTask.java
+/app/src/main/java/com/jerae/zephaire/particles/animations/HelixParticleTask.java
+/app/src/main/java/com/jerae/zephaire/particles/animations/LineParticleTask.java
+/app/src/main/java/com/jerae/zephaire/particles/animations/MovingStarParticleTask.java
+/app/src/main/java/com/jerae/zephaire/particles/animations/PulsingCircleParticleTask.java
+/app/src/main/java/com/jerae/zephaire/particles/animations/StarParticleTask.java
+/app/src/main/java/com/jerae/zephaire/particles/animations/VortexParticleTask.java
+/app/src/main/java/com/jerae/zephaire/particles/animations/WaveParticleTask.java
+/app/src/main/java/com/jerae/zephaire/particles/animations/decorator/MultiColorTransitionDecorator.java
+/app/src/main/java/com/jerae/zephaire/particles/animations/decorator/SoundDecorator.java
+/app/src/main/java/com/jerae/zephaire/particles/animations/decorator/TrailDecorator.java
+/app/src/main/java/com/jerae/zephaire/particles/animations/entity/EntityCircleParticleTask.java
+/app/src/main/java/com/jerae/zephaire/particles/animations/entity/EntityParticleTask.java
+/app/src/main/java/com/jerae/zephaire/particles/animations/entity/EntityStarParticleTask.java
+/app/src/main/java/com/jerae/zephaire/particles/animations/entity/EntityVortexParticleTask.java
+/app/src/main/java/com/jerae/zephaire/particles/conditions/BlockInteractCondition.java
+/app/src/main/java/com/jerae/zephaire/particles/conditions/BlockMatchCondition.java
+/app/src/main/java/com/jerae/zephaire/particles/conditions/CachedParticleCondition.java
+/app/src/main/java/com/jerae/zephaire/particles/conditions/ConditionManager.java
+/app/src/main/java/com/jerae/zephaire/particles/conditions/DelayConditionDecorator.java
+/app/src/main/java/com/jerae/zephaire/particles/conditions/ParticleCondition.java
+/app/src/main/java/com/jerae/zephaire/particles/conditions/TimeCondition.java
+/app/src/main/java/com/jerae/zephaire/particles/conditions/TimerCondition.java
+/app/src/main/java/com/jerae/zephaire/particles/conditions/WeatherCondition.java
+/app/src/main/java/com/jerae/zephaire/particles/data/EntityTarget.java
+/app/src/main/java/com/jerae/zephaire/particles/data/SpawnBehavior.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/AbstractParticleFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/AnimatedParticleFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/EntityParticleFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/StaticParticleFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/animated/AbstractAnimatedParticleFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/animated/CircleParticleFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/animated/CurveParticleFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/animated/HelixParticleFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/animated/LineParticleFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/animated/MovingStarParticleFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/animated/PulsingCircleParticleFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/animated/StarParticleFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/animated/VortexParticleFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/animated/WaveParticleFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/conditions/BlockInteractConditionFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/conditions/BlockMatchConditionFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/conditions/ConditionFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/conditions/DelayConditionFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/conditions/TimeConditionFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/conditions/TimerConditionFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/conditions/WeatherConditionFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/decorators/DecoratorFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/decorators/MultiColorTransitionDecoratorFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/decorators/SoundDecoratorFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/decorators/TrailDecoratorFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/entity/EntityCircleParticleFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/entity/EntityStarParticleFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/entity/EntityVortexParticleFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/statics/AbstractStaticParticleFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/statics/RandomBurstRegionFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/statics/StaticCircleFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/statics/StaticCuboidFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/statics/StaticCurveFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/statics/StaticLineFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/statics/StaticPointFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/statics/StaticPyramidFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/statics/StaticRegionFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/factories/statics/StaticStarFactory.java
+/app/src/main/java/com/jerae/zephaire/particles/loaders/AnimatedParticleLoader.java
+/app/src/main/java/com/jerae/zephaire/particles/loaders/ConditionParser.java
+/app/src/main/java/com/jerae/zephaire/particles/loaders/EntityParticleLoader.java
+/app/src/main/java/com/jerae/zephaire/particles/loaders/StaticParticleLoader.java
+/app/src/main/java/com/jerae/zephaire/particles/managers/AnimationManager.java
+/app/src/main/java/com/jerae/zephaire/particles/managers/CollisionManager.java
+/app/src/main/java/com/jerae/zephaire/particles/managers/EntityParticleManager.java
+/app/src/main/java/com/jerae/zephaire/particles/managers/FactoryManager.java
+/app/src/main/java/com/jerae/zephaire/particles/managers/ParticleManager.java
+/app/src/main/java/com/jerae/zephaire/particles/managers/PerformanceManager.java
+/app/src/main/java/com/jerae/zephaire/particles/statics/RandomBurstRegionParticleTask.java
+/app/src/main/java/com/jerae/zephaire/particles/statics/StaticCircleParticleTask.java
+/app/src/main/java/com/jerae/zephaire/particles/statics/StaticCuboidParticleTask.java
+/app/src/main/java/com/jerae/zephaire/particles/statics/StaticCurveParticleTask.java
+/app/src/main/java/com/jerae/zephaire/particles/statics/StaticLineParticleTask.java
+/app/src/main/java/com/jerae/zephaire/particles/statics/StaticPointParticleTask.java
+/app/src/main/java/com/jerae/zephaire/particles/statics/StaticPyramidParticleTask.java
+/app/src/main/java/com/jerae/zephaire/particles/statics/StaticRegionParticleTask.java
+/app/src/main/java/com/jerae/zephaire/particles/statics/StaticStarParticleTask.java
+/app/src/main/java/com/jerae/zephaire/particles/util/ConfigValidator.java
+/app/src/main/java/com/jerae/zephaire/particles/util/ParticleDrawingUtils.java
+/app/src/main/java/com/jerae/zephaire/particles/util/ParticleUtils.java
+/app/src/main/java/com/jerae/zephaire/particles/util/VectorUtils.java

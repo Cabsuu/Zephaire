@@ -35,17 +35,19 @@ public class EntityVortexParticleTask implements EntityParticleTask {
     private final SpawnBehavior spawnBehavior;
     private final int despawnTimer;
     private final boolean hasGravity;
+    private final int loopDelay;
 
     private final List<Location> particles = new ArrayList<>();
     private final List<Vector> velocities = new ArrayList<>();
     private int tickCounter = 0;
+    private int loopDelayCounter = 0;
 
     // --- PERFORMANCE: Reusable objects for vector calculations ---
     private final Vector toCenter = new Vector();
     private final Vector rotational = new Vector();
 
 
-    public EntityVortexParticleTask(String effectName, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity) {
+    public EntityVortexParticleTask(String effectName, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay) {
         this.effectName = effectName;
         this.particle = particle;
         this.radius = radius;
@@ -61,6 +63,7 @@ public class EntityVortexParticleTask implements EntityParticleTask {
         this.spawnBehavior = spawnBehavior;
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
+        this.loopDelay = loopDelay;
     }
 
     @Override
@@ -68,7 +71,7 @@ public class EntityVortexParticleTask implements EntityParticleTask {
         return new EntityVortexParticleTask(
                 effectName, particle, radius, height, speed, particleCount, options,
                 conditionManager, collisionEnabled, offset, target, period, spawnBehavior,
-                despawnTimer, hasGravity
+                despawnTimer, hasGravity, loopDelay
         );
     }
 
@@ -89,6 +92,11 @@ public class EntityVortexParticleTask implements EntityParticleTask {
                 break;
             case ALWAYS:
                 break;
+        }
+
+        if (loopDelayCounter > 0) {
+            loopDelayCounter--;
+            return;
         }
 
         tickCounter++;
@@ -135,6 +143,7 @@ public class EntityVortexParticleTask implements EntityParticleTask {
             if (p.getY() > center.getY() + height || newDistanceToCenter > radius) {
                 particles.set(i, getRandomLocationInVortex(center, world));
                 v.zero();
+                loopDelayCounter = loopDelay;
             }
 
             if (collisionEnabled && CollisionManager.isColliding(p)) continue;

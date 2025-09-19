@@ -51,6 +51,11 @@ public class SoundDecorator implements AnimatedParticle {
     }
 
     @Override
+    public int getLoopDelayCounter() {
+        return wrappedParticle.getLoopDelayCounter();
+    }
+
+    @Override
     public String getDebugInfo() {
         // A decorator passes the debug call to the particle it's wrapping,
         // but adds its own information to the output.

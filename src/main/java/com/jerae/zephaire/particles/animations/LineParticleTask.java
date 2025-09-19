@@ -25,12 +25,14 @@ public class LineParticleTask implements AnimatedParticle {
     private final boolean collisionEnabled;
     private final int despawnTimer;
     private final boolean hasGravity;
+    private final int loopDelay;
     private double currentProgress = 0.0;
     private int direction = 1;
     private int tickCounter = 0;
+    private int loopDelayCounter = 0;
     private final Location currentLocation;
 
-    public LineParticleTask(Location startPoint, Location endPoint, Particle particle, double speed, int period, Object options, boolean resetOnEnd, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
+    public LineParticleTask(Location startPoint, Location endPoint, Particle particle, double speed, int period, Object options, boolean resetOnEnd, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, int loopDelay) {
         this.startPoint = startPoint;
         this.particle = particle;
         this.speed = speed;
@@ -43,11 +45,17 @@ public class LineParticleTask implements AnimatedParticle {
         this.collisionEnabled = collisionEnabled;
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
+        this.loopDelay = loopDelay;
     }
 
     @Override
     public void tick() {
         if (!conditionManager.allConditionsMet(startPoint)) {
+            return;
+        }
+
+        if (loopDelayCounter > 0) {
+            loopDelayCounter--;
             return;
         }
 
@@ -57,12 +65,15 @@ public class LineParticleTask implements AnimatedParticle {
             currentProgress = 1.0;
             if (resetOnEnd) {
                 currentProgress = 0.0;
+                loopDelayCounter = loopDelay;
             } else {
                 direction = -1;
+                loopDelayCounter = loopDelay;
             }
         } else if (currentProgress <= 0.0) {
             currentProgress = 0.0;
             direction = 1;
+            loopDelayCounter = loopDelay;
         }
 
         double newX = startPoint.getX() + directionVector.getX() * currentProgress;

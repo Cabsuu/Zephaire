@@ -11,7 +11,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 public class VortexParticleFactory extends AbstractAnimatedParticleFactory {
     @Override
-    protected AnimatedParticle createParticleTask(ConfigurationSection section, ConditionManager manager, World world) {
+    protected AnimatedParticle createParticleTask(ConfigurationSection section, ConditionManager manager, World world, int loopDelay) {
         Location center = parseLocation(world, section, "center");
         if (center == null) {
             return null;
@@ -27,6 +27,6 @@ public class VortexParticleFactory extends AbstractAnimatedParticleFactory {
         int despawnTimer = section.getInt("despawn-timer", 100);
         boolean hasGravity = section.getBoolean("options.gravity", false);
 
-        return new VortexParticleTask(center, particle, radius, height, speed, particleCount, options, manager, collisionEnabled, despawnTimer, hasGravity);
+        return new VortexParticleTask(center, particle, radius, height, speed, particleCount, options, manager, collisionEnabled, despawnTimer, hasGravity, loopDelay);
     }
 }

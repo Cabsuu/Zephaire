@@ -15,7 +15,7 @@ import org.bukkit.util.Vector;
 
 public class EntityStarParticleFactory implements EntityParticleFactory {
     @Override
-    public EntityParticleTask create(String effectName, ConfigurationSection section, EntityTarget target, ConditionManager manager, Vector offset, int period, SpawnBehavior spawnBehavior) {
+    public EntityParticleTask create(String effectName, ConfigurationSection section, EntityTarget target, ConditionManager manager, Vector offset, int period, SpawnBehavior spawnBehavior, int loopDelay) {
         Particle particle = ConfigValidator.getParticleType(section, "type", "FLAME");
         int points = ConfigValidator.getPositiveInt(section, "points", 5);
         double outerRadius = ConfigValidator.getPositiveDouble(section, "outer-radius", 3.0);
@@ -32,6 +32,6 @@ public class EntityStarParticleFactory implements EntityParticleFactory {
         int despawnTimer = section.getInt("despawn-timer", 100);
         boolean hasGravity = section.getBoolean("options.gravity", false);
 
-        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, manager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce, spawnBehavior, despawnTimer, hasGravity);
+        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, manager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce, spawnBehavior, despawnTimer, hasGravity, loopDelay);
     }
 }
