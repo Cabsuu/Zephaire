@@ -29,10 +29,11 @@ public class PulsingCircleParticleTask implements AnimatedParticle {
     private final boolean collisionEnabled;
     private final int despawnTimer;
     private final boolean hasGravity;
-    private final LoopDelay loopDelay;
+    private final int loopDelay;
 
     private double currentRadius;
     private int tickCounter = 0;
+    private int loopDelayCounter = 0;
 
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Location currentLocation;
@@ -40,7 +41,7 @@ public class PulsingCircleParticleTask implements AnimatedParticle {
     private final Vector rotatedPos = new Vector();
 
 
-    public PulsingCircleParticleTask(Location center, Particle particle, double maxRadius, double pulseSpeed, int particleCount, double pitch, double yaw, boolean expand, Object options, ConditionManager conditionManager, int period, boolean collisionEnabled, int despawnTimer, boolean hasGravity, LoopDelay loopDelay) {
+    public PulsingCircleParticleTask(Location center, Particle particle, double maxRadius, double pulseSpeed, int particleCount, double pitch, double yaw, boolean expand, Object options, ConditionManager conditionManager, int period, boolean collisionEnabled, int despawnTimer, boolean hasGravity, int loopDelay) {
         this.center = center;
         this.particle = particle;
         this.maxRadius = maxRadius;
@@ -66,11 +67,12 @@ public class PulsingCircleParticleTask implements AnimatedParticle {
 
     @Override
     public void tick() {
-        if (loopDelay.isWaiting()) {
+        if (!conditionManager.allConditionsMet(center)) {
             return;
         }
 
-        if (!conditionManager.allConditionsMet(center)) {
+        if (loopDelayCounter > 0) {
+            loopDelayCounter--;
             return;
         }
 
@@ -84,11 +86,13 @@ public class PulsingCircleParticleTask implements AnimatedParticle {
             currentRadius += pulseSpeed;
             if (currentRadius >= maxRadius) {
                 currentRadius = 0;
+                loopDelayCounter = loopDelay;
             }
         } else {
             currentRadius -= pulseSpeed;
             if (currentRadius <= 0) {
                 currentRadius = maxRadius;
+                loopDelayCounter = loopDelay;
             }
         }
 
@@ -125,25 +129,6 @@ public class PulsingCircleParticleTask implements AnimatedParticle {
     @Override
     public boolean shouldCollide() {
         return collisionEnabled;
-    }
-
-    @Override
-    public boolean isLoopComplete() {
-        if (expand) {
-            return currentRadius >= maxRadius;
-        } else {
-            return currentRadius <= 0;
-        }
-    }
-
-    @Override
-    public LoopDelay getLoopDelay() {
-        return loopDelay;
-    }
-
-    @Override
-    public void reset() {
-        this.currentRadius = expand ? 0 : maxRadius;
     }
 
     @Override

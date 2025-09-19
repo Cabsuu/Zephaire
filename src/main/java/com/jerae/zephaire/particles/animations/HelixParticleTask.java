@@ -30,12 +30,13 @@ public class HelixParticleTask implements AnimatedParticle {
     private final boolean collisionEnabled;
     private final int despawnTimer;
     private final boolean hasGravity;
-    private final LoopDelay loopDelay;
+    private final int loopDelay;
 
     private double angle;
     private double currentYOffset;
     private int verticalDirection = 1;
     private int tickCounter = 0;
+    private int loopDelayCounter = 0;
 
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Location currentLocation;
@@ -43,7 +44,7 @@ public class HelixParticleTask implements AnimatedParticle {
     private final Vector rotatedVector = new Vector();
 
 
-    public HelixParticleTask(Location base, Particle particle, double radius, double height, double speed, double verticalSpeed, int period, double startAngle, Object options, double pitch, double yaw, boolean bounce, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, LoopDelay loopDelay) {
+    public HelixParticleTask(Location base, Particle particle, double radius, double height, double speed, double verticalSpeed, int period, double startAngle, Object options, double pitch, double yaw, boolean bounce, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, int loopDelay) {
         this.base = base;
         this.particle = particle;
         this.radius = radius;
@@ -66,18 +67,13 @@ public class HelixParticleTask implements AnimatedParticle {
     }
 
     @Override
-    public void reset() {
-        currentYOffset = 0;
-        verticalDirection = 1;
-    }
-
-    @Override
     public void tick() {
-        if (loopDelay.isWaiting()) {
+        if (!conditionManager.allConditionsMet(base)) {
             return;
         }
 
-        if (!conditionManager.allConditionsMet(base)) {
+        if (loopDelayCounter > 0) {
+            loopDelayCounter--;
             return;
         }
 
@@ -88,13 +84,16 @@ public class HelixParticleTask implements AnimatedParticle {
             if (currentYOffset >= height) {
                 currentYOffset = height;
                 verticalDirection = -1;
+                loopDelayCounter = loopDelay;
             } else if (currentYOffset <= 0) {
                 currentYOffset = 0;
                 verticalDirection = 1;
+                loopDelayCounter = loopDelay;
             }
         } else {
             if (currentYOffset >= height) {
                 currentYOffset = 0;
+                loopDelayCounter = loopDelay;
             }
         }
 
@@ -133,20 +132,6 @@ public class HelixParticleTask implements AnimatedParticle {
     @Override
     public boolean shouldCollide() {
         return collisionEnabled;
-    }
-
-    @Override
-    public boolean isLoopComplete() {
-        if (bounce) {
-            return (currentYOffset >= height && verticalDirection == -1) || (currentYOffset <= 0 && verticalDirection == 1);
-        } else {
-            return currentYOffset >= height;
-        }
-    }
-
-    @Override
-    public LoopDelay getLoopDelay() {
-        return loopDelay;
     }
 
     @Override

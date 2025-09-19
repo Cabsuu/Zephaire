@@ -12,7 +12,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 public class PulsingCircleParticleFactory extends AbstractAnimatedParticleFactory {
     @Override
-    protected AnimatedParticle createParticleTask(ConfigurationSection section, ConditionManager manager, World world) {
+    protected AnimatedParticle createParticleTask(ConfigurationSection section, ConditionManager manager, World world, int loopDelay) {
         Location center = parseLocation(world, section, "center");
         if (center == null) {
             return null;

@@ -1,6 +1,5 @@
 package com.jerae.zephaire.particles.animations.entity;
 
-import com.jerae.zephaire.particles.animations.LoopDelay;
 import com.jerae.zephaire.particles.ParticleScheduler;
 import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.managers.CollisionManager;
@@ -32,10 +31,11 @@ public class EntityCircleParticleTask implements EntityParticleTask {
     private final SpawnBehavior spawnBehavior;
     private final int despawnTimer;
     private final boolean hasGravity;
-    private final LoopDelay loopDelay;
+    private final int loopDelay;
 
     private double angle = 0;
     private int tickCounter = 0;
+    private int loopDelayCounter = 0;
 
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Location spawnLocation;
@@ -43,7 +43,7 @@ public class EntityCircleParticleTask implements EntityParticleTask {
     private final Vector rotatedPos = new Vector();
 
 
-    public EntityCircleParticleTask(String effectName, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, LoopDelay loopDelay) {
+    public EntityCircleParticleTask(String effectName, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay) {
         this.effectName = effectName;
         this.particle = particle;
         this.radius = radius;
@@ -81,10 +81,6 @@ public class EntityCircleParticleTask implements EntityParticleTask {
 
     @Override
     public void tick(Entity entity) {
-        if (loopDelay.isWaiting()) {
-            return;
-        }
-
         boolean isMoving = entity.getVelocity().setY(0).lengthSquared() > 0.01;
 
         switch (spawnBehavior) {
@@ -98,6 +94,11 @@ public class EntityCircleParticleTask implements EntityParticleTask {
                 break;
         }
 
+        if (loopDelayCounter > 0) {
+            loopDelayCounter--;
+            return;
+        }
+
         tickCounter++;
         if (tickCounter < period) {
             return;
@@ -108,6 +109,11 @@ public class EntityCircleParticleTask implements EntityParticleTask {
         spawnLocation.setWorld(entity.getWorld()); // Ensure world is correct
 
         angle += speed;
+
+        if (angle >= 2 * Math.PI) {
+            angle = 0;
+            loopDelayCounter = loopDelay;
+        }
 
         for (int i = 0; i < particleCount; i++) {
             double particleAngle = angle + (2 * Math.PI * i) / particleCount;
@@ -157,35 +163,5 @@ public class EntityCircleParticleTask implements EntityParticleTask {
                 ChatColor.AQUA + "Speed: " + ChatColor.WHITE + speed + "\n" +
                 ChatColor.AQUA + "Target: " + ChatColor.WHITE + target.getTargetType().name() + targetNameInfo +
                 (target.getEntityType() != null ? " (" + target.getEntityType().name() + ")" : "");
-    }
-
-    @Override
-    public void tick() {
-        // This task is ticked with an entity context, so this method is not used.
-    }
-
-    @Override
-    public Location getCurrentLocation() {
-        // Not applicable for entity particles in the same way as static ones.
-        return null;
-    }
-
-    @Override
-    public boolean isLoopComplete() {
-        boolean complete = angle >= 2 * Math.PI;
-        if (complete) {
-            angle = 0;
-        }
-        return complete;
-    }
-
-    @Override
-    public LoopDelay getLoopDelay() {
-        return loopDelay;
-    }
-
-    @Override
-    public void reset() {
-        // This task is continuous, so there is nothing to reset.
     }
 }

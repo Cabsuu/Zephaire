@@ -16,7 +16,7 @@ import org.bukkit.util.Vector;
 
 public class EntityVortexParticleFactory implements EntityParticleFactory {
     @Override
-    public EntityParticleTask create(String effectName, ConfigurationSection section, EntityTarget target, ConditionManager manager, Vector offset, int period, SpawnBehavior spawnBehavior) {
+    public EntityParticleTask create(String effectName, ConfigurationSection section, EntityTarget target, ConditionManager manager, Vector offset, int period, SpawnBehavior spawnBehavior, int loopDelay) {
         Particle particle = ConfigValidator.getParticleType(section, "type", "PORTAL");
         double radius = ConfigValidator.getPositiveDouble(section, "radius", 3.0);
         double height = ConfigValidator.getPositiveDouble(section, "height", 5.0);

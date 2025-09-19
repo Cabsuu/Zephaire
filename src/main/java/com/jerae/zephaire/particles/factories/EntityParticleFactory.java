@@ -23,5 +23,5 @@ public interface EntityParticleFactory {
      * @param spawnBehavior The condition under which particles should spawn.
      * @return An EntityParticleTask instance.
      */
-    EntityParticleTask create(String effectName, ConfigurationSection section, EntityTarget target, ConditionManager manager, Vector offset, int period, SpawnBehavior spawnBehavior);
+    EntityParticleTask create(String effectName, ConfigurationSection section, EntityTarget target, ConditionManager manager, Vector offset, int period, SpawnBehavior spawnBehavior, int loopDelay);
 }

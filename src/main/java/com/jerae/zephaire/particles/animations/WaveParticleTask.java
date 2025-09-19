@@ -28,10 +28,11 @@ public class WaveParticleTask implements AnimatedParticle {
     private final boolean collisionEnabled;
     private final int despawnTimer;
     private final boolean hasGravity;
-    private final LoopDelay loopDelay;
+    private final int loopDelay;
 
     private double progress = 0;
     private int tickCounter = 0;
+    private int loopDelayCounter = 0;
 
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Location currentLocation;
@@ -39,7 +40,7 @@ public class WaveParticleTask implements AnimatedParticle {
     private final Vector rotatedVector = new Vector();
 
 
-    public WaveParticleTask(Location base, Particle particle, double amplitude, double length, double speed, int period, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, LoopDelay loopDelay) {
+    public WaveParticleTask(Location base, Particle particle, double amplitude, double length, double speed, int period, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, int loopDelay) {
         this.base = base;
         this.particle = particle;
         this.amplitude = amplitude;
@@ -59,11 +60,12 @@ public class WaveParticleTask implements AnimatedParticle {
 
     @Override
     public void tick() {
-        if (loopDelay.isWaiting()) {
+        if (!conditionManager.allConditionsMet(base)) {
             return;
         }
 
-        if (!conditionManager.allConditionsMet(base)) {
+        if (loopDelayCounter > 0) {
+            loopDelayCounter--;
             return;
         }
 
@@ -71,6 +73,7 @@ public class WaveParticleTask implements AnimatedParticle {
 
         if (progress > length) {
             progress = 0;
+            loopDelayCounter = loopDelay;
         }
 
         double angle = (progress / length) * 2 * Math.PI;
@@ -107,25 +110,6 @@ public class WaveParticleTask implements AnimatedParticle {
     @Override
     public boolean shouldCollide() {
         return collisionEnabled;
-    }
-
-    @Override
-    public boolean isLoopComplete() {
-        boolean complete = progress >= length;
-        if (complete) {
-            progress = 0;
-        }
-        return complete;
-    }
-
-    @Override
-    public LoopDelay getLoopDelay() {
-        return loopDelay;
-    }
-
-    @Override
-    public void reset() {
-        // This task is continuous, so there is nothing to reset.
     }
 
     @Override

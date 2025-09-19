@@ -12,7 +12,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 public class WaveParticleFactory extends AbstractAnimatedParticleFactory {
     @Override
-    protected AnimatedParticle createParticleTask(ConfigurationSection section, ConditionManager manager, World world) {
+    protected AnimatedParticle createParticleTask(ConfigurationSection section, ConditionManager manager, World world, int loopDelay) {
         Location base = parseLocation(world, section, "base");
         if (base == null) {
             return null;

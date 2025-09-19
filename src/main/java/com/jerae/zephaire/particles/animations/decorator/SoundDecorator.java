@@ -4,7 +4,6 @@ import com.jerae.zephaire.particles.Debuggable;
 import com.jerae.zephaire.particles.SoundPlayData;
 import com.jerae.zephaire.particles.ParticleScheduler;
 import com.jerae.zephaire.particles.animations.AnimatedParticle;
-import com.jerae.zephaire.particles.animations.LoopDelay;
 import org.bukkit.Location;
 import org.bukkit.Registry;
 import org.bukkit.Sound;
@@ -25,16 +24,6 @@ public class SoundDecorator implements AnimatedParticle {
         this.volume = volume;
         this.pitch = pitch;
         this.period = Math.max(1, period);
-    }
-
-    @Override
-    public boolean isLoopComplete() {
-        return wrappedParticle.isLoopComplete();
-    }
-
-    @Override
-    public LoopDelay getLoopDelay() {
-        return wrappedParticle.getLoopDelay();
     }
 
     @Override
@@ -62,8 +51,8 @@ public class SoundDecorator implements AnimatedParticle {
     }
 
     @Override
-    public void reset() {
-        // This task is continuous, so there is nothing to reset.
+    public int getLoopDelayCounter() {
+        return wrappedParticle.getLoopDelayCounter();
     }
 
     @Override

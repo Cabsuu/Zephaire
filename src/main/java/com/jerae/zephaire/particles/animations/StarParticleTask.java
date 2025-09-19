@@ -29,9 +29,10 @@ public class StarParticleTask implements AnimatedParticle {
     private final boolean collisionEnabled;
     private final int despawnTimer;
     private final boolean hasGravity;
-    private final LoopDelay loopDelay;
+    private final int loopDelay;
 
     private double rotationAngle = 0;
+    private int loopDelayCounter = 0;
 
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Vector[] vertices;
@@ -42,7 +43,7 @@ public class StarParticleTask implements AnimatedParticle {
     private final Vector rotatedPos = new Vector();
 
 
-    public StarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, LoopDelay loopDelay) {
+    public StarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, int loopDelay) {
         this.center = center;
         this.particle = particle;
         this.points = Math.max(2, points); // A star must have at least 2 points
@@ -67,15 +68,21 @@ public class StarParticleTask implements AnimatedParticle {
 
     @Override
     public void tick() {
-        if (loopDelay.isWaiting()) {
-            return;
-        }
-
         if (!conditionManager.allConditionsMet(center) || !PerformanceManager.isPlayerNearby(center)) {
             return;
         }
 
+        if (loopDelayCounter > 0) {
+            loopDelayCounter--;
+            return;
+        }
+
         rotationAngle += speed;
+
+        if (rotationAngle >= 2 * Math.PI) {
+            rotationAngle = 0;
+            loopDelayCounter = loopDelay;
+        }
 
         int totalVertices = points * 2;
 
@@ -130,21 +137,6 @@ public class StarParticleTask implements AnimatedParticle {
     @Override
     public boolean shouldCollide() {
         return collisionEnabled;
-    }
-
-    @Override
-    public boolean isLoopComplete() {
-        return rotationAngle >= 2 * Math.PI;
-    }
-
-    @Override
-    public LoopDelay getLoopDelay() {
-        return loopDelay;
-    }
-
-    @Override
-    public void reset() {
-        rotationAngle = 0;
     }
 
     @Override

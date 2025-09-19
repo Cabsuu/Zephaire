@@ -3,7 +3,6 @@ package com.jerae.zephaire.particles.animations.decorator;
 import com.jerae.zephaire.particles.ParticleScheduler;
 import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.animations.AnimatedParticle;
-import com.jerae.zephaire.particles.animations.LoopDelay;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -35,16 +34,6 @@ public class MultiColorTransitionDecorator implements AnimatedParticle {
         // --- DEFENSIVE: Initialize the cached world ---
         Location loc = wrappedParticle.getCurrentLocation();
         this.world = (loc != null) ? loc.getWorld() : null;
-    }
-
-    @Override
-    public boolean isLoopComplete() {
-        return wrappedParticle.isLoopComplete();
-    }
-
-    @Override
-    public LoopDelay getLoopDelay() {
-        return wrappedParticle.getLoopDelay();
     }
 
     @Override
@@ -84,8 +73,8 @@ public class MultiColorTransitionDecorator implements AnimatedParticle {
     }
 
     @Override
-    public void reset() {
-        // This task is continuous, so there is nothing to reset.
+    public int getLoopDelayCounter() {
+        return wrappedParticle.getLoopDelayCounter();
     }
 
     @Override

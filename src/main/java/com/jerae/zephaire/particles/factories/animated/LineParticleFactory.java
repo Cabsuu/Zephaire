@@ -12,7 +12,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 public class LineParticleFactory extends AbstractAnimatedParticleFactory {
     @Override
-    protected AnimatedParticle createParticleTask(ConfigurationSection section, ConditionManager manager, World world) {
+    protected AnimatedParticle createParticleTask(ConfigurationSection section, ConditionManager manager, World world, int loopDelay) {
         Location start = parseLocation(world, section, "start");
         Location end = parseLocation(world, section, "end");
 

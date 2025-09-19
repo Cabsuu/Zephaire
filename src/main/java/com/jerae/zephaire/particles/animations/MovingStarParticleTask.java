@@ -33,16 +33,17 @@ public class MovingStarParticleTask implements AnimatedParticle {
     private final boolean bounce;
     private final int despawnTimer;
     private final boolean hasGravity;
-    private final LoopDelay loopDelay;
+    private final int loopDelay;
 
     private double rotationAngle = 0;
     private double currentYOffset = 0;
     private int verticalDirection = 1;
+    private int loopDelayCounter = 0;
 
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Vector[] vertices;
 
-    public MovingStarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, Vector velocity, boolean collisionEnabled, double height, double verticalSpeed, boolean bounce, int despawnTimer, boolean hasGravity, LoopDelay loopDelay) {
+    public MovingStarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, Vector velocity, boolean collisionEnabled, double height, double verticalSpeed, boolean bounce, int despawnTimer, boolean hasGravity, int loopDelay) {
         this.center = center;
         this.particle = particle;
         this.points = Math.max(2, points);
@@ -70,11 +71,12 @@ public class MovingStarParticleTask implements AnimatedParticle {
 
     @Override
     public void tick() {
-        if (loopDelay.isWaiting()) {
+        if (!conditionManager.allConditionsMet(center) || !PerformanceManager.isPlayerNearby(center)) {
             return;
         }
 
-        if (!conditionManager.allConditionsMet(center) || !PerformanceManager.isPlayerNearby(center)) {
+        if (loopDelayCounter > 0) {
+            loopDelayCounter--;
             return;
         }
 
@@ -94,13 +96,16 @@ public class MovingStarParticleTask implements AnimatedParticle {
                 if (currentYOffset >= height) {
                     currentYOffset = height;
                     verticalDirection = -1;
+                    loopDelayCounter = loopDelay;
                 } else if (currentYOffset <= 0) {
                     currentYOffset = 0;
                     verticalDirection = 1;
+                    loopDelayCounter = loopDelay;
                 }
             } else {
                 if (currentYOffset >= height || currentYOffset < 0) { // Reset if it goes above or below (if verticalSpeed is negative)
                     currentYOffset = 0;
+                    loopDelayCounter = loopDelay;
                 }
             }
         }
@@ -133,27 +138,6 @@ public class MovingStarParticleTask implements AnimatedParticle {
     @Override
     public boolean shouldCollide() {
         return collisionEnabled;
-    }
-
-    @Override
-    public boolean isLoopComplete() {
-        boolean complete = rotationAngle >= 2 * Math.PI;
-        if (complete) {
-            rotationAngle = 0;
-        }
-        return complete;
-    }
-
-    @Override
-    public LoopDelay getLoopDelay() {
-        return loopDelay;
-    }
-
-    @Override
-    public void reset() {
-        rotationAngle = 0;
-        currentYOffset = 0;
-        verticalDirection = 1;
     }
 
     @Override

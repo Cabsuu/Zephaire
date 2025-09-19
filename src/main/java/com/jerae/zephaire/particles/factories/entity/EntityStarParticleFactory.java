@@ -16,7 +16,7 @@ import org.bukkit.util.Vector;
 
 public class EntityStarParticleFactory implements EntityParticleFactory {
     @Override
-    public EntityParticleTask create(String effectName, ConfigurationSection section, EntityTarget target, ConditionManager manager, Vector offset, int period, SpawnBehavior spawnBehavior) {
+    public EntityParticleTask create(String effectName, ConfigurationSection section, EntityTarget target, ConditionManager manager, Vector offset, int period, SpawnBehavior spawnBehavior, int loopDelay) {
         Particle particle = ConfigValidator.getParticleType(section, "type", "FLAME");
         int points = ConfigValidator.getPositiveInt(section, "points", 5);
         double outerRadius = ConfigValidator.getPositiveDouble(section, "outer-radius", 3.0);
