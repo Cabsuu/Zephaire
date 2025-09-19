@@ -113,6 +113,11 @@ public class WaveParticleTask implements AnimatedParticle {
     }
 
     @Override
+    public int getLoopDelayCounter() {
+        return loopDelayCounter;
+    }
+
+    @Override
     public String getDebugInfo() {
         StringBuilder info = new StringBuilder();
         info.append(ChatColor.AQUA).append("Type: ").append(ChatColor.WHITE).append("ANIMATED").append("\n");

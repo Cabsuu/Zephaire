@@ -156,6 +156,11 @@ public class VortexParticleTask implements AnimatedParticle {
     }
 
     @Override
+    public int getLoopDelayCounter() {
+        return loopDelayCounter;
+    }
+
+    @Override
     public String getDebugInfo() {
         return ChatColor.AQUA + "Type: " + ChatColor.WHITE + "ANIMATED" + "\n" +
                 ChatColor.AQUA + "Shape: " + ChatColor.WHITE + "VORTEX" + "\n" +
