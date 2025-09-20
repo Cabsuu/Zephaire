@@ -36,8 +36,8 @@ public final class Zephaire extends JavaPlugin {
         // --- SAVE DEFAULT FILES ---
         this.saveDefaultConfig();
         this.saveResource("guide.txt", true);
-        this.saveResource("particles.txt", false);
-        this.saveResource("entity-guide.txt", false);
+        this.saveResource("particles.txt", true);
+        this.saveResource("entity-guide.txt", true);
         this.saveResource("disabled-particles.yml", false);
         this.saveResource("entity-particles.yml", false);
 

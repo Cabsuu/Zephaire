@@ -36,17 +36,13 @@ public class EntityCircleParticleTask implements EntityParticleTask {
     private double angle = 0;
     private int tickCounter = 0;
     private int loopDelayCounter = 0;
+    private Location lastLocation;
 
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Location spawnLocation;
     private final Vector relativePos;
     private final Vector rotatedPos = new Vector();
     private final boolean testMode;
-
-
-    public EntityCircleParticleTask(String effectName, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay) {
-        this(effectName, particle, radius, speed, particleCount, options, pitch, yaw, conditionManager, collisionEnabled, offset, target, period, spawnBehavior, despawnTimer, hasGravity, loopDelay, false);
-    }
 
     public EntityCircleParticleTask(String effectName, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay, boolean testMode) {
         this.effectName = effectName;
@@ -88,7 +84,19 @@ public class EntityCircleParticleTask implements EntityParticleTask {
     @Override
     public void tick(Entity entity) {
         // --- Spawn Behavior ---
-        boolean isMovingHorizontally = entity.getVelocity().setY(0).lengthSquared() > 0.001;
+        Location currentLocation = entity.getLocation();
+
+        boolean isMovingHorizontally;
+        if (lastLocation == null || currentLocation == null || !lastLocation.getWorld().equals(currentLocation.getWorld())) {
+            isMovingHorizontally = entity.getVelocity().setY(0).lengthSquared() > 0.001;
+        } else {
+            isMovingHorizontally = lastLocation.getX() != currentLocation.getX() || lastLocation.getZ() != currentLocation.getZ();
+        }
+
+        if (currentLocation != null) {
+            this.lastLocation = currentLocation.clone();
+        }
+
         boolean isOnGround = entity.isOnGround();
 
         switch (spawnBehavior) {

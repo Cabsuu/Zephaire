@@ -21,7 +21,9 @@ public interface EntityParticleFactory {
      * @param offset The positional offset for the particle effect's appearance.
      * @param period The tick period for rendering the particle effect.
      * @param spawnBehavior The condition under which particles should spawn.
+     * @param loopDelay The delay in ticks before the animation loops.
+     * @param debug Whether to enable debug logging for this particle task.
      * @return An EntityParticleTask instance.
      */
-    EntityParticleTask create(String effectName, ConfigurationSection section, EntityTarget target, ConditionManager manager, Vector offset, int period, SpawnBehavior spawnBehavior, int loopDelay);
+    EntityParticleTask create(String effectName, ConfigurationSection section, EntityTarget target, ConditionManager manager, Vector offset, int period, SpawnBehavior spawnBehavior, int loopDelay, boolean debug);
 }

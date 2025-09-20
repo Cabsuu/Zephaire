@@ -1,6 +1,8 @@
 package com.jerae.zephaire.particles.animations.entity;
 
 import com.jerae.zephaire.particles.data.SpawnBehavior;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 import org.junit.jupiter.api.Test;
@@ -62,5 +64,59 @@ public class EntitySpawnBehaviorTest {
         when(mockEntity.getVelocity()).thenReturn(new Vector(0, 0, 0));
         when(mockEntity.isOnGround()).thenReturn(false);
         assertThrows(RuntimeException.class, () -> task.tick(mockEntity), "Should throw when standing still in air");
+    }
+
+    @Test
+    public void testStandingStillBehaviorWithLocationChange() {
+        // This test simulates a moving entity that has a transient zero velocity.
+        // For STANDING_STILL, it should NOT spawn particles if the location has changed.
+        Entity mockEntity = Mockito.mock(Entity.class);
+        World mockWorld = Mockito.mock(World.class);
+        EntityCircleParticleTask task = new EntityCircleParticleTask(
+                "test", null, 0.0, 0.0, 0, null, 0.0, 0.0,
+                null, false, new Vector(0,0,0), null,
+                1, SpawnBehavior.STANDING_STILL, 0, false, 0, true
+        );
+
+        Location loc1 = new Location(mockWorld, 0, 0, 0);
+        Location loc2 = new Location(mockWorld, 1, 0, 1); // Moved
+
+        when(mockEntity.getVelocity()).thenReturn(new Vector(0, 0, 0)); // Zero velocity
+        when(mockEntity.isOnGround()).thenReturn(true);
+        when(mockEntity.getWorld()).thenReturn(mockWorld);
+        when(mockEntity.getLocation()).thenReturn(loc1, loc2);
+
+        // First tick uses velocity check (zero velocity), so it should spawn for STANDING_STILL.
+        assertThrows(RuntimeException.class, () -> task.tick(mockEntity), "Should throw on first tick for STANDING_STILL with zero velocity");
+
+        // Second tick uses location check (detects movement), so it should NOT spawn.
+        assertDoesNotThrow(() -> task.tick(mockEntity), "Should not throw when location changes for STANDING_STILL");
+    }
+
+    @Test
+    public void testMovingBehaviorWithLocationChange() {
+        // This test simulates a moving entity that has a transient zero velocity.
+        // For MOVING, it SHOULD spawn particles if the location has changed.
+        Entity mockEntity = Mockito.mock(Entity.class);
+        World mockWorld = Mockito.mock(World.class);
+        EntityCircleParticleTask task = new EntityCircleParticleTask(
+                "test", null, 0.0, 0.0, 0, null, 0.0, 0.0,
+                null, false, new Vector(0,0,0), null,
+                1, SpawnBehavior.MOVING, 0, false, 0, true
+        );
+
+        Location loc1 = new Location(mockWorld, 0, 0, 0);
+        Location loc2 = new Location(mockWorld, 1, 0, 1); // Moved
+
+        when(mockEntity.getVelocity()).thenReturn(new Vector(0, 0, 0)); // Zero velocity
+        when(mockEntity.isOnGround()).thenReturn(true);
+        when(mockEntity.getWorld()).thenReturn(mockWorld);
+        when(mockEntity.getLocation()).thenReturn(loc1, loc2);
+
+        // First tick uses velocity check (zero velocity), so it should NOT spawn for MOVING.
+        assertDoesNotThrow(() -> task.tick(mockEntity), "Should not throw on first tick for MOVING with zero velocity");
+
+        // Second tick uses location check (detects movement), so it SHOULD spawn.
+        assertThrows(RuntimeException.class, () -> task.tick(mockEntity), "Should throw when location changes for MOVING");
     }
 }

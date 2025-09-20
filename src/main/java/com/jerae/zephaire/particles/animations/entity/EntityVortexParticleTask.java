@@ -41,6 +41,7 @@ public class EntityVortexParticleTask implements EntityParticleTask {
     private final List<Vector> velocities = new ArrayList<>();
     private int tickCounter = 0;
     private int loopDelayCounter = 0;
+    private Location lastLocation;
 
     // --- PERFORMANCE: Reusable objects for vector calculations ---
     private final Vector toCenter = new Vector();
@@ -83,7 +84,19 @@ public class EntityVortexParticleTask implements EntityParticleTask {
     @Override
     public void tick(Entity entity) {
         // --- Spawn Behavior ---
-        boolean isMovingHorizontally = entity.getVelocity().setY(0).lengthSquared() > 0.001;
+        Location currentLocation = entity.getLocation();
+
+        boolean isMovingHorizontally;
+        if (lastLocation == null || currentLocation == null || !lastLocation.getWorld().equals(currentLocation.getWorld())) {
+            isMovingHorizontally = entity.getVelocity().setY(0).lengthSquared() > 0.001;
+        } else {
+            isMovingHorizontally = lastLocation.getX() != currentLocation.getX() || lastLocation.getZ() != currentLocation.getZ();
+        }
+
+        if (currentLocation != null) {
+            this.lastLocation = currentLocation.clone();
+        }
+
         boolean isOnGround = entity.isOnGround();
 
         switch (spawnBehavior) {

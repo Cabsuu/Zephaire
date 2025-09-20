@@ -45,6 +45,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
     private double currentYOffset = 0;
     private int verticalDirection = 1;
     private int loopDelayCounter = 0;
+    private Location lastLocation;
 
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Vector[] vertices;
@@ -96,7 +97,19 @@ public class EntityStarParticleTask implements EntityParticleTask {
     @Override
     public void tick(Entity entity) {
         // --- Spawn Behavior ---
-        boolean isMovingHorizontally = entity.getVelocity().setY(0).lengthSquared() > 0.001;
+        Location currentLocation = entity.getLocation();
+
+        boolean isMovingHorizontally;
+        if (lastLocation == null || currentLocation == null || !lastLocation.getWorld().equals(currentLocation.getWorld())) {
+            isMovingHorizontally = entity.getVelocity().setY(0).lengthSquared() > 0.001;
+        } else {
+            isMovingHorizontally = lastLocation.getX() != currentLocation.getX() || lastLocation.getZ() != currentLocation.getZ();
+        }
+
+        if (currentLocation != null) {
+            this.lastLocation = currentLocation.clone();
+        }
+
         boolean isOnGround = entity.isOnGround();
 
         switch (spawnBehavior) {
