@@ -95,14 +95,16 @@ public class EntityStarParticleTask implements EntityParticleTask {
 
     @Override
     public void tick(Entity entity) {
-        boolean isMoving = entity.getVelocity().setY(0).lengthSquared() > 0.01;
+        // --- Spawn Behavior ---
+        boolean isMovingHorizontally = entity.getVelocity().setY(0).lengthSquared() > 0.001;
+        boolean isOnGround = entity.isOnGround();
 
         switch (spawnBehavior) {
             case STANDING_STILL:
-                if (isMoving) return;
+                if (isMovingHorizontally || !isOnGround) return;
                 break;
             case MOVING:
-                if (!isMoving) return;
+                if (!isMovingHorizontally && isOnGround) return;
                 break;
             case ALWAYS:
                 break;

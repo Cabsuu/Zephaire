@@ -41,9 +41,14 @@ public class EntityCircleParticleTask implements EntityParticleTask {
     private final Location spawnLocation;
     private final Vector relativePos;
     private final Vector rotatedPos = new Vector();
+    private final boolean testMode;
 
 
     public EntityCircleParticleTask(String effectName, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay) {
+        this(effectName, particle, radius, speed, particleCount, options, pitch, yaw, conditionManager, collisionEnabled, offset, target, period, spawnBehavior, despawnTimer, hasGravity, loopDelay, false);
+    }
+
+    public EntityCircleParticleTask(String effectName, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay, boolean testMode) {
         this.effectName = effectName;
         this.particle = particle;
         this.radius = radius;
@@ -63,6 +68,7 @@ public class EntityCircleParticleTask implements EntityParticleTask {
         this.loopDelay = loopDelay;
         this.spawnLocation = new Location(null, 0, 0, 0); // World will be set dynamically
         this.relativePos = new Vector();
+        this.testMode = testMode;
     }
 
     @Override
@@ -70,7 +76,7 @@ public class EntityCircleParticleTask implements EntityParticleTask {
         return new EntityCircleParticleTask(
                 this.effectName, this.particle, this.radius, this.speed,
                 this.particleCount, this.options, this.pitch, this.yaw,
-                this.conditionManager, this.collisionEnabled, this.offset, this.target, this.period, this.spawnBehavior, this.despawnTimer, this.hasGravity, this.loopDelay
+                this.conditionManager, this.collisionEnabled, this.offset, this.target, this.period, this.spawnBehavior, this.despawnTimer, this.hasGravity, this.loopDelay, this.testMode
         );
     }
 
@@ -81,17 +87,23 @@ public class EntityCircleParticleTask implements EntityParticleTask {
 
     @Override
     public void tick(Entity entity) {
-        boolean isMoving = entity.getVelocity().setY(0).lengthSquared() > 0.01;
+        // --- Spawn Behavior ---
+        boolean isMovingHorizontally = entity.getVelocity().setY(0).lengthSquared() > 0.001;
+        boolean isOnGround = entity.isOnGround();
 
         switch (spawnBehavior) {
             case STANDING_STILL:
-                if (isMoving) return;
+                if (isMovingHorizontally || !isOnGround) return;
                 break;
             case MOVING:
-                if (!isMoving) return;
+                if (!isMovingHorizontally && isOnGround) return;
                 break;
             case ALWAYS:
                 break;
+        }
+
+        if (testMode) {
+            throw new RuntimeException("TestParticleSpawn");
         }
 
         if (loopDelayCounter > 0) {
