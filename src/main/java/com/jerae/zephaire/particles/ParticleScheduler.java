@@ -2,6 +2,7 @@ package com.jerae.zephaire.particles;
 
 import com.jerae.zephaire.Zephaire;
 import org.bukkit.Bukkit;
+import org.bukkit.Particle;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -40,7 +41,11 @@ public class ParticleScheduler extends BukkitRunnable {
             if (data != null && data.location.getWorld() != null && data.location.isChunkLoaded()) {
                 switch (data.particleType) {
                     case BUKKIT:
-                        if (data.particle != null) {
+                        if (data.particle == Particle.SHRIEK) {
+                            data.location.getWorld().spawnParticle(data.particle, data.location, 1, data.shriekDelay);
+                        } else if (data.particle == Particle.VIBRATION && data.vibration != null) {
+                            data.location.getWorld().spawnParticle(data.particle, data.location, 1, data.vibration);
+                        } else if (data.particle != null) {
                             data.location.getWorld().spawnParticle(
                                     data.particle, data.location, data.count,
                                     data.offsetX, data.offsetY, data.offsetZ,

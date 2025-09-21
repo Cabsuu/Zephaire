@@ -1,3 +1,1 @@
-com\jerae\zephaire\particles\animations\entity\EntitySpawnBehaviorTest.class
-com\jerae\zephaire\particles\animations\entity\TestParticleSpawnException.class
-com\jerae\zephaire\particles\animations\LoopDelayTest.class
+com/jerae/zephaire/particles/ParticleUtilsTest.class

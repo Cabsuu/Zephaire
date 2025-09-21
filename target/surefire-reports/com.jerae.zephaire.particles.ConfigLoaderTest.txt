@@ -1,0 +1,14 @@
+-------------------------------------------------------------------------------
+Test set: com.jerae.zephaire.particles.ConfigLoaderTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.256 s <<< FAILURE! -- in com.jerae.zephaire.particles.ConfigLoaderTest
+com.jerae.zephaire.particles.ConfigLoaderTest.testLoadParticlesLoadsFromSeparatedFiles -- Time elapsed: 0.245 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: Expected java.lang.Exception to be thrown, but nothing was thrown.
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:152)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:73)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:35)
+	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3111)
+	at com.jerae.zephaire.particles.ConfigLoaderTest.testLoadParticlesLoadsFromSeparatedFiles(ConfigLoaderTest.java:83)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)

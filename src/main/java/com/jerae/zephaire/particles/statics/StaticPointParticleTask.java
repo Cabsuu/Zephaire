@@ -78,11 +78,17 @@ public class StaticPointParticleTask extends BukkitRunnable implements Debuggabl
                 ParticleScheduler.queueParticle(new ParticleSpawnData(location, (ItemStack) particleOptions, despawnTimer, hasGravity));
             }
         } else if (particle != null) {
-            ParticleScheduler.queueParticle(new ParticleSpawnData(
-                    particle, location, count,
-                    offsetX, offsetY, offsetZ,
-                    speed, particleOptions
-            ));
+            if (particle == Particle.SHRIEK && particleOptions instanceof Integer) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(particle, location, (Integer) particleOptions));
+            } else if (particle == Particle.VIBRATION && particleOptions instanceof org.bukkit.Vibration) {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(particle, location, (org.bukkit.Vibration) particleOptions));
+            } else {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(
+                        particle, location, count,
+                        offsetX, offsetY, offsetZ,
+                        speed, particleOptions
+                ));
+            }
         }
     }
 
