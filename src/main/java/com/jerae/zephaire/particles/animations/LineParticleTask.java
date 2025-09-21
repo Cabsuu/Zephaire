@@ -98,6 +98,8 @@ public class LineParticleTask implements AnimatedParticle {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, (Integer) options));
                 } else if (particle == Particle.VIBRATION && options instanceof org.bukkit.Vibration) {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, (org.bukkit.Vibration) options));
+                } else if (particle == Particle.SCULK_CHARGE && options instanceof Float) {
+                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, (Float) options));
                 } else {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, 1, 0, 0, 0, 0, options));
                 }

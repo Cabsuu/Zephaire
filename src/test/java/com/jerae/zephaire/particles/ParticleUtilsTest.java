@@ -83,4 +83,16 @@ public class ParticleUtilsTest {
         assertTrue(result instanceof Integer, "Result should be an Integer");
         assertEquals(5, (Integer) result, "Delay should be parsed correctly");
     }
+
+    @Test
+    public void testParseSculkChargeParticle() {
+        ConfigurationSection optionsSection = mock(ConfigurationSection.class);
+        when(optionsSection.getDouble("roll", 0.0)).thenReturn(0.5);
+
+        Object result = ParticleUtils.parseParticleOptions(Particle.SCULK_CHARGE, optionsSection);
+
+        assertNotNull(result, "Result should not be null for SCULK_CHARGE particle");
+        assertTrue(result instanceof Float, "Result should be a Float");
+        assertEquals(0.5f, (Float) result, 0.001f, "Roll should be parsed correctly");
+    }
 }

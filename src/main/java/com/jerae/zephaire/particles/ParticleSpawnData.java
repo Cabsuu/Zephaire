@@ -21,6 +21,7 @@ public class ParticleSpawnData {
     public final org.bukkit.util.Vector velocity;
     public final int shriekDelay;
     public final org.bukkit.Vibration vibration;
+    public final float sculkChargeRoll;
 
 
     /**
@@ -41,6 +42,7 @@ public class ParticleSpawnData {
         this.velocity = null;
         this.shriekDelay = 0;
         this.vibration = null;
+        this.sculkChargeRoll = 0;
     }
 
     /**
@@ -80,6 +82,28 @@ public class ParticleSpawnData {
         this.velocity = velocity;
         this.shriekDelay = 0;
         this.vibration = null;
+        this.sculkChargeRoll = 0;
+    }
+
+    /**
+     * Constructor for SCULK_CHARGE particles.
+     */
+    public ParticleSpawnData(Particle particle, Location location, float sculkChargeRoll) {
+        this.particleType = ParticleType.BUKKIT;
+        this.particle = particle;
+        this.location = location.clone();
+        this.count = 1;
+        this.offsetX = 0;
+        this.offsetY = 0;
+        this.offsetZ = 0;
+        this.speed = 0;
+        this.data = null;
+        this.despawnTimer = 0;
+        this.hasGravity = false;
+        this.velocity = null;
+        this.shriekDelay = 0;
+        this.vibration = null;
+        this.sculkChargeRoll = sculkChargeRoll;
     }
 
     /**
@@ -100,6 +124,7 @@ public class ParticleSpawnData {
         this.velocity = null;
         this.shriekDelay = shriekDelay;
         this.vibration = null;
+        this.sculkChargeRoll = 0;
     }
 
     /**
@@ -120,6 +145,7 @@ public class ParticleSpawnData {
         this.velocity = null;
         this.shriekDelay = 0;
         this.vibration = vibration;
+        this.sculkChargeRoll = 0;
     }
 }
 

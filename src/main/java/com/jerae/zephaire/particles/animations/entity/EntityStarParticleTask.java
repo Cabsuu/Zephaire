@@ -209,6 +209,8 @@ public class EntityStarParticleTask implements EntityParticleTask {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, particleLoc, (Integer) options));
                 } else if (particle == Particle.VIBRATION && options instanceof org.bukkit.Vibration) {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, particleLoc, (org.bukkit.Vibration) options));
+                } else if (particle == Particle.SCULK_CHARGE && options instanceof Float) {
+                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, particleLoc, (Float) options));
                 } else {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, particleLoc, 1, 0, 0, 0, 0, options));
                 }

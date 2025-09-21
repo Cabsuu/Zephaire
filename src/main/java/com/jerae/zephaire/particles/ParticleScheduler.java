@@ -45,6 +45,16 @@ public class ParticleScheduler extends BukkitRunnable {
                             data.location.getWorld().spawnParticle(data.particle, data.location, 1, data.shriekDelay);
                         } else if (data.particle == Particle.VIBRATION && data.vibration != null) {
                             data.location.getWorld().spawnParticle(data.particle, data.location, 1, data.vibration);
+                        } else if (data.particle == Particle.SCULK_CHARGE) {
+                            try {
+                                Class<?> sculkChargeClass = Class.forName("com.destroystokyo.paper.particle.Particle$SculkCharge");
+                                java.lang.reflect.Constructor<?> constructor = sculkChargeClass.getConstructor(float.class);
+                                Object sculkChargeOptions = constructor.newInstance(data.sculkChargeRoll);
+                                data.location.getWorld().spawnParticle(data.particle, data.location, 1, 0, 0, 0, 0, sculkChargeOptions);
+                            } catch (Exception e) {
+                                // Fallback for non-Paper servers
+                                data.location.getWorld().spawnParticle(data.particle, data.location, 1);
+                            }
                         } else if (data.particle != null) {
                             data.location.getWorld().spawnParticle(
                                     data.particle, data.location, data.count,

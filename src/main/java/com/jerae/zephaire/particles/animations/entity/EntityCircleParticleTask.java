@@ -162,6 +162,8 @@ public class EntityCircleParticleTask implements EntityParticleTask {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, (Integer) options));
                 } else if (particle == Particle.VIBRATION && options instanceof org.bukkit.Vibration) {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, (org.bukkit.Vibration) options));
+                } else if (particle == Particle.SCULK_CHARGE && options instanceof Float) {
+                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, (Float) options));
                 } else {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, 1, 0, 0, 0, 0, options));
                 }

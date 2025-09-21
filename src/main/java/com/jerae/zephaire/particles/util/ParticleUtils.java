@@ -101,6 +101,8 @@ public final class ParticleUtils {
         } else if (particle == Particle.ENTITY_EFFECT) {
             // ENTITY_EFFECT uses a Color object for its data
             return hexToColor(optionsSection.getString("color", "FFFFFF"));
+        } else if (particle == Particle.SCULK_CHARGE) {
+            return (float) optionsSection.getDouble("roll", 0.0);
         } else if (particle == Particle.SHRIEK) {
             return optionsSection.getInt("delay", 0);
         } else if (particle == Particle.VIBRATION) {
