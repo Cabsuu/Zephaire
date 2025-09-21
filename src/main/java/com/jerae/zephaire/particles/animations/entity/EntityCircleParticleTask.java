@@ -158,7 +158,13 @@ public class EntityCircleParticleTask implements EntityParticleTask {
                 Vector velocity = inheritEntityVelocity ? entity.getVelocity() : new Vector(0, 0, 0);
                 ParticleScheduler.queueParticle(new ParticleSpawnData(spawnLocation, (ItemStack) options, despawnTimer, hasGravity, velocity));
             } else if (particle != null) {
-                ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, 1, 0, 0, 0, 0, options));
+                if (particle == Particle.SHRIEK && options instanceof Integer) {
+                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, (Integer) options));
+                } else if (particle == Particle.VIBRATION && options instanceof org.bukkit.Vibration) {
+                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, (org.bukkit.Vibration) options));
+                } else {
+                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, 1, 0, 0, 0, 0, options));
+                }
             }
         }
     }

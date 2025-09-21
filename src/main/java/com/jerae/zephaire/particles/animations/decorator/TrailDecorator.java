@@ -58,7 +58,13 @@ public class TrailDecorator implements AnimatedParticle {
             tickCounter = 0;
             if (currentLoc != null) {
                 for (Location trailLoc : recentLocations) {
-                    ParticleScheduler.queueParticle(new ParticleSpawnData(trailParticle, trailLoc, 1, 0, 0, 0, 0, trailParticleOptions));
+                    if (trailParticle == Particle.SHRIEK && trailParticleOptions instanceof Integer) {
+                        ParticleScheduler.queueParticle(new ParticleSpawnData(trailParticle, trailLoc, (Integer) trailParticleOptions));
+                    } else if (trailParticle == Particle.VIBRATION && trailParticleOptions instanceof org.bukkit.Vibration) {
+                        ParticleScheduler.queueParticle(new ParticleSpawnData(trailParticle, trailLoc, (org.bukkit.Vibration) trailParticleOptions));
+                    } else {
+                        ParticleScheduler.queueParticle(new ParticleSpawnData(trailParticle, trailLoc, 1, 0, 0, 0, 0, trailParticleOptions));
+                    }
                 }
             }
         }

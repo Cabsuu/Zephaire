@@ -116,7 +116,13 @@ public class PulsingCircleParticleTask implements AnimatedParticle {
             if (particle == null && options instanceof ItemStack) {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(currentLocation, (ItemStack) options, despawnTimer, hasGravity));
             } else if (particle != null) {
-                ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, 1, 0, 0, 0, 0, options));
+                if (particle == Particle.SHRIEK && options instanceof Integer) {
+                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, (Integer) options));
+                } else if (particle == Particle.VIBRATION && options instanceof org.bukkit.Vibration) {
+                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, (org.bukkit.Vibration) options));
+                } else {
+                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, 1, 0, 0, 0, 0, options));
+                }
             }
         }
     }
