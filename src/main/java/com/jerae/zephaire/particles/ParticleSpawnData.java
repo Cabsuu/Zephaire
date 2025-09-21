@@ -18,6 +18,7 @@ public class ParticleSpawnData {
     public final Object data;
     public final int despawnTimer;
     public final boolean hasGravity;
+    public final org.bukkit.util.Vector velocity;
 
     /**
      * Constructor for standard Bukkit particles.
@@ -34,6 +35,7 @@ public class ParticleSpawnData {
         this.data = data;
         this.despawnTimer = 0;
         this.hasGravity = false;
+        this.velocity = null;
     }
 
     /**
@@ -43,7 +45,7 @@ public class ParticleSpawnData {
      */
     @Deprecated
     public ParticleSpawnData(Location location, ItemStack itemStack, int despawnTimer) {
-        this(location, itemStack, despawnTimer, false);
+        this(location, itemStack, despawnTimer, false, new org.bukkit.util.Vector(0, 0, 0));
     }
 
     /**
@@ -51,6 +53,14 @@ public class ParticleSpawnData {
      * The `data` field will hold the ItemStack.
      */
     public ParticleSpawnData(Location location, ItemStack itemStack, int despawnTimer, boolean hasGravity) {
+        this(location, itemStack, despawnTimer, hasGravity, new org.bukkit.util.Vector(0, 0, 0));
+    }
+
+    /**
+     * Constructor for VISUAL_ITEM particles.
+     * The `data` field will hold the ItemStack.
+     */
+    public ParticleSpawnData(Location location, ItemStack itemStack, int despawnTimer, boolean hasGravity, org.bukkit.util.Vector velocity) {
         this.particleType = ParticleType.VISUAL_ITEM;
         this.particle = null; // Not a real Bukkit particle
         this.location = location.clone();
@@ -62,6 +72,7 @@ public class ParticleSpawnData {
         this.data = itemStack;
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
+        this.velocity = velocity;
     }
 }
 

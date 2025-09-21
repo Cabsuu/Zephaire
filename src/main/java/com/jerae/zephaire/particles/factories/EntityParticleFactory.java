@@ -25,5 +25,5 @@ public interface EntityParticleFactory {
      * @param debug Whether to enable debug logging for this particle task.
      * @return An EntityParticleTask instance.
      */
-    EntityParticleTask create(String effectName, ConfigurationSection section, EntityTarget target, ConditionManager manager, Vector offset, int period, SpawnBehavior spawnBehavior, int loopDelay, boolean debug);
+    EntityParticleTask create(String effectName, ConfigurationSection section, EntityTarget target, ConditionManager manager, Vector offset, int period, SpawnBehavior spawnBehavior, int loopDelay, boolean debug, boolean inheritEntityVelocity);
 }

@@ -58,7 +58,7 @@ public class ParticleScheduler extends BukkitRunnable {
                             Item item = data.location.getWorld().dropItem(data.location, itemStack.clone());
                             item.setPickupDelay(Integer.MAX_VALUE);
                             item.setGravity(data.hasGravity);
-                            item.setVelocity(new Vector(0, 0, 0));
+                            item.setVelocity(data.velocity);
                             item.setMetadata("zephaire-cosmetic", new FixedMetadataValue(plugin, true));
 
                             if (data.despawnTimer > 0) {

@@ -36,6 +36,7 @@ public class EntityVortexParticleTask implements EntityParticleTask {
     private final int despawnTimer;
     private final boolean hasGravity;
     private final int loopDelay;
+    private final boolean inheritEntityVelocity;
 
     private final List<Location> particles = new ArrayList<>();
     private final List<Vector> velocities = new ArrayList<>();
@@ -48,7 +49,7 @@ public class EntityVortexParticleTask implements EntityParticleTask {
     private final Vector rotational = new Vector();
 
 
-    public EntityVortexParticleTask(String effectName, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay) {
+    public EntityVortexParticleTask(String effectName, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay, boolean inheritEntityVelocity) {
         this.effectName = effectName;
         this.particle = particle;
         this.radius = radius;
@@ -65,6 +66,7 @@ public class EntityVortexParticleTask implements EntityParticleTask {
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
         this.loopDelay = loopDelay;
+        this.inheritEntityVelocity = inheritEntityVelocity;
     }
 
     @Override
@@ -72,7 +74,7 @@ public class EntityVortexParticleTask implements EntityParticleTask {
         return new EntityVortexParticleTask(
                 effectName, particle, radius, height, speed, particleCount, options,
                 conditionManager, collisionEnabled, offset, target, period, spawnBehavior,
-                despawnTimer, hasGravity, loopDelay
+                despawnTimer, hasGravity, loopDelay, inheritEntityVelocity
         );
     }
 
@@ -164,8 +166,12 @@ public class EntityVortexParticleTask implements EntityParticleTask {
 
             if (collisionEnabled && CollisionManager.isColliding(p)) continue;
 
+            Vector totalVelocity = v.clone();
+            if (inheritEntityVelocity) {
+                totalVelocity.add(entity.getVelocity());
+            }
             if (particle == null && options instanceof ItemStack) {
-                ParticleScheduler.queueParticle(new ParticleSpawnData(p, (ItemStack) options, despawnTimer, hasGravity));
+                ParticleScheduler.queueParticle(new ParticleSpawnData(p, (ItemStack) options, despawnTimer, hasGravity, totalVelocity));
             } else if (particle != null) {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(particle, p, 1, 0, 0, 0, 0, options));
             }

@@ -11,8 +11,31 @@ import org.mockito.Mockito;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
+import com.jerae.zephaire.particles.ParticleScheduler;
+import com.jerae.zephaire.particles.ParticleSpawnData;
+import org.bukkit.inventory.ItemStack;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.mockito.ArgumentCaptor;
+import org.mockito.MockedStatic;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 
 public class EntitySpawnBehaviorTest {
+    private MockedStatic<ParticleScheduler> mockedScheduler;
+
+    @BeforeEach
+    public void setUp() {
+        mockedScheduler = mockStatic(ParticleScheduler.class);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        mockedScheduler.close();
+    }
 
     @Test
     public void testStandingStillSpawnBehavior() {
@@ -21,7 +44,7 @@ public class EntitySpawnBehaviorTest {
                 "test", (org.bukkit.Particle) null, 0.0, 0.0, 0, (Object) null, 0.0, 0.0,
                 (com.jerae.zephaire.particles.conditions.ConditionManager) null,
                 false, (org.bukkit.util.Vector) null, (com.jerae.zephaire.particles.data.EntityTarget) null,
-                1, SpawnBehavior.STANDING_STILL, 0, false, 0, true
+                1, SpawnBehavior.STANDING_STILL, 0, false, 0, true, false
         );
 
         // Case 1: Standing still on the ground (should spawn)
@@ -47,7 +70,7 @@ public class EntitySpawnBehaviorTest {
                 "test", (org.bukkit.Particle) null, 0.0, 0.0, 0, (Object) null, 0.0, 0.0,
                 (com.jerae.zephaire.particles.conditions.ConditionManager) null,
                 false, (org.bukkit.util.Vector) null, (com.jerae.zephaire.particles.data.EntityTarget) null,
-                1, SpawnBehavior.MOVING, 0, false, 0, true
+                1, SpawnBehavior.MOVING, 0, false, 0, true, false
         );
 
         // Case 1: Standing still on the ground (should not spawn)
@@ -75,7 +98,7 @@ public class EntitySpawnBehaviorTest {
         EntityCircleParticleTask task = new EntityCircleParticleTask(
                 "test", null, 0.0, 0.0, 0, null, 0.0, 0.0,
                 null, false, new Vector(0,0,0), null,
-                1, SpawnBehavior.STANDING_STILL, 0, false, 0, true
+                1, SpawnBehavior.STANDING_STILL, 0, false, 0, true, false
         );
 
         Location loc1 = new Location(mockWorld, 0, 0, 0);
@@ -102,7 +125,7 @@ public class EntitySpawnBehaviorTest {
         EntityCircleParticleTask task = new EntityCircleParticleTask(
                 "test", null, 0.0, 0.0, 0, null, 0.0, 0.0,
                 null, false, new Vector(0,0,0), null,
-                1, SpawnBehavior.MOVING, 0, false, 0, true
+                1, SpawnBehavior.MOVING, 0, false, 0, true, false
         );
 
         Location loc1 = new Location(mockWorld, 0, 0, 0);
@@ -118,5 +141,57 @@ public class EntitySpawnBehaviorTest {
 
         // Second tick uses location check (detects movement), so it SHOULD spawn.
         assertThrows(RuntimeException.class, () -> task.tick(mockEntity), "Should throw when location changes for MOVING");
+    }
+
+    @Test
+    public void testInheritEntityVelocity() {
+        Entity mockEntity = Mockito.mock(Entity.class);
+        World mockWorld = Mockito.mock(World.class);
+        Location loc = new Location(mockWorld, 0, 0, 0);
+        Vector velocity = new Vector(1, 2, 3);
+
+        when(mockEntity.getVelocity()).thenReturn(velocity);
+        when(mockEntity.isOnGround()).thenReturn(true);
+        when(mockEntity.getWorld()).thenReturn(mockWorld);
+        when(mockEntity.getLocation()).thenReturn(loc);
+
+        EntityPointParticleTask task = new EntityPointParticleTask(
+                "test", null, Mockito.mock(ItemStack.class), null, false, new Vector(0,0,0), null,
+                1, SpawnBehavior.ALWAYS, 0, false, 0, false, true
+        );
+
+        task.tick(mockEntity);
+
+        ArgumentCaptor<ParticleSpawnData> captor = ArgumentCaptor.forClass(ParticleSpawnData.class);
+        mockedScheduler.verify(() -> ParticleScheduler.queueParticle(captor.capture()), times(1));
+
+        ParticleSpawnData capturedData = captor.getValue();
+        assertEquals(velocity, capturedData.velocity);
+    }
+
+    @Test
+    public void testDoNotInheritEntityVelocity() {
+        Entity mockEntity = Mockito.mock(Entity.class);
+        World mockWorld = Mockito.mock(World.class);
+        Location loc = new Location(mockWorld, 0, 0, 0);
+        Vector velocity = new Vector(1, 2, 3);
+
+        when(mockEntity.getVelocity()).thenReturn(velocity);
+        when(mockEntity.isOnGround()).thenReturn(true);
+        when(mockEntity.getWorld()).thenReturn(mockWorld);
+        when(mockEntity.getLocation()).thenReturn(loc);
+
+        EntityPointParticleTask task = new EntityPointParticleTask(
+                "test", null, Mockito.mock(ItemStack.class), null, false, new Vector(0,0,0), null,
+                1, SpawnBehavior.ALWAYS, 0, false, 0, false, false
+        );
+
+        task.tick(mockEntity);
+
+        ArgumentCaptor<ParticleSpawnData> captor = ArgumentCaptor.forClass(ParticleSpawnData.class);
+        mockedScheduler.verify(() -> ParticleScheduler.queueParticle(captor.capture()), times(1));
+
+        ParticleSpawnData capturedData = captor.getValue();
+        assertEquals(new Vector(0, 0, 0), capturedData.velocity);
     }
 }

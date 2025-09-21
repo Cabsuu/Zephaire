@@ -39,6 +39,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
     private final int despawnTimer;
     private final boolean hasGravity;
     private final int loopDelay;
+    private final boolean inheritEntityVelocity;
 
     private double rotationAngle = 0;
     private int tickCounter = 0;
@@ -54,7 +55,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
     private final Vector currentLinePoint = new Vector();
     private final Location particleLoc;
 
-    public EntityStarParticleTask(String effectName, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, double height, double verticalSpeed, boolean bounce, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay) {
+    public EntityStarParticleTask(String effectName, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, double height, double verticalSpeed, boolean bounce, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay, boolean inheritEntityVelocity) {
         this.effectName = effectName;
         this.particle = particle;
         this.points = Math.max(2, points);
@@ -77,6 +78,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
         this.loopDelay = loopDelay;
+        this.inheritEntityVelocity = inheritEntityVelocity;
         this.vertices = new Vector[this.points * 2];
         for (int i = 0; i < vertices.length; i++) {
             vertices[i] = new Vector();
@@ -86,7 +88,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
 
     @Override
     public EntityParticleTask newInstance() {
-        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, conditionManager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce, this.spawnBehavior, despawnTimer, hasGravity, loopDelay);
+        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, conditionManager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce, this.spawnBehavior, despawnTimer, hasGravity, loopDelay, inheritEntityVelocity);
     }
 
     @Override
@@ -163,10 +165,10 @@ public class EntityStarParticleTask implements EntityParticleTask {
             }
         }
 
-        drawStar(center);
+        drawStar(center, entity.getVelocity());
     }
 
-    private void drawStar(Location center) {
+    private void drawStar(Location center, Vector entityVelocity) {
         int totalVertices = points * 2;
 
         // Calculate all the vertices of the star with the vertical offset
@@ -181,11 +183,11 @@ public class EntityStarParticleTask implements EntityParticleTask {
         for (int i = 0; i < totalVertices; i++) {
             Vector start = vertices[i];
             Vector end = vertices[(i + 1) % totalVertices];
-            drawParticleLine(center, start, end);
+            drawParticleLine(center, start, end, entityVelocity);
         }
     }
 
-    private void drawParticleLine(Location center, Vector start, Vector end) {
+    private void drawParticleLine(Location center, Vector start, Vector end, Vector entityVelocity) {
         lineDirection.copy(end).subtract(start);
         double length = lineDirection.length();
         lineDirection.normalize();
@@ -200,7 +202,8 @@ public class EntityStarParticleTask implements EntityParticleTask {
                 continue;
             }
             if (particle == null && options instanceof ItemStack) {
-                ParticleScheduler.queueParticle(new ParticleSpawnData(particleLoc, (ItemStack) options, despawnTimer, hasGravity));
+                Vector velocity = inheritEntityVelocity ? entityVelocity : new Vector(0, 0, 0);
+                ParticleScheduler.queueParticle(new ParticleSpawnData(particleLoc, (ItemStack) options, despawnTimer, hasGravity, velocity));
             } else if (particle != null) {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(particle, particleLoc, 1, 0, 0, 0, 0, options));
             }

@@ -10,6 +10,7 @@ import com.jerae.zephaire.particles.factories.decorators.MultiColorTransitionDec
 import com.jerae.zephaire.particles.factories.decorators.SoundDecoratorFactory;
 import com.jerae.zephaire.particles.factories.decorators.TrailDecoratorFactory;
 import com.jerae.zephaire.particles.factories.entity.EntityCircleParticleFactory;
+import com.jerae.zephaire.particles.factories.entity.EntityPointParticleFactory;
 import com.jerae.zephaire.particles.factories.entity.EntityStarParticleFactory;
 import com.jerae.zephaire.particles.factories.entity.EntityVortexParticleFactory;
 import com.jerae.zephaire.particles.factories.statics.*;
@@ -80,6 +81,7 @@ public class FactoryManager {
         entityFactories.put("CIRCLE", new EntityCircleParticleFactory());
         entityFactories.put("STAR", new EntityStarParticleFactory());
         entityFactories.put("VORTEX", new EntityVortexParticleFactory());
+        entityFactories.put("POINT", new EntityPointParticleFactory());
     }
 
     public Optional<StaticParticleFactory> getStaticFactory(String shape) {
