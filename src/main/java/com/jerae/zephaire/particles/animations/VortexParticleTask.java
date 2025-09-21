@@ -137,6 +137,8 @@ public class VortexParticleTask implements AnimatedParticle {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, p, (org.bukkit.Vibration) options));
                 } else if (particle == Particle.SCULK_CHARGE && options instanceof Float) {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, p, (Float) options));
+                } else if (particle == Particle.TRAIL && options instanceof Integer) {
+                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, p, (Integer) options, hasGravity));
                 } else {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, p, 1, 0, 0, 0, 0, options));
                 }

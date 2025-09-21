@@ -95,4 +95,16 @@ public class ParticleUtilsTest {
         assertTrue(result instanceof Float, "Result should be a Float");
         assertEquals(0.5f, (Float) result, 0.001f, "Roll should be parsed correctly");
     }
+
+    @Test
+    public void testParseTrailParticle() {
+        ConfigurationSection optionsSection = mock(ConfigurationSection.class);
+        when(optionsSection.getInt("duration", 20)).thenReturn(100);
+
+        Object result = ParticleUtils.parseParticleOptions(Particle.TRAIL, optionsSection);
+
+        assertNotNull(result, "Result should not be null for TRAIL particle");
+        assertTrue(result instanceof Integer, "Result should be an Integer");
+        assertEquals(100, (Integer) result, "Duration should be parsed correctly");
+    }
 }

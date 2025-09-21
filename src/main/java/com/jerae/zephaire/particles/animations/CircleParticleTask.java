@@ -107,6 +107,8 @@ public class CircleParticleTask implements AnimatedParticle {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, (org.bukkit.Vibration) options));
                 } else if (particle == Particle.SCULK_CHARGE && options instanceof Float) {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, (Float) options));
+                } else if (particle == Particle.TRAIL && options instanceof Integer) {
+                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, (Integer) options, hasGravity));
                 } else {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, 1, 0, 0, 0, 0, options));
                 }

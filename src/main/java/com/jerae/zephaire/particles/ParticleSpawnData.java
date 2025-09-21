@@ -22,6 +22,7 @@ public class ParticleSpawnData {
     public final int shriekDelay;
     public final org.bukkit.Vibration vibration;
     public final float sculkChargeRoll;
+    public final int trailDuration;
 
 
     /**
@@ -43,6 +44,7 @@ public class ParticleSpawnData {
         this.shriekDelay = 0;
         this.vibration = null;
         this.sculkChargeRoll = 0;
+        this.trailDuration = 0;
     }
 
     /**
@@ -83,6 +85,7 @@ public class ParticleSpawnData {
         this.shriekDelay = 0;
         this.vibration = null;
         this.sculkChargeRoll = 0;
+        this.trailDuration = 0;
     }
 
     /**
@@ -104,6 +107,7 @@ public class ParticleSpawnData {
         this.shriekDelay = 0;
         this.vibration = null;
         this.sculkChargeRoll = sculkChargeRoll;
+        this.trailDuration = 0;
     }
 
     /**
@@ -125,6 +129,7 @@ public class ParticleSpawnData {
         this.shriekDelay = shriekDelay;
         this.vibration = null;
         this.sculkChargeRoll = 0;
+        this.trailDuration = 0;
     }
 
     /**
@@ -146,6 +151,29 @@ public class ParticleSpawnData {
         this.shriekDelay = 0;
         this.vibration = vibration;
         this.sculkChargeRoll = 0;
+        this.trailDuration = 0;
+    }
+
+    /**
+     * Constructor for TRAIL particles.
+     */
+    public ParticleSpawnData(Particle particle, Location location, int trailDuration, boolean hasGravity) {
+        this.particleType = ParticleType.BUKKIT;
+        this.particle = particle;
+        this.location = location.clone();
+        this.count = 1;
+        this.offsetX = 0;
+        this.offsetY = 0;
+        this.offsetZ = 0;
+        this.speed = 0;
+        this.data = null;
+        this.despawnTimer = 0;
+        this.hasGravity = hasGravity;
+        this.velocity = null;
+        this.shriekDelay = 0;
+        this.vibration = null;
+        this.sculkChargeRoll = 0;
+        this.trailDuration = trailDuration;
     }
 }
 

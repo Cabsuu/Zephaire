@@ -55,6 +55,16 @@ public class ParticleScheduler extends BukkitRunnable {
                                 // Fallback for non-Paper servers
                                 data.location.getWorld().spawnParticle(data.particle, data.location, 1);
                             }
+                        } else if (data.particle == Particle.TRAIL) {
+                            try {
+                                Class<?> trailClass = Class.forName("org.bukkit.Particle$Trail");
+                                java.lang.reflect.Constructor<?> constructor = trailClass.getConstructor(int.class);
+                                Object trailOptions = constructor.newInstance(data.trailDuration);
+                                data.location.getWorld().spawnParticle(data.particle, data.location, 1, 0, 0, 0, 0, trailOptions);
+                            } catch (Exception e) {
+                                // Fallback for non-Paper servers
+                                data.location.getWorld().spawnParticle(data.particle, data.location, 1);
+                            }
                         } else if (data.particle != null) {
                             data.location.getWorld().spawnParticle(
                                     data.particle, data.location, data.count,

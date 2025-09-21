@@ -105,6 +105,8 @@ public final class ParticleUtils {
             return (float) optionsSection.getDouble("roll", 0.0);
         } else if (particle == Particle.SHRIEK) {
             return optionsSection.getInt("delay", 0);
+        } else if (particle == Particle.TRAIL) {
+            return optionsSection.getInt("duration", 20);
         } else if (particle == Particle.VIBRATION) {
             ConfigurationSection destSection = optionsSection.getConfigurationSection("destination");
             if (destSection == null) {
