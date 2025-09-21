@@ -13,6 +13,9 @@ import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 public class StaticPointParticleTask extends BukkitRunnable implements Debuggable {
 
@@ -27,8 +30,9 @@ public class StaticPointParticleTask extends BukkitRunnable implements Debuggabl
     private final World world;
     private final int despawnTimer;
     private final boolean hasGravity;
+    private final double spread;
 
-    public StaticPointParticleTask(Location location, Particle particle, int count, double offsetX, double offsetY, double offsetZ, double speed, Object particleOptions, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
+    public StaticPointParticleTask(Location location, Particle particle, int count, double offsetX, double offsetY, double offsetZ, double speed, Object particleOptions, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, double spread) {
         this.location = location;
         this.particle = particle;
         this.count = count;
@@ -42,6 +46,7 @@ public class StaticPointParticleTask extends BukkitRunnable implements Debuggabl
         this.world = location.getWorld();
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
+        this.spread = spread;
     }
 
     @Override
@@ -60,7 +65,18 @@ public class StaticPointParticleTask extends BukkitRunnable implements Debuggabl
         }
 
         if (particle == null && particleOptions instanceof ItemStack) {
-            ParticleScheduler.queueParticle(new ParticleSpawnData(location, (ItemStack) particleOptions, despawnTimer, hasGravity));
+            if (spread > 0) {
+                for (int i = 0; i < count; i++) {
+                    Vector randomVelocity = new Vector(
+                            ThreadLocalRandom.current().nextDouble(-1, 1),
+                            ThreadLocalRandom.current().nextDouble(-1, 1),
+                            ThreadLocalRandom.current().nextDouble(-1, 1)
+                    ).normalize().multiply(spread);
+                    ParticleScheduler.queueParticle(new ParticleSpawnData(location, (ItemStack) particleOptions, despawnTimer, hasGravity, randomVelocity));
+                }
+            } else {
+                ParticleScheduler.queueParticle(new ParticleSpawnData(location, (ItemStack) particleOptions, despawnTimer, hasGravity));
+            }
         } else if (particle != null) {
             ParticleScheduler.queueParticle(new ParticleSpawnData(
                     particle, location, count,

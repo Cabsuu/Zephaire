@@ -1,5 +1,5 @@
 name: Zephaire
-version: '0.5.2'
+version: '0.5.3'
 main: com.jerae.zephaire.Zephaire
 api-version: '1.21'
 softdepend: [Purpur]

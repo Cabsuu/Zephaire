@@ -157,7 +157,7 @@ public class EntitySpawnBehaviorTest {
 
         EntityPointParticleTask task = new EntityPointParticleTask(
                 "test", null, Mockito.mock(ItemStack.class), null, false, new Vector(0,0,0), null,
-                1, SpawnBehavior.ALWAYS, 0, false, 0, false, true
+                1, SpawnBehavior.ALWAYS, 0, false, 0, false, true, 0.0, 1
         );
 
         task.tick(mockEntity);
@@ -183,7 +183,7 @@ public class EntitySpawnBehaviorTest {
 
         EntityPointParticleTask task = new EntityPointParticleTask(
                 "test", null, Mockito.mock(ItemStack.class), null, false, new Vector(0,0,0), null,
-                1, SpawnBehavior.ALWAYS, 0, false, 0, false, false
+                1, SpawnBehavior.ALWAYS, 0, false, 0, false, false, 0.0, 1
         );
 
         task.tick(mockEntity);
@@ -193,5 +193,31 @@ public class EntitySpawnBehaviorTest {
 
         ParticleSpawnData capturedData = captor.getValue();
         assertEquals(new Vector(0, 0, 0), capturedData.velocity);
+    }
+
+    @Test
+    public void testSpread() {
+        Entity mockEntity = Mockito.mock(Entity.class);
+        World mockWorld = Mockito.mock(World.class);
+        Location loc = new Location(mockWorld, 0, 0, 0);
+
+        when(mockEntity.getVelocity()).thenReturn(new Vector(0, 0, 0));
+        when(mockEntity.isOnGround()).thenReturn(true);
+        when(mockEntity.getWorld()).thenReturn(mockWorld);
+        when(mockEntity.getLocation()).thenReturn(loc);
+
+        EntityPointParticleTask task = new EntityPointParticleTask(
+                "test", null, Mockito.mock(ItemStack.class), null, false, new Vector(0,0,0), null,
+                1, SpawnBehavior.ALWAYS, 0, false, 0, false, false, 0.5, 5
+        );
+
+        task.tick(mockEntity);
+
+        ArgumentCaptor<ParticleSpawnData> captor = ArgumentCaptor.forClass(ParticleSpawnData.class);
+        mockedScheduler.verify(() -> ParticleScheduler.queueParticle(captor.capture()), times(5));
+
+        for (ParticleSpawnData data : captor.getAllValues()) {
+            assert(data.velocity.lengthSquared() > 0);
+        }
     }
 }

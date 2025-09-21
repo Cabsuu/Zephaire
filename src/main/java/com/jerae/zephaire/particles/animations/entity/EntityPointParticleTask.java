@@ -13,6 +13,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public class EntityPointParticleTask implements EntityParticleTask {
     private final String effectName;
     private final Particle particle;
@@ -28,12 +30,14 @@ public class EntityPointParticleTask implements EntityParticleTask {
     private final int loopDelay;
     private final boolean debug;
     private final boolean inheritEntityVelocity;
+    private final double spread;
+    private final int particleCount;
 
     private int tickCounter = 0;
     private int loopDelayCounter = 0;
     private Location lastLocation;
 
-    public EntityPointParticleTask(String effectName, Particle particle, Object options, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay, boolean debug, boolean inheritEntityVelocity) {
+    public EntityPointParticleTask(String effectName, Particle particle, Object options, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay, boolean debug, boolean inheritEntityVelocity, double spread, int particleCount) {
         this.effectName = effectName;
         this.particle = particle;
         this.options = options;
@@ -48,11 +52,13 @@ public class EntityPointParticleTask implements EntityParticleTask {
         this.loopDelay = loopDelay;
         this.debug = debug;
         this.inheritEntityVelocity = inheritEntityVelocity;
+        this.spread = spread;
+        this.particleCount = particleCount;
     }
 
     @Override
     public EntityParticleTask newInstance() {
-        return new EntityPointParticleTask(effectName, particle, options, conditionManager, collisionEnabled, offset, target, period, spawnBehavior, despawnTimer, hasGravity, loopDelay, debug, inheritEntityVelocity);
+        return new EntityPointParticleTask(effectName, particle, options, conditionManager, collisionEnabled, offset, target, period, spawnBehavior, despawnTimer, hasGravity, loopDelay, debug, inheritEntityVelocity, spread, particleCount);
     }
 
     @Override
@@ -106,8 +112,20 @@ public class EntityPointParticleTask implements EntityParticleTask {
         }
 
         if (particle == null && options instanceof ItemStack) {
-            Vector velocity = inheritEntityVelocity ? entity.getVelocity() : new Vector(0, 0, 0);
-            ParticleScheduler.queueParticle(new ParticleSpawnData(spawnLocation, (ItemStack) options, despawnTimer, hasGravity, velocity));
+            if (spread > 0) {
+                for (int i = 0; i < particleCount; i++) {
+                    Vector randomVelocity = new Vector(
+                            ThreadLocalRandom.current().nextDouble(-1, 1),
+                            ThreadLocalRandom.current().nextDouble(-1, 1),
+                            ThreadLocalRandom.current().nextDouble(-1, 1)
+                    ).normalize().multiply(spread);
+                    Vector finalVelocity = inheritEntityVelocity ? entity.getVelocity().clone().add(randomVelocity) : randomVelocity;
+                    ParticleScheduler.queueParticle(new ParticleSpawnData(spawnLocation, (ItemStack) options, despawnTimer, hasGravity, finalVelocity));
+                }
+            } else {
+                Vector velocity = inheritEntityVelocity ? entity.getVelocity() : new Vector(0, 0, 0);
+                ParticleScheduler.queueParticle(new ParticleSpawnData(spawnLocation, (ItemStack) options, despawnTimer, hasGravity, velocity));
+            }
         } else if (particle != null) {
             ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, 1, 0, 0, 0, 0, options));
         }

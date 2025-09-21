@@ -81,11 +81,13 @@ entity-particles:
   item-toss:
     target:
       type: PLAYER
-    shape: 'POINT' # particle-count is always 1
+    shape: 'POINT'
     type: 'VISUAL_ITEM'
     options:
       material: 'DIAMOND'
       gravity: true
     inherit-entity-velocity: true
     despawn-timer: 40
+    spread: 0 # How fast the velocity it will spread the item. Best with particle-count setting.
+    # Note: Spread setting only works in Static and Entity 'POINT' shape.
 
