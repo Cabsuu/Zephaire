@@ -29,6 +29,10 @@ public final class Zephaire extends JavaPlugin {
     private BukkitTask particleSchedulerTask;
     private FileConfiguration entityParticlesConfig;
     private File entityParticlesFile;
+    private FileConfiguration staticParticlesConfig;
+    private File staticParticlesFile;
+    private FileConfiguration animatedParticlesConfig;
+    private File animatedParticlesFile;
 
 
     @Override
@@ -40,6 +44,8 @@ public final class Zephaire extends JavaPlugin {
         this.saveResource("entity-guide.txt", true);
         this.saveResource("disabled-particles.yml", false);
         this.saveResource("entity-particles.yml", false);
+        this.saveResource("static-particles.yml", false);
+        this.saveResource("animated-particles.yml", false);
 
 
         // --- INITIALIZE CORE COMPONENTS ---
@@ -51,6 +57,12 @@ public final class Zephaire extends JavaPlugin {
         // Load entity-particles.yml
         this.entityParticlesFile = new File(getDataFolder(), "entity-particles.yml");
         this.entityParticlesConfig = YamlConfiguration.loadConfiguration(entityParticlesFile);
+
+        this.staticParticlesFile = new File(getDataFolder(), "static-particles.yml");
+        this.staticParticlesConfig = YamlConfiguration.loadConfiguration(staticParticlesFile);
+
+        this.animatedParticlesFile = new File(getDataFolder(), "animated-particles.yml");
+        this.animatedParticlesConfig = YamlConfiguration.loadConfiguration(animatedParticlesFile);
 
         this.particleConfigLoader = new ParticleConfigLoader(this, factoryManager, particleManager, entityParticleManager);
         this.particleManager.setConfigLoader(this.particleConfigLoader); // Link loader to manager
@@ -88,6 +100,8 @@ public final class Zephaire extends JavaPlugin {
 
         // Reload entity-particles.yml
         this.entityParticlesConfig = YamlConfiguration.loadConfiguration(entityParticlesFile);
+        this.staticParticlesConfig = YamlConfiguration.loadConfiguration(staticParticlesFile);
+        this.animatedParticlesConfig = YamlConfiguration.loadConfiguration(animatedParticlesFile);
 
 
         // 2. Stop any existing particle scheduler to prevent duplicates.
@@ -123,5 +137,13 @@ public final class Zephaire extends JavaPlugin {
 
     public FileConfiguration getEntityParticlesConfig() {
         return entityParticlesConfig;
+    }
+
+    public FileConfiguration getStaticParticlesConfig() {
+        return staticParticlesConfig;
+    }
+
+    public FileConfiguration getAnimatedParticlesConfig() {
+        return animatedParticlesConfig;
     }
 }

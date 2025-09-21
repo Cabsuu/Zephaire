@@ -44,7 +44,14 @@ public class ParticleConfigLoader {
     }
 
     private void loadParticleSection(String configSectionName) {
-        ConfigurationSection section = plugin.getConfig().getConfigurationSection(configSectionName);
+        org.bukkit.configuration.file.FileConfiguration config;
+        if ("animated-particles".equals(configSectionName)) {
+            config = plugin.getAnimatedParticlesConfig();
+        } else {
+            config = plugin.getStaticParticlesConfig();
+        }
+
+        ConfigurationSection section = config.getConfigurationSection(configSectionName);
         if (section == null) {
             return;
         }
