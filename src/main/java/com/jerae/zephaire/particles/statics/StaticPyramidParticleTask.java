@@ -103,7 +103,13 @@ public class StaticPyramidParticleTask extends BukkitRunnable implements Debugga
             if (particle == null && particleOptions instanceof ItemStack) {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(loc, (ItemStack) particleOptions, despawnTimer, hasGravity));
             } else if (particle != null) {
-                ParticleScheduler.queueParticle(new ParticleSpawnData(particle, loc, 1, 0, 0, 0, 0, particleOptions));
+                if (particle == Particle.SHRIEK && particleOptions instanceof Integer) {
+                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, loc, (Integer) particleOptions));
+                } else if (particle == Particle.VIBRATION && particleOptions instanceof org.bukkit.Vibration) {
+                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, loc, (org.bukkit.Vibration) particleOptions));
+                } else {
+                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, loc, 1, 0, 0, 0, 0, particleOptions));
+                }
             }
         }
     }

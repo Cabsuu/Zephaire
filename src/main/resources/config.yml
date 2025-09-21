@@ -17,19 +17,3 @@ performance:
   # If true, animated particles can be stopped by solid blocks.
   # This can be overridden by individual particle settings.
   enable-collision-check: false
-
-static-particles:
-  point-particle-name: # (A variable name for the particle)
-    shape: 'POINT' # (Default if 'shape' is omitted)
-    type: 'FLAME' # (Default if 'type' is omitted)
-    period: 10 # (Default if 'period' is omitted, and only available for 'POINT' in static-particles.)
-    world: 'world' # (Default if 'world' is omitted)
-    location: # (Default if 'location' is omitted)
-      x: 0
-      y: 80
-      z: 0
-    count: 1 # (Default if 'count' is omitted)
-    speed: 1 # (Default for POINT if 'speed' is omitted)
-    offset-x: 0.0
-    offset-y: 0.0
-    offset-z: 0.0 # (Default if offset-xyz is omitted)

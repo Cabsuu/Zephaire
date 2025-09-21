@@ -1,3 +1,4 @@
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zephaire\particles\animations\entity\EntitySpawnBehaviorTest.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zephaire\particles\animations\entity\TestParticleSpawnException.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zephaire\particles\animations\LoopDelayTest.java
+/app/src/test/java/com/jerae/zephaire/particles/ParticleUtilsTest.java
+/app/src/test/java/com/jerae/zephaire/particles/animations/LoopDelayTest.java
+/app/src/test/java/com/jerae/zephaire/particles/animations/entity/EntitySpawnBehaviorTest.java
+/app/src/test/java/com/jerae/zephaire/particles/animations/entity/TestParticleSpawnException.java

@@ -173,7 +173,17 @@ public class EntityVortexParticleTask implements EntityParticleTask {
             if (particle == null && options instanceof ItemStack) {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(p, (ItemStack) options, despawnTimer, hasGravity, totalVelocity));
             } else if (particle != null) {
-                ParticleScheduler.queueParticle(new ParticleSpawnData(particle, p, 1, 0, 0, 0, 0, options));
+                if (particle == Particle.SHRIEK && options instanceof Integer) {
+                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, p, (Integer) options));
+                } else if (particle == Particle.VIBRATION && options instanceof org.bukkit.Vibration) {
+                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, p, (org.bukkit.Vibration) options));
+                } else if (particle == Particle.SCULK_CHARGE && options instanceof Float) {
+                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, p, (Float) options));
+                } else if (particle == Particle.TRAIL && options instanceof Integer) {
+                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, p, (Integer) options, hasGravity));
+                } else {
+                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, p, 1, 0, 0, 0, 0, options));
+                }
             }
         }
     }

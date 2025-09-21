@@ -101,6 +101,26 @@ public final class ParticleUtils {
         } else if (particle == Particle.ENTITY_EFFECT) {
             // ENTITY_EFFECT uses a Color object for its data
             return hexToColor(optionsSection.getString("color", "FFFFFF"));
+        } else if (particle == Particle.SCULK_CHARGE) {
+            return (float) optionsSection.getDouble("roll", 0.0);
+        } else if (particle == Particle.SHRIEK) {
+            return optionsSection.getInt("delay", 0);
+        } else if (particle == Particle.TRAIL) {
+            return optionsSection.getInt("duration", 20);
+        } else if (particle == Particle.VIBRATION) {
+            ConfigurationSection destSection = optionsSection.getConfigurationSection("destination");
+            if (destSection == null) {
+                JavaPlugin.getPlugin(Zephaire.class).getLogger().warning("Missing 'destination' for VIBRATION particle in '" + optionsSection.getParent().getName() + "'. Skipping.");
+                return null;
+            }
+            World world = Bukkit.getWorld(destSection.getString("world", "world"));
+            if (world == null) {
+                JavaPlugin.getPlugin(Zephaire.class).getLogger().warning("Invalid world for VIBRATION particle destination in '" + optionsSection.getParent().getName() + "'. Skipping.");
+                return null;
+            }
+            Location destination = parseLocation(world, destSection);
+            int arrivalTime = optionsSection.getInt("arrival-time", 20);
+            return new org.bukkit.Vibration(new org.bukkit.Vibration.Destination.BlockDestination(destination), arrivalTime);
         }
         return null;
     }

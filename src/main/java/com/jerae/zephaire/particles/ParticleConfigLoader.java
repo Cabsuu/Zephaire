@@ -44,7 +44,7 @@ public class ParticleConfigLoader {
     }
 
     private void loadParticleSection(String configSectionName) {
-        ConfigurationSection section = plugin.getConfig().getConfigurationSection(configSectionName);
+        ConfigurationSection section = getSection(configSectionName);
         if (section == null) {
             return;
         }
@@ -82,15 +82,24 @@ public class ParticleConfigLoader {
     }
 
 
+    private ConfigurationSection getSection(String configSectionName) {
+        return switch (configSectionName) {
+            case "animated-particles" -> plugin.getAnimatedParticlesConfig().getConfigurationSection(configSectionName);
+            case "static-particles" -> plugin.getStaticParticlesConfig().getConfigurationSection(configSectionName);
+            case "entity-particles" -> plugin.getEntityParticlesConfig().getConfigurationSection(configSectionName);
+            default -> null;
+        };
+    }
+
     public boolean loadSingleParticle(String key) {
-        ConfigurationSection staticSection = plugin.getConfig().getConfigurationSection("static-particles");
+        ConfigurationSection staticSection = getSection("static-particles");
         if (staticSection != null && staticSection.isConfigurationSection(key)) {
             loadParticleFromSection(staticSection, key, false);
             plugin.getParticleManager().startAnimationManager();
             return true;
         }
 
-        ConfigurationSection animatedSection = plugin.getConfig().getConfigurationSection("animated-particles");
+        ConfigurationSection animatedSection = getSection("animated-particles");
         if (animatedSection != null && animatedSection.isConfigurationSection(key)) {
             loadParticleFromSection(animatedSection, key, true);
             plugin.getParticleManager().startAnimationManager();

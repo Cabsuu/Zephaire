@@ -102,7 +102,13 @@ public class RandomBurstRegionParticleTask extends BukkitRunnable implements Deb
                     if (particle == null && particleOptions instanceof ItemStack) {
                         ParticleScheduler.queueParticle(new ParticleSpawnData(spawnLoc, (ItemStack) particleOptions, despawnTimer));
                     } else if (particle != null) {
-                        ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLoc, 1, 0, 0, 0, 0, particleOptions));
+                        if (particle == Particle.SHRIEK && particleOptions instanceof Integer) {
+                            ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLoc, (Integer) particleOptions));
+                        } else if (particle == Particle.VIBRATION && particleOptions instanceof org.bukkit.Vibration) {
+                            ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLoc, (org.bukkit.Vibration) particleOptions));
+                        } else {
+                            ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLoc, 1, 0, 0, 0, 0, particleOptions));
+                        }
                     }
                 }
             }
