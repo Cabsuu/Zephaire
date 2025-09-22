@@ -98,6 +98,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
 
     @Override
     public void tick(Entity entity) {
+        if (!conditionManager.allConditionsMet(entity.getLocation())) return;
         // --- Spawn Behavior ---
         Location currentLocation = entity.getLocation();
 
@@ -244,5 +245,10 @@ public class EntityStarParticleTask implements EntityParticleTask {
                 ChatColor.AQUA + "Height: " + ChatColor.WHITE + height + "\n" +
                 ChatColor.AQUA + "Target: " + ChatColor.WHITE + target.getTargetType().name() + targetNameInfo +
                 (target.getEntityType() != null ? " (" + target.getEntityType().name() + ")" : "");
+    }
+
+    @Override
+    public ConditionManager getConditionManager() {
+        return conditionManager;
     }
 }

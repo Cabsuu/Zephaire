@@ -9,6 +9,7 @@ import com.jerae.zephaire.particles.managers.FactoryManager;
 import com.jerae.zephaire.particles.animations.entity.EntityParticleTask;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
+import com.jerae.zephaire.particles.conditions.ConditionManager;
 import org.bukkit.util.Vector;
 
 import java.util.Collections;
@@ -27,7 +28,7 @@ public class EntityParticleLoader {
         this.entityParticleManager = entityParticleManager;
     }
 
-    public void load(String key, ConfigurationSection config) {
+    public void load(String key, ConfigurationSection config, ConditionManager conditionManager) {
         String shape = config.getString("shape", "").toUpperCase();
         if (shape.isEmpty()) {
             plugin.getLogger().warning("Missing 'shape' for entity particle '" + key + "'. Skipping.");
@@ -65,7 +66,7 @@ public class EntityParticleLoader {
         int loopDelay = config.getInt("loop-delay", 0);
         boolean debug = config.getBoolean("debug", false);
         boolean inheritEntityVelocity = config.getBoolean("inherit-entity-velocity", true);
-        EntityParticleTask task = factoryOpt.get().create(key, config, target, null, offset, period, spawnBehavior, loopDelay, debug, inheritEntityVelocity);
+        EntityParticleTask task = factoryOpt.get().create(key, config, target, conditionManager, offset, period, spawnBehavior, loopDelay, debug, inheritEntityVelocity);
 
         if (task != null) {
             entityParticleManager.addEffectTemplate(key, task);

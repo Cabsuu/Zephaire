@@ -1,0 +1,22 @@
+# --- EXAMPLE OF A DECORATOR ---
+  particle-name:
+    decorators:
+      multi-color-transition: # (The decorator will override this with DUST_COLOR_TRANSITION, but it's still needed.)
+        size: 1.2
+        transition-time: 40 # Ticks for each color-to-color fade (2 seconds)
+        colors:
+          - '#FF0000' # Red
+          - '#FFFF00' # Yellow
+          - '#00FF00' # Green
+          - '#00FFFF' # Cyan
+          - '#0000FF' # Blue
+          - '#FF00FF' # Magenta
+      sound:
+        sound: "BLOCK_BELL_RESONATE"
+        volume: 1.0
+        pitch: 1.2
+        period: 40 # Play the sound every 2 seconds.
+      trail:
+        trail-particle-type: "SMOKE"
+        trail-length: 25 # The trail will consist of the last 25 particle positions.
+        period: 1       # A new set of trail particles spawns every tick.

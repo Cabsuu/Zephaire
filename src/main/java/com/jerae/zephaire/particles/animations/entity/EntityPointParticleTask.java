@@ -68,6 +68,7 @@ public class EntityPointParticleTask implements EntityParticleTask {
 
     @Override
     public void tick(Entity entity) {
+        if (!conditionManager.allConditionsMet(entity.getLocation())) return;
         Location currentLocation = entity.getLocation();
 
         boolean isMovingHorizontally;
@@ -162,5 +163,10 @@ public class EntityPointParticleTask implements EntityParticleTask {
                 ChatColor.AQUA + "Shape: " + ChatColor.WHITE + "POINT" + "\n" +
                 ChatColor.AQUA + "Target: " + ChatColor.WHITE + target.getTargetType().name() + targetNameInfo +
                 (target.getEntityType() != null ? " (" + target.getEntityType().name() + ")" : "");
+    }
+
+    @Override
+    public ConditionManager getConditionManager() {
+        return conditionManager;
     }
 }

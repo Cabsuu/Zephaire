@@ -17,3 +17,19 @@ performance:
   # If true, animated particles can be stopped by solid blocks.
   # This can be overridden by individual particle settings.
   enable-collision-check: false
+
+# A list of worlds where the plugin will be disabled.
+disabled-worlds:
+  - "example_world_name"
+
+# Enable or disable major features of the plugin.
+plugin-features:
+  # Set to false to disable all static particle effects.
+  enable-static-particles: true
+  # Set to false to disable all animated particle effects.
+  enable-animated-particles: true
+  # Set to false to disable all entity-attached particle effects.
+  enable-entity-particles: true
+
+# Command alias for /zephaire.
+command-alias: "zph"

@@ -38,9 +38,15 @@ public class ParticleConfigLoader {
      * Loads all static, animated, and entity-targeted particles from the configuration files.
      */
     public void loadParticles() {
-        loadParticleSection("static-particles");
-        loadParticleSection("animated-particles");
-        loadEntityParticleSection();
+        if (plugin.isStaticParticlesEnabled()) {
+            loadParticleSection("static-particles");
+        }
+        if (plugin.isAnimatedParticlesEnabled()) {
+            loadParticleSection("animated-particles");
+        }
+        if (plugin.isEntityParticlesEnabled()) {
+            loadEntityParticleSection();
+        }
     }
 
     private void loadParticleSection(String configSectionName) {
@@ -74,7 +80,9 @@ public class ParticleConfigLoader {
                 continue;
             }
             try {
-                entityLoader.load(key, particleConfig);
+                String particlePath = "entity-particles." + key;
+                ConditionManager manager = conditionParser.parse(particleConfig, null, particlePath);
+                entityLoader.load(key, particleConfig, manager);
             } catch (Exception e) {
                 plugin.getLogger().log(Level.SEVERE, "An unexpected error occurred while loading entity particle '" + key + "'.", e);
             }

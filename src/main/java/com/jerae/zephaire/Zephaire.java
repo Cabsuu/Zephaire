@@ -19,6 +19,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
+import java.util.List;
 
 public final class Zephaire extends JavaPlugin {
 
@@ -35,20 +36,27 @@ public final class Zephaire extends JavaPlugin {
     private File staticParticlesFile;
     private FileConfiguration animatedParticlesConfig;
     private File animatedParticlesFile;
+    private boolean staticParticlesEnabled;
+    private boolean animatedParticlesEnabled;
+    private boolean entityParticlesEnabled;
+    private List<String> disabledWorlds;
 
 
     @Override
     public void onEnable() {
         // --- SAVE DEFAULT FILES ---
         this.saveDefaultConfig();
-        this.saveResource("guide.txt", true);
-        this.saveResource("particles.txt", true);
-        this.saveResource("entity-guide.txt", true);
-        this.saveResource("disabled-particles.yml", false);
-        this.saveResource("entity-particles.yml", false);
-        this.saveResource("static-particles.yml", false);
-        this.saveResource("animated-particles.yml", false);
-        this.saveResource("particle-groups.yml", false);
+        this.saveResource("guides/static-guide.txt", true);
+        this.saveResource("guides/animated-guide.txt", true);
+        this.saveResource("guides/condition-guide.txt", true);
+        this.saveResource("guides/decorator-guide.txt", true);
+        this.saveResource("guides/entity-guide.txt", true);
+        this.saveResource("particles/particles.txt", true);
+        this.saveResource("particles/disabled-particles.yml", false);
+        this.saveResource("particles/entity-particles.yml", false);
+        this.saveResource("particles/static-particles.yml", false);
+        this.saveResource("particles/animated-particles.yml", false);
+        this.saveResource("particles/particle-groups.yml", false);
 
 
         // --- INITIALIZE CORE COMPONENTS ---
@@ -59,13 +67,13 @@ public final class Zephaire extends JavaPlugin {
         this.particleGroupManager = new ParticleGroupManager(this);
 
         // Load entity-particles.yml
-        this.entityParticlesFile = new File(getDataFolder(), "entity-particles.yml");
+        this.entityParticlesFile = new File(getDataFolder(), "particles/entity-particles.yml");
         this.entityParticlesConfig = YamlConfiguration.loadConfiguration(entityParticlesFile);
 
-        this.staticParticlesFile = new File(getDataFolder(), "static-particles.yml");
+        this.staticParticlesFile = new File(getDataFolder(), "particles/static-particles.yml");
         this.staticParticlesConfig = YamlConfiguration.loadConfiguration(staticParticlesFile);
 
-        this.animatedParticlesFile = new File(getDataFolder(), "animated-particles.yml");
+        this.animatedParticlesFile = new File(getDataFolder(), "particles/animated-particles.yml");
         this.animatedParticlesConfig = YamlConfiguration.loadConfiguration(animatedParticlesFile);
 
         this.particleConfigLoader = new ParticleConfigLoader(this, factoryManager, particleManager, entityParticleManager);
@@ -89,6 +97,19 @@ public final class Zephaire extends JavaPlugin {
             ZephaireCommand commandHandler = new ZephaireCommand(this);
             zephairePluginCommand.setExecutor(commandHandler);
             zephairePluginCommand.setTabCompleter(commandHandler);
+
+            // Dynamically register the alias
+            String alias = getConfig().getString("command-alias");
+            if (alias != null && !alias.isEmpty()) {
+                try {
+                    final java.lang.reflect.Field commandMapField = getServer().getClass().getDeclaredField("commandMap");
+                    commandMapField.setAccessible(true);
+                    final org.bukkit.command.CommandMap commandMap = (org.bukkit.command.CommandMap) commandMapField.get(getServer());
+                    commandMap.register(alias, getName(), zephairePluginCommand);
+                } catch (NoSuchFieldException | IllegalAccessException e) {
+                    getLogger().log(java.util.logging.Level.SEVERE, "Failed to register command alias", e);
+                }
+            }
         }
 
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(this), this);
@@ -102,6 +123,10 @@ public final class Zephaire extends JavaPlugin {
         // 1. Reload the config.yml file from disk and initialize performance settings.
         reloadConfig();
         PerformanceManager.initialize(getConfig());
+        this.disabledWorlds = getConfig().getStringList("disabled-worlds");
+        this.staticParticlesEnabled = getConfig().getBoolean("plugin-features.enable-static-particles", true);
+        this.animatedParticlesEnabled = getConfig().getBoolean("plugin-features.enable-animated-particles", true);
+        this.entityParticlesEnabled = getConfig().getBoolean("plugin-features.enable-entity-particles", true);
 
         // Reload entity-particles.yml
         this.entityParticlesConfig = YamlConfiguration.loadConfiguration(entityParticlesFile);
@@ -155,5 +180,21 @@ public final class Zephaire extends JavaPlugin {
 
     public FileConfiguration getAnimatedParticlesConfig() {
         return animatedParticlesConfig;
+    }
+
+    public boolean isStaticParticlesEnabled() {
+        return staticParticlesEnabled;
+    }
+
+    public boolean isAnimatedParticlesEnabled() {
+        return animatedParticlesEnabled;
+    }
+
+    public boolean isEntityParticlesEnabled() {
+        return entityParticlesEnabled;
+    }
+
+    public List<String> getDisabledWorlds() {
+        return disabledWorlds;
     }
 }

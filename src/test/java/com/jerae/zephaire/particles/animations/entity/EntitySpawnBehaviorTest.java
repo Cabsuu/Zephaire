@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import com.jerae.zephaire.particles.conditions.ConditionManager;
 
 
 public class EntitySpawnBehaviorTest {
@@ -40,9 +41,13 @@ public class EntitySpawnBehaviorTest {
     @Test
     public void testStandingStillSpawnBehavior() {
         Entity mockEntity = Mockito.mock(Entity.class);
+        Location mockLocation = Mockito.mock(Location.class);
+        when(mockEntity.getLocation()).thenReturn(mockLocation);
+        ConditionManager mockConditionManager = Mockito.mock(ConditionManager.class);
+        when(mockConditionManager.allConditionsMet(mockLocation)).thenReturn(true);
         EntityCircleParticleTask task = new EntityCircleParticleTask(
                 "test", (org.bukkit.Particle) null, 0.0, 0.0, 0, (Object) null, 0.0, 0.0,
-                (com.jerae.zephaire.particles.conditions.ConditionManager) null,
+                mockConditionManager,
                 false, (org.bukkit.util.Vector) null, (com.jerae.zephaire.particles.data.EntityTarget) null,
                 1, SpawnBehavior.STANDING_STILL, 0, false, 0, true, false
         );
@@ -66,9 +71,13 @@ public class EntitySpawnBehaviorTest {
     @Test
     public void testMovingSpawnBehavior() {
         Entity mockEntity = Mockito.mock(Entity.class);
+        Location mockLocation = Mockito.mock(Location.class);
+        when(mockEntity.getLocation()).thenReturn(mockLocation);
+        ConditionManager mockConditionManager = Mockito.mock(ConditionManager.class);
+        when(mockConditionManager.allConditionsMet(mockLocation)).thenReturn(true);
         EntityCircleParticleTask task = new EntityCircleParticleTask(
                 "test", (org.bukkit.Particle) null, 0.0, 0.0, 0, (Object) null, 0.0, 0.0,
-                (com.jerae.zephaire.particles.conditions.ConditionManager) null,
+                mockConditionManager,
                 false, (org.bukkit.util.Vector) null, (com.jerae.zephaire.particles.data.EntityTarget) null,
                 1, SpawnBehavior.MOVING, 0, false, 0, true, false
         );
@@ -95,24 +104,27 @@ public class EntitySpawnBehaviorTest {
         // For STANDING_STILL, it should NOT spawn particles if the location has changed.
         Entity mockEntity = Mockito.mock(Entity.class);
         World mockWorld = Mockito.mock(World.class);
-        EntityCircleParticleTask task = new EntityCircleParticleTask(
-                "test", null, 0.0, 0.0, 0, null, 0.0, 0.0,
-                null, false, new Vector(0,0,0), null,
-                1, SpawnBehavior.STANDING_STILL, 0, false, 0, true, false
-        );
-
         Location loc1 = new Location(mockWorld, 0, 0, 0);
         Location loc2 = new Location(mockWorld, 1, 0, 1); // Moved
+        ConditionManager mockConditionManager = Mockito.mock(ConditionManager.class);
+        when(mockConditionManager.allConditionsMet(loc1)).thenReturn(true);
+        when(mockConditionManager.allConditionsMet(loc2)).thenReturn(true);
+        EntityCircleParticleTask task = new EntityCircleParticleTask(
+                "test", null, 0.0, 0.0, 0, null, 0.0, 0.0,
+                mockConditionManager, false, new Vector(0,0,0), null,
+                1, SpawnBehavior.STANDING_STILL, 0, false, 0, true, false
+        );
 
         when(mockEntity.getVelocity()).thenReturn(new Vector(0, 0, 0)); // Zero velocity
         when(mockEntity.isOnGround()).thenReturn(true);
         when(mockEntity.getWorld()).thenReturn(mockWorld);
-        when(mockEntity.getLocation()).thenReturn(loc1, loc2);
 
-        // First tick uses velocity check (zero velocity), so it should spawn for STANDING_STILL.
+        // First tick
+        when(mockEntity.getLocation()).thenReturn(loc1);
         assertThrows(RuntimeException.class, () -> task.tick(mockEntity), "Should throw on first tick for STANDING_STILL with zero velocity");
 
-        // Second tick uses location check (detects movement), so it should NOT spawn.
+        // Second tick
+        when(mockEntity.getLocation()).thenReturn(loc2);
         assertDoesNotThrow(() -> task.tick(mockEntity), "Should not throw when location changes for STANDING_STILL");
     }
 
@@ -122,24 +134,27 @@ public class EntitySpawnBehaviorTest {
         // For MOVING, it SHOULD spawn particles if the location has changed.
         Entity mockEntity = Mockito.mock(Entity.class);
         World mockWorld = Mockito.mock(World.class);
-        EntityCircleParticleTask task = new EntityCircleParticleTask(
-                "test", null, 0.0, 0.0, 0, null, 0.0, 0.0,
-                null, false, new Vector(0,0,0), null,
-                1, SpawnBehavior.MOVING, 0, false, 0, true, false
-        );
-
         Location loc1 = new Location(mockWorld, 0, 0, 0);
         Location loc2 = new Location(mockWorld, 1, 0, 1); // Moved
+        ConditionManager mockConditionManager = Mockito.mock(ConditionManager.class);
+        when(mockConditionManager.allConditionsMet(loc1)).thenReturn(true);
+        when(mockConditionManager.allConditionsMet(loc2)).thenReturn(true);
+        EntityCircleParticleTask task = new EntityCircleParticleTask(
+                "test", null, 0.0, 0.0, 0, null, 0.0, 0.0,
+                mockConditionManager, false, new Vector(0,0,0), null,
+                1, SpawnBehavior.MOVING, 0, false, 0, true, false
+        );
 
         when(mockEntity.getVelocity()).thenReturn(new Vector(0, 0, 0)); // Zero velocity
         when(mockEntity.isOnGround()).thenReturn(true);
         when(mockEntity.getWorld()).thenReturn(mockWorld);
-        when(mockEntity.getLocation()).thenReturn(loc1, loc2);
 
-        // First tick uses velocity check (zero velocity), so it should NOT spawn for MOVING.
+        // First tick
+        when(mockEntity.getLocation()).thenReturn(loc1);
         assertDoesNotThrow(() -> task.tick(mockEntity), "Should not throw on first tick for MOVING with zero velocity");
 
-        // Second tick uses location check (detects movement), so it SHOULD spawn.
+        // Second tick
+        when(mockEntity.getLocation()).thenReturn(loc2);
         assertThrows(RuntimeException.class, () -> task.tick(mockEntity), "Should throw when location changes for MOVING");
     }
 
@@ -154,9 +169,11 @@ public class EntitySpawnBehaviorTest {
         when(mockEntity.isOnGround()).thenReturn(true);
         when(mockEntity.getWorld()).thenReturn(mockWorld);
         when(mockEntity.getLocation()).thenReturn(loc);
+        ConditionManager mockConditionManager = Mockito.mock(ConditionManager.class);
+        when(mockConditionManager.allConditionsMet(loc)).thenReturn(true);
 
         EntityPointParticleTask task = new EntityPointParticleTask(
-                "test", null, Mockito.mock(ItemStack.class), null, false, new Vector(0,0,0), null,
+                "test", null, Mockito.mock(ItemStack.class), mockConditionManager, false, new Vector(0,0,0), null,
                 1, SpawnBehavior.ALWAYS, 0, false, 0, false, true, 0.0, 1
         );
 
@@ -180,9 +197,11 @@ public class EntitySpawnBehaviorTest {
         when(mockEntity.isOnGround()).thenReturn(true);
         when(mockEntity.getWorld()).thenReturn(mockWorld);
         when(mockEntity.getLocation()).thenReturn(loc);
+        ConditionManager mockConditionManager = Mockito.mock(ConditionManager.class);
+        when(mockConditionManager.allConditionsMet(loc)).thenReturn(true);
 
         EntityPointParticleTask task = new EntityPointParticleTask(
-                "test", null, Mockito.mock(ItemStack.class), null, false, new Vector(0,0,0), null,
+                "test", null, Mockito.mock(ItemStack.class), mockConditionManager, false, new Vector(0,0,0), null,
                 1, SpawnBehavior.ALWAYS, 0, false, 0, false, false, 0.0, 1
         );
 
@@ -205,9 +224,11 @@ public class EntitySpawnBehaviorTest {
         when(mockEntity.isOnGround()).thenReturn(true);
         when(mockEntity.getWorld()).thenReturn(mockWorld);
         when(mockEntity.getLocation()).thenReturn(loc);
+        ConditionManager mockConditionManager = Mockito.mock(ConditionManager.class);
+        when(mockConditionManager.allConditionsMet(loc)).thenReturn(true);
 
         EntityPointParticleTask task = new EntityPointParticleTask(
-                "test", null, Mockito.mock(ItemStack.class), null, false, new Vector(0,0,0), null,
+                "test", null, Mockito.mock(ItemStack.class), mockConditionManager, false, new Vector(0,0,0), null,
                 1, SpawnBehavior.ALWAYS, 0, false, 0, false, false, 0.5, 5
         );
 
@@ -219,5 +240,27 @@ public class EntitySpawnBehaviorTest {
         for (ParticleSpawnData data : captor.getAllValues()) {
             assert(data.velocity.lengthSquared() > 0);
         }
+    }
+
+    @Test
+    public void testEntityParticleConditions() {
+        Entity mockEntity = Mockito.mock(Entity.class);
+        Location mockLocation = Mockito.mock(Location.class);
+        when(mockEntity.getLocation()).thenReturn(mockLocation);
+        ConditionManager mockConditionManager = Mockito.mock(ConditionManager.class);
+        EntityCircleParticleTask task = new EntityCircleParticleTask(
+                "test", (org.bukkit.Particle) null, 0.0, 0.0, 0, (Object) null, 0.0, 0.0,
+                mockConditionManager,
+                false, (org.bukkit.util.Vector) null, (com.jerae.zephaire.particles.data.EntityTarget) null,
+                1, SpawnBehavior.ALWAYS, 0, false, 0, true, false
+        );
+
+        // Case 1: Conditions not met (should not spawn)
+        when(mockConditionManager.allConditionsMet(mockLocation)).thenReturn(false);
+        assertDoesNotThrow(() -> task.tick(mockEntity), "Should not throw when conditions are not met");
+
+        // Case 2: Conditions met (should spawn)
+        when(mockConditionManager.allConditionsMet(mockLocation)).thenReturn(true);
+        assertThrows(RuntimeException.class, () -> task.tick(mockEntity), "Should throw when conditions are met");
     }
 }

@@ -23,12 +23,12 @@ public class DataManager {
 
     public DataManager(Zephaire plugin) {
         this.plugin = plugin;
-        this.disabledParticlesFile = new File(plugin.getDataFolder(), "disabled-particles.yml");
+        this.disabledParticlesFile = new File(plugin.getDataFolder(), "particles/disabled-particles.yml");
     }
 
     public void load() {
         if (!disabledParticlesFile.exists()) {
-            plugin.saveResource("disabled-particles.yml", false);
+            plugin.saveResource("particles/disabled-particles.yml", false);
         }
 
         disabledParticlesConfig = YamlConfiguration.loadConfiguration(disabledParticlesFile);

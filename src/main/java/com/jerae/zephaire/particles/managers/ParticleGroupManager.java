@@ -23,9 +23,9 @@ public class ParticleGroupManager {
     }
 
     public void initialize() {
-        particleGroupsFile = new File(plugin.getDataFolder(), "particle-groups.yml");
+        particleGroupsFile = new File(plugin.getDataFolder(), "particles/particle-groups.yml");
         if (!particleGroupsFile.exists()) {
-            plugin.saveResource("particle-groups.yml", false);
+            plugin.saveResource("particles/particle-groups.yml", false);
         }
         particleGroupsConfig = YamlConfiguration.loadConfiguration(particleGroupsFile);
         loadParticleGroups();

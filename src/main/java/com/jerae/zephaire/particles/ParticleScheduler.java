@@ -39,6 +39,9 @@ public class ParticleScheduler extends BukkitRunnable {
         while (!particleQueue.isEmpty()) {
             ParticleSpawnData data = particleQueue.poll();
             if (data != null && data.location.getWorld() != null && data.location.isChunkLoaded()) {
+                if (plugin.getDisabledWorlds().contains(data.location.getWorld().getName())) {
+                    continue;
+                }
                 switch (data.particleType) {
                     case BUKKIT:
                         if (data.particle == Particle.SHRIEK) {

@@ -1,6 +1,7 @@
 package com.jerae.zephaire.particles.animations.entity;
 
 import com.jerae.zephaire.particles.Debuggable;
+import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.data.EntityTarget;
 import org.bukkit.entity.Entity;
 
@@ -9,5 +10,6 @@ public interface EntityParticleTask extends Debuggable {
     boolean shouldCollide();
     String getEffectName();
     EntityTarget getTarget();
+    ConditionManager getConditionManager();
     EntityParticleTask newInstance();
 }

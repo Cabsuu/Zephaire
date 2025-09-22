@@ -85,6 +85,8 @@ public class EntityCircleParticleTask implements EntityParticleTask {
 
     @Override
     public void tick(Entity entity) {
+        if (!conditionManager.allConditionsMet(entity.getLocation())) return;
+
         // --- Spawn Behavior ---
         Location currentLocation = entity.getLocation();
 
@@ -196,5 +198,10 @@ public class EntityCircleParticleTask implements EntityParticleTask {
                 ChatColor.AQUA + "Speed: " + ChatColor.WHITE + speed + "\n" +
                 ChatColor.AQUA + "Target: " + ChatColor.WHITE + target.getTargetType().name() + targetNameInfo +
                 (target.getEntityType() != null ? " (" + target.getEntityType().name() + ")" : "");
+    }
+
+    @Override
+    public ConditionManager getConditionManager() {
+        return conditionManager;
     }
 }
