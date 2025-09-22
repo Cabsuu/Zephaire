@@ -6,7 +6,7 @@
 
     <groupId>com.jerae</groupId>
     <artifactId>Zephaire</artifactId>
-    <version>0.5.3</version>
+    <version>0.5.4</version>
     <packaging>jar</packaging>
 
     <name>zephaire</name>

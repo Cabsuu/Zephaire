@@ -1,6 +1,7 @@
 package com.jerae.zephaire.commands.subcommands;
 
 import com.jerae.zephaire.Zephaire;
+import com.jerae.zephaire.particles.managers.ParticleGroupManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -26,70 +27,91 @@ public class ToggleCommand implements SubCommand {
         }
 
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.RED + "Usage: /zephaire toggle <particle-name>");
+            sender.sendMessage(ChatColor.RED + "Usage: /zephaire toggle <particle-name|group-name>");
             return;
         }
 
-        String particleName = args[1];
+        String name = args[1];
+        ParticleGroupManager groupManager = plugin.getParticleGroupManager();
 
-        ConfigurationSection staticSection = plugin.getConfig().getConfigurationSection("static-particles");
-        ConfigurationSection animatedSection = plugin.getConfig().getConfigurationSection("animated-particles");
-        boolean particleExistsInConfig = (staticSection != null && staticSection.contains(particleName)) ||
+        if (groupManager.isGroup(name)) {
+            toggleParticleGroup(sender, name, groupManager.getParticlesInGroup(name));
+        } else {
+            toggleSingleParticle(sender, name);
+        }
+    }
+
+    private void toggleSingleParticle(CommandSender sender, String particleName) {
+        ConfigurationSection staticSection = plugin.getStaticParticlesConfig().getConfigurationSection("particles");
+        ConfigurationSection animatedSection = plugin.getAnimatedParticlesConfig().getConfigurationSection("particles");
+
+        boolean particleExists = (staticSection != null && staticSection.contains(particleName)) ||
                 (animatedSection != null && animatedSection.contains(particleName));
 
-        if (!particleExistsInConfig) {
-            sender.sendMessage(ChatColor.RED + "Particle effect '" + particleName + "' not found in config.yml.");
+        if (!particleExists) {
+            sender.sendMessage(ChatColor.RED + "Particle effect '" + particleName + "' not found.");
             return;
         }
 
-        // The action is to flip the disabled state in the data file.
-        // Then, we sync the runtime state to match the new data file state.
         boolean isNowEnabled = plugin.getDataManager().toggleParticle(particleName);
 
         if (isNowEnabled) {
-            // We want it running.
-            boolean wasAlreadyRunning = plugin.getParticleManager().getParticle(particleName).isPresent();
-            if (wasAlreadyRunning) {
-                sender.sendMessage(ChatColor.YELLOW + "Particle effect '" + particleName + "' was already enabled.");
+            boolean success = plugin.getParticleManager().enableParticle(particleName);
+            if (success) {
+                sender.sendMessage(ChatColor.GREEN + "Particle effect '" + particleName + "' has been enabled.");
             } else {
-                // We are using enableParticle here which internally checks again if it's running,
-                // this is a safe redundancy.
-                boolean success = plugin.getParticleManager().enableParticle(particleName);
-                if (success) {
-                    sender.sendMessage(ChatColor.GREEN + "Particle effect '" + particleName + "' has been enabled.");
-                } else {
-                    sender.sendMessage(ChatColor.RED + "Failed to enable particle effect '" + particleName + "'. Check server logs.");
-                    // Revert data change because it failed
-                    plugin.getDataManager().toggleParticle(particleName);
-                }
+                sender.sendMessage(ChatColor.RED + "Failed to enable particle effect '" + particleName + "'. Check server logs.");
+                plugin.getDataManager().toggleParticle(particleName); // Revert
             }
         } else {
-            // We want it stopped.
-            boolean wasRunning = plugin.getParticleManager().getParticle(particleName).isPresent();
-            if (wasRunning) {
-                plugin.getParticleManager().disableParticle(particleName);
-                sender.sendMessage(ChatColor.YELLOW + "Particle effect '" + particleName + "' has been disabled.");
+            plugin.getParticleManager().disableParticle(particleName);
+            sender.sendMessage(ChatColor.YELLOW + "Particle effect '" + particleName + "' has been disabled.");
+        }
+    }
+
+    private void toggleParticleGroup(CommandSender sender, String groupName, List<String> particles) {
+        if (particles.isEmpty()) {
+            sender.sendMessage(ChatColor.YELLOW + "Particle group '" + groupName + "' is empty or does not exist.");
+            return;
+        }
+
+        int enabledCount = 0;
+        int disabledCount = 0;
+
+        for (String particleName : particles) {
+            boolean isNowEnabled = plugin.getDataManager().toggleParticle(particleName);
+            if (isNowEnabled) {
+                if (plugin.getParticleManager().enableParticle(particleName)) {
+                    enabledCount++;
+                }
             } else {
-                sender.sendMessage(ChatColor.YELLOW + "Particle effect '" + particleName + "' was already disabled.");
+                plugin.getParticleManager().disableParticle(particleName);
+                disabledCount++;
             }
         }
+
+        sender.sendMessage(ChatColor.GREEN + "Toggled group '" + groupName + "': "
+                + enabledCount + " enabled, " + disabledCount + " disabled.");
     }
 
 
     @Override
     public List<String> getTabCompletions(String[] args) {
         if (args.length == 2) {
-            // Tab-complete all particle names from the config, not just active ones
-            List<String> allParticleNames = new ArrayList<>();
-            ConfigurationSection staticSection = plugin.getConfig().getConfigurationSection("static-particles");
+            List<String> suggestions = new ArrayList<>();
+            // Add particle names
+            ConfigurationSection staticSection = plugin.getStaticParticlesConfig().getConfigurationSection("particles");
             if (staticSection != null) {
-                allParticleNames.addAll(staticSection.getKeys(false));
+                suggestions.addAll(staticSection.getKeys(false));
             }
-            ConfigurationSection animatedSection = plugin.getConfig().getConfigurationSection("animated-particles");
+            ConfigurationSection animatedSection = plugin.getAnimatedParticlesConfig().getConfigurationSection("particles");
             if (animatedSection != null) {
-                allParticleNames.addAll(animatedSection.getKeys(false));
+                suggestions.addAll(animatedSection.getKeys(false));
             }
-            return StringUtil.copyPartialMatches(args[1], allParticleNames, new ArrayList<>());
+            // Add group names
+            suggestions.addAll(plugin.getParticleGroupManager().getParticleGroups().keySet());
+
+            return StringUtil.copyPartialMatches(args[1], suggestions, new ArrayList<>());
         }
         return Collections.emptyList();
     }
