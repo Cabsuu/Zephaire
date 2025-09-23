@@ -1,5 +1,7 @@
 # --- EXAMPLE OF A DECORATOR ---
   particle-name:
+    shape: 'POINT'
+    ...
     decorators:
       multi-color-transition: # (The decorator will override this with DUST_COLOR_TRANSITION, but it's still needed.)
         size: 1.2
@@ -16,7 +18,40 @@
         volume: 1.0
         pitch: 1.2
         period: 40 # Play the sound every 2 seconds.
+
       trail:
         trail-particle-type: "SMOKE"
         trail-length: 25 # The trail will consist of the last 25 particle positions.
         period: 1       # A new set of trail particles spawns every tick.
+
+      velocity:
+        type: bounce
+        velocity:
+          x: 0
+          y: -0.5
+          z: 0
+        bounce-factor: 0.8
+        ground-location:
+          world: world
+          x: 0
+          y: 64
+          z: 0
+
+        type: gravity
+        velocity:
+          x: 0.5   # Initial sideways velocity
+          y: 2.0   # Initial upward velocity
+          z: 0.0
+
+        type: spray
+        velocity:
+          x: 1.0  # Base direction of the spray
+          y: 0.0
+          z: 0.0
+        spread: 0.3 # How much the angle can vary. Higher is more spread out.
+
+        type: fountain
+        velocity:
+          x: 0.0
+          y: 1.8  # The initial upward force of the fountain
+          z: 0.0

@@ -158,3 +158,15 @@ static-particles:
       x: 0
       y: 0
       z: 0
+
+  static-cone-name:
+    shape: STATIC_CONE
+    world: world
+    center:
+      x: 10
+      y: 70
+      z: 10
+    radius: 2.5
+    height: 4
+    density: 15
+    particle-type: FLAME

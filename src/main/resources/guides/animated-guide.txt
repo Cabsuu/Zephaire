@@ -123,3 +123,17 @@ animated-particles:
       x: 0
       y: 65
       z: 0
+
+  my-animated-spiral:
+    shape: SPIRAL
+    world: world
+    base:
+      x: 20
+      y: 70
+      z: 20
+    start-radius: 0.5
+    end-radius: 4
+    height: 8
+    speed: 0.2
+    vertical-speed: 0.1
+    particle-type: END_ROD
