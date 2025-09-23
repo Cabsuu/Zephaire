@@ -1,5 +1,6 @@
 package com.jerae.zephaire.particles.factories.animated;
 
+import com.jerae.zephaire.Zephaire;
 import com.jerae.zephaire.particles.animations.AnimatedParticle;
 import com.jerae.zephaire.particles.animations.LineParticleTask;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
@@ -11,7 +12,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 public class LineParticleFactory extends AbstractAnimatedParticleFactory {
     @Override
-    protected AnimatedParticle createParticleTask(ConfigurationSection section, ConditionManager manager, World world, int loopDelay) {
+    protected AnimatedParticle createParticleTask(Zephaire plugin, ConfigurationSection section, ConditionManager manager, World world, int loopDelay) {
         Location start = parseLocation(world, section, "start");
         Location end = parseLocation(world, section, "end");
 

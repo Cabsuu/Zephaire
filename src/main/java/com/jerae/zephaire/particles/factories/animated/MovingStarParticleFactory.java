@@ -1,5 +1,6 @@
 package com.jerae.zephaire.particles.factories.animated;
 
+import com.jerae.zephaire.Zephaire;
 import com.jerae.zephaire.particles.animations.AnimatedParticle;
 import com.jerae.zephaire.particles.animations.MovingStarParticleTask;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
@@ -12,7 +13,7 @@ import org.bukkit.util.Vector;
 
 public class MovingStarParticleFactory extends AbstractAnimatedParticleFactory {
     @Override
-    protected AnimatedParticle createParticleTask(ConfigurationSection section, ConditionManager manager, World world, int loopDelay) {
+    protected AnimatedParticle createParticleTask(Zephaire plugin, ConfigurationSection section, ConditionManager manager, World world, int loopDelay) {
         Location center = parseLocation(world, section, "center");
         if (center == null) {
             return null;

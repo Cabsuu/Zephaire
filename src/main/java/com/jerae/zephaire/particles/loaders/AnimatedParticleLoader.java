@@ -34,7 +34,7 @@ public class AnimatedParticleLoader {
             return;
         }
 
-        AnimatedParticle baseParticle = factoryOpt.get().create(config, condManager);
+        AnimatedParticle baseParticle = factoryOpt.get().create(plugin, config, condManager);
         if (baseParticle != null) {
             AnimatedParticle decoratedParticle = applyDecorators(baseParticle, config, key);
             particleManager.addParticle(key, decoratedParticle);

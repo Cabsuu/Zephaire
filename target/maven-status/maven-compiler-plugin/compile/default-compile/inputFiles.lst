@@ -6,6 +6,8 @@ H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zep
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\commands\subcommands\ToggleCommand.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\commands\ZephaireCommand.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\data\DataManager.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\listeners\AnvilListener.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\listeners\EnchantListener.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\listeners\EntityListener.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\listeners\ItemListener.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\listeners\PlayerInteractListener.java
@@ -27,11 +29,13 @@ H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zep
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\StarParticleTask.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\VortexParticleTask.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\WaveParticleTask.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\conditions\AnvilCondition.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\conditions\BlockInteractCondition.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\conditions\BlockMatchCondition.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\conditions\CachedParticleCondition.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\conditions\ConditionManager.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\conditions\DelayConditionDecorator.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\conditions\EnchantCondition.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\conditions\ParticleCondition.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\conditions\TimeCondition.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\conditions\TimerCondition.java
@@ -51,10 +55,12 @@ H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zep
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\animated\VortexParticleFactory.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\animated\WaveParticleFactory.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\AnimatedParticleFactory.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\conditions\AnvilConditionFactory.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\conditions\BlockInteractConditionFactory.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\conditions\BlockMatchConditionFactory.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\conditions\ConditionFactory.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\conditions\DelayConditionFactory.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\conditions\EnchantConditionFactory.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\conditions\TimeConditionFactory.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\conditions\TimerConditionFactory.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\conditions\WeatherConditionFactory.java

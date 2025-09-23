@@ -6,13 +6,18 @@ import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.managers.PerformanceManager;
 import com.jerae.zephaire.particles.util.ParticleUtils;
+import com.jerae.zephaire.Zephaire;
 import com.jerae.zephaire.particles.util.VectorUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CircleParticleTask implements AnimatedParticle {
 
@@ -30,6 +35,7 @@ public class CircleParticleTask implements AnimatedParticle {
     private final int despawnTimer;
     private final boolean hasGravity;
     private final int loopDelay;
+    private final Zephaire plugin;
 
     private double angle = 0;
     private int loopDelayCounter = 0;
@@ -38,7 +44,8 @@ public class CircleParticleTask implements AnimatedParticle {
     private final Vector relativePos;
     private final Vector rotatedPos = new Vector();
 
-    public CircleParticleTask(Location center, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, int loopDelay) {
+    public CircleParticleTask(Zephaire plugin, Location center, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, int loopDelay) {
+        this.plugin = plugin;
         this.center = center;
         this.particle = particle;
         this.radius = radius;
@@ -80,40 +87,54 @@ public class CircleParticleTask implements AnimatedParticle {
             loopDelayCounter = loopDelay;
         }
 
-        for (int i = 0; i < particleCount; i++) {
-            double particleAngle = angle + (2 * Math.PI * i) / particleCount;
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                List<ParticleSpawnData> spawnDataList = new ArrayList<>();
+                for (int i = 0; i < particleCount; i++) {
+                    double particleAngle = angle + (2 * Math.PI * i) / particleCount;
 
-            // --- PERFORMANCE: Reuse the relativePos vector ---
-            relativePos.setX(radius * Math.cos(particleAngle));
-            relativePos.setY(0);
-            relativePos.setZ(radius * Math.sin(particleAngle));
+                    relativePos.setX(radius * Math.cos(particleAngle));
+                    relativePos.setY(0);
+                    relativePos.setZ(radius * Math.sin(particleAngle));
 
-            VectorUtils.rotateVector(relativePos, pitch, yaw, rotatedPos);
+                    VectorUtils.rotateVector(relativePos, pitch, yaw, rotatedPos);
 
-            // --- PERFORMANCE: Reuse the spawnLocation object ---
-            spawnLocation.setX(center.getX() + rotatedPos.getX());
-            spawnLocation.setY(center.getY() + rotatedPos.getY());
-            spawnLocation.setZ(center.getZ() + rotatedPos.getZ());
+                    spawnLocation.setX(center.getX() + rotatedPos.getX());
+                    spawnLocation.setY(center.getY() + rotatedPos.getY());
+                    spawnLocation.setZ(center.getZ() + rotatedPos.getZ());
 
-            if (collisionEnabled && CollisionManager.isColliding(spawnLocation)) {
-                continue;
-            }
-            if (particle == null && options instanceof ItemStack) {
-                ParticleScheduler.queueParticle(new ParticleSpawnData(spawnLocation, (ItemStack) options, despawnTimer, hasGravity));
-            } else if (particle != null) {
-                if (particle == Particle.SHRIEK && options instanceof Integer) {
-                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, (Integer) options));
-                } else if (particle == Particle.VIBRATION && options instanceof org.bukkit.Vibration) {
-                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, (org.bukkit.Vibration) options));
-                } else if (particle == Particle.SCULK_CHARGE && options instanceof Float) {
-                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, (Float) options));
-                } else if (particle == Particle.TRAIL && options instanceof Integer) {
-                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, (Integer) options, hasGravity));
-                } else {
-                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, 1, 0, 0, 0, 0, options));
+                    if (collisionEnabled && CollisionManager.isColliding(spawnLocation)) {
+                        continue;
+                    }
+
+                    if (particle == null && options instanceof ItemStack) {
+                        spawnDataList.add(new ParticleSpawnData(spawnLocation.clone(), (ItemStack) options, despawnTimer, hasGravity));
+                    } else if (particle != null) {
+                        if (particle == Particle.SHRIEK && options instanceof Integer) {
+                            spawnDataList.add(new ParticleSpawnData(particle, spawnLocation.clone(), (Integer) options));
+                        } else if (particle == Particle.VIBRATION && options instanceof org.bukkit.Vibration) {
+                            spawnDataList.add(new ParticleSpawnData(particle, spawnLocation.clone(), (org.bukkit.Vibration) options));
+                        } else if (particle == Particle.SCULK_CHARGE && options instanceof Float) {
+                            spawnDataList.add(new ParticleSpawnData(particle, spawnLocation.clone(), (Float) options));
+                        } else if (particle == Particle.TRAIL && options instanceof Integer) {
+                            spawnDataList.add(new ParticleSpawnData(particle, spawnLocation.clone(), (Integer) options, hasGravity));
+                        } else {
+                            spawnDataList.add(new ParticleSpawnData(particle, spawnLocation.clone(), 1, 0, 0, 0, 0, options));
+                        }
+                    }
                 }
+
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        for (ParticleSpawnData data : spawnDataList) {
+                            ParticleScheduler.queueParticle(data);
+                        }
+                    }
+                }.runTask(plugin);
             }
-        }
+        }.runTaskAsynchronously(plugin);
     }
 
     @Override

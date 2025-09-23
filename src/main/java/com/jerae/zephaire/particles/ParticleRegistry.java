@@ -1,9 +1,12 @@
 package com.jerae.zephaire.particles;
 
+import com.jerae.zephaire.particles.conditions.AnvilCondition;
 import com.jerae.zephaire.particles.conditions.BlockInteractCondition;
+import com.jerae.zephaire.particles.conditions.EnchantCondition;
 import com.jerae.zephaire.particles.managers.ParticleManager;
 import org.bukkit.Location;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,6 +64,22 @@ public final class ParticleRegistry {
      */
     public static Optional<BlockInteractCondition> getBlockInteractConditionAt(Location location) {
         return getManager().getBlockInteractConditionAt(location);
+    }
+
+    public static void registerAnvilCondition(AnvilCondition condition) {
+        getManager().registerAnvilCondition(condition);
+    }
+
+    public static Collection<AnvilCondition> getAnvilConditions() {
+        return getManager().getAnvilConditions();
+    }
+
+    public static void registerEnchantCondition(EnchantCondition condition) {
+        getManager().registerEnchantCondition(condition);
+    }
+
+    public static Collection<EnchantCondition> getEnchantConditions() {
+        return getManager().getEnchantConditions();
     }
 
     /**

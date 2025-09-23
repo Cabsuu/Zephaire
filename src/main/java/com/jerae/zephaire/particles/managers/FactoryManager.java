@@ -5,6 +5,8 @@ import com.jerae.zephaire.particles.factories.EntityParticleFactory;
 import com.jerae.zephaire.particles.factories.StaticParticleFactory;
 import com.jerae.zephaire.particles.factories.animated.*;
 import com.jerae.zephaire.particles.factories.conditions.*;
+import com.jerae.zephaire.particles.factories.conditions.AnvilConditionFactory;
+import com.jerae.zephaire.particles.factories.conditions.EnchantConditionFactory;
 import com.jerae.zephaire.particles.factories.decorators.DecoratorFactory;
 import com.jerae.zephaire.particles.factories.decorators.MultiColorTransitionDecoratorFactory;
 import com.jerae.zephaire.particles.factories.decorators.SoundDecoratorFactory;
@@ -69,6 +71,8 @@ public class FactoryManager {
         conditionFactories.put("TIMER", new TimerConditionFactory());
         conditionFactories.put("DELAY", new DelayConditionFactory());
         conditionFactories.put("BLOCK_INTERACT", new BlockInteractConditionFactory());
+        conditionFactories.put("ANVIL", new AnvilConditionFactory());
+        conditionFactories.put("ENCHANT", new EnchantConditionFactory());
     }
 
     private void registerDecoratorFactories() {

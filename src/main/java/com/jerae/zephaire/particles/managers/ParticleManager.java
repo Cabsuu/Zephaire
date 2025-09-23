@@ -4,7 +4,9 @@ import com.jerae.zephaire.Zephaire;
 import com.jerae.zephaire.particles.Debuggable;
 import com.jerae.zephaire.particles.ParticleConfigLoader;
 import com.jerae.zephaire.particles.animations.AnimatedParticle;
+import com.jerae.zephaire.particles.conditions.AnvilCondition;
 import com.jerae.zephaire.particles.conditions.BlockInteractCondition;
+import com.jerae.zephaire.particles.conditions.EnchantCondition;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -22,6 +24,8 @@ public class ParticleManager {
     private final List<String> particleNames = new ArrayList<>();
     private final Map<String, Debuggable> activeParticles = new HashMap<>();
     private final Map<Location, BlockInteractCondition> blockInteractConditions = new HashMap<>();
+    private final List<AnvilCondition> anvilConditions = new ArrayList<>();
+    private final List<EnchantCondition> enchantConditions = new ArrayList<>();
 
     public ParticleManager(Zephaire plugin) {
         this.plugin = plugin;
@@ -52,6 +56,8 @@ public class ParticleManager {
         particleNames.clear();
         activeParticles.clear();
         blockInteractConditions.clear();
+        anvilConditions.clear();
+        enchantConditions.clear();
 
         // Start with a fresh animation manager
         animationManager = new AnimationManager();
@@ -93,6 +99,22 @@ public class ParticleManager {
 
     public Optional<BlockInteractCondition> getBlockInteractConditionAt(Location location) {
         return Optional.ofNullable(blockInteractConditions.get(location));
+    }
+
+    public void registerAnvilCondition(AnvilCondition condition) {
+        anvilConditions.add(condition);
+    }
+
+    public Collection<AnvilCondition> getAnvilConditions() {
+        return Collections.unmodifiableCollection(anvilConditions);
+    }
+
+    public void registerEnchantCondition(EnchantCondition condition) {
+        enchantConditions.add(condition);
+    }
+
+    public Collection<EnchantCondition> getEnchantConditions() {
+        return Collections.unmodifiableCollection(enchantConditions);
     }
 
 

@@ -1,1 +1,9 @@
+com\jerae\zephaire\particles\conditions\EnchantCondition.class
+com\jerae\zephaire\particles\conditions\AnvilCondition.class
+com\jerae\zephaire\particles\animations\CircleParticleTask$1$1.class
+com\jerae\zephaire\particles\animations\CircleParticleTask$1.class
+com\jerae\zephaire\particles\factories\conditions\EnchantConditionFactory.class
+com\jerae\zephaire\particles\factories\conditions\AnvilConditionFactory.class
+com\jerae\zephaire\listeners\AnvilListener.class
 com\jerae\zephaire\particles\managers\ParticleGroupManager.class
+com\jerae\zephaire\listeners\EnchantListener.class

@@ -1,0 +1,16 @@
+# ===================================================================
+# Zephaire Plugin Animated Particles Configuration
+# ===================================================================
+
+# Add your animated particle configurations here.
+# For example:
+#
+# my-animated-particle:
+#   shape: 'CIRCLE'
+#   type: 'VILLAGER_HAPPY'
+#   world: 'world'
+#   radius: 2.0
+#   particle-count: 50
+#   update-rate: 1
+#
+animated-particles:

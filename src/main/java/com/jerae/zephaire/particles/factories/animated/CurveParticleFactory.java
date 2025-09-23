@@ -1,5 +1,6 @@
 package com.jerae.zephaire.particles.factories.animated;
 
+import com.jerae.zephaire.Zephaire;
 import com.jerae.zephaire.particles.animations.AnimatedParticle;
 import com.jerae.zephaire.particles.animations.CurveParticleTask;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
@@ -10,7 +11,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 public class CurveParticleFactory extends AbstractAnimatedParticleFactory {
     @Override
-    protected AnimatedParticle createParticleTask(ConfigurationSection section, ConditionManager manager, World world, int loopDelay) {
+    protected AnimatedParticle createParticleTask(Zephaire plugin, ConfigurationSection section, ConditionManager manager, World world, int loopDelay) {
         Location start = parseLocation(world, section, "start");
         Location control = parseLocation(world, section, "control");
         Location end = parseLocation(world, section, "end");

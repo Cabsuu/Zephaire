@@ -1,5 +1,6 @@
 package com.jerae.zephaire.particles.factories.animated;
 
+import com.jerae.zephaire.Zephaire;
 import com.jerae.zephaire.particles.animations.AnimatedParticle;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.factories.AbstractParticleFactory;
@@ -14,16 +15,16 @@ import org.bukkit.configuration.ConfigurationSection;
 public abstract class AbstractAnimatedParticleFactory extends AbstractParticleFactory implements AnimatedParticleFactory {
 
     @Override
-    public AnimatedParticle create(ConfigurationSection section, ConditionManager manager) {
+    public AnimatedParticle create(Zephaire plugin, ConfigurationSection section, ConditionManager manager) {
         World world = parseWorld(section);
         if (world == null) {
             return null;
         }
         int loopDelay = parseLoopDelay(section);
-        return createParticleTask(section, manager, world, loopDelay);
+        return createParticleTask(plugin, section, manager, world, loopDelay);
     }
 
-    protected abstract AnimatedParticle createParticleTask(ConfigurationSection section, ConditionManager manager, World world, int loopDelay);
+    protected abstract AnimatedParticle createParticleTask(Zephaire plugin, ConfigurationSection section, ConditionManager manager, World world, int loopDelay);
 
     protected int parseLoopDelay(ConfigurationSection section) {
         return section.getInt("loop-delay", 0);

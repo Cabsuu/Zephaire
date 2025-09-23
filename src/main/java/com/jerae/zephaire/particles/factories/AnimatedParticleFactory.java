@@ -1,5 +1,6 @@
 package com.jerae.zephaire.particles.factories;
 
+import com.jerae.zephaire.Zephaire;
 import com.jerae.zephaire.particles.animations.AnimatedParticle;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import org.bukkit.configuration.ConfigurationSection;
@@ -15,5 +16,5 @@ public interface AnimatedParticleFactory {
      * @param manager The ConditionManager for this effect.
      * @return An AnimatedParticle instance.
      */
-    AnimatedParticle create(ConfigurationSection section, ConditionManager manager);
+    AnimatedParticle create(Zephaire plugin, ConfigurationSection section, ConditionManager manager);
 }

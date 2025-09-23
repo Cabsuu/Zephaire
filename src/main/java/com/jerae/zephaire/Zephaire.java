@@ -2,6 +2,8 @@ package com.jerae.zephaire;
 
 import com.jerae.zephaire.commands.ZephaireCommand;
 import com.jerae.zephaire.data.DataManager;
+import com.jerae.zephaire.listeners.AnvilListener;
+import com.jerae.zephaire.listeners.EnchantListener;
 import com.jerae.zephaire.listeners.EntityListener;
 import com.jerae.zephaire.listeners.PlayerInteractListener;
 import com.jerae.zephaire.particles.ParticleScheduler;
@@ -114,6 +116,8 @@ public final class Zephaire extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(this), this);
         getServer().getPluginManager().registerEvents(new EntityListener(this), this);
+        getServer().getPluginManager().registerEvents(new EnchantListener(this), this);
+        getServer().getPluginManager().registerEvents(new AnvilListener(this), this);
     }
 
     /**

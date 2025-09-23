@@ -1,0 +1,15 @@
+# ===================================================================
+# Zephaire Plugin Entity-Targeted Particles Configuration
+# ===================================================================
+
+entity-particles:
+  aura-of-flames:
+    target:
+      type: PLAYER
+      name: "Notch"  # Example for a specific player
+    shape: 'CIRCLE'
+    type: 'FLAME'
+    radius: 1.5
+    particle-count: 20
+    speed: 0.1
+    offset-y: 1.0
