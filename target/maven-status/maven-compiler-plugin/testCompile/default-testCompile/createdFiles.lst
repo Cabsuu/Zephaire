@@ -1,3 +1,9 @@
 com\jerae\zephaire\commands\subcommands\ToggleCommandTest.class
+com\jerae\zephaire\particles\animations\entity\EntitySpiralParticleTaskTest.class
+com\jerae\zephaire\particles\animations\decorator\VelocityDecoratorTest.class
+com\jerae\zephaire\particles\ParticleConfigLoaderTest.class
+com\jerae\zephaire\particles\conditions\ElytraConditionTest.class
 com\jerae\zephaire\listeners\EnchantAnvilListenerTest.class
+com\jerae\zephaire\particles\animations\AnimatedSpiralParticleTaskTest.class
 com\jerae\zephaire\particles\ParticleUtilsTest.class
+com\jerae\zephaire\particles\statics\StaticConeParticleTaskTest.class

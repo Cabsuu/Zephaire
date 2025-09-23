@@ -11,8 +11,10 @@ import com.jerae.zephaire.particles.factories.decorators.DecoratorFactory;
 import com.jerae.zephaire.particles.factories.decorators.MultiColorTransitionDecoratorFactory;
 import com.jerae.zephaire.particles.factories.decorators.SoundDecoratorFactory;
 import com.jerae.zephaire.particles.factories.decorators.TrailDecoratorFactory;
+import com.jerae.zephaire.particles.factories.decorators.VelocityDecoratorFactory;
 import com.jerae.zephaire.particles.factories.entity.EntityCircleParticleFactory;
 import com.jerae.zephaire.particles.factories.entity.EntityPointParticleFactory;
+import com.jerae.zephaire.particles.factories.entity.EntitySpiralParticleFactory;
 import com.jerae.zephaire.particles.factories.entity.EntityStarParticleFactory;
 import com.jerae.zephaire.particles.factories.entity.EntityVortexParticleFactory;
 import com.jerae.zephaire.particles.factories.statics.*;
@@ -50,6 +52,7 @@ public class FactoryManager {
         staticFactories.put("STATIC_CURVE", new StaticCurveFactory());
         staticFactories.put("RANDOM_BURST_REGION", new RandomBurstRegionFactory());
         staticFactories.put("STATIC_PYRAMID", new StaticPyramidFactory());
+        staticFactories.put("STATIC_CONE", new StaticConeFactory());
     }
 
     private void registerAnimatedFactories() {
@@ -62,6 +65,7 @@ public class FactoryManager {
         animatedFactories.put("WAVE", new WaveParticleFactory());
         animatedFactories.put("MOVING_STAR", new MovingStarParticleFactory());
         animatedFactories.put("VORTEX", new VortexParticleFactory());
+        animatedFactories.put("SPIRAL", new AnimatedSpiralParticleFactory());
     }
 
     private void registerConditionFactories() {
@@ -73,12 +77,14 @@ public class FactoryManager {
         conditionFactories.put("BLOCK_INTERACT", new BlockInteractConditionFactory());
         conditionFactories.put("ANVIL", new AnvilConditionFactory());
         conditionFactories.put("ENCHANT", new EnchantConditionFactory());
+        conditionFactories.put("ELYTRA", new ElytraConditionFactory());
     }
 
     private void registerDecoratorFactories() {
         decoratorFactories.put("multi-color-transition", new MultiColorTransitionDecoratorFactory());
         decoratorFactories.put("sound", new SoundDecoratorFactory());
         decoratorFactories.put("trail", new TrailDecoratorFactory());
+        decoratorFactories.put("velocity", new VelocityDecoratorFactory());
     }
 
     private void registerEntityFactories() {
@@ -86,6 +92,7 @@ public class FactoryManager {
         entityFactories.put("STAR", new EntityStarParticleFactory());
         entityFactories.put("VORTEX", new EntityVortexParticleFactory());
         entityFactories.put("POINT", new EntityPointParticleFactory());
+        entityFactories.put("SPIRAL", new EntitySpiralParticleFactory());
     }
 
     public Optional<StaticParticleFactory> getStaticFactory(String shape) {

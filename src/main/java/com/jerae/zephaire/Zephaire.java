@@ -147,6 +147,9 @@ public final class Zephaire extends JavaPlugin {
         }
 
         // 3. Re-initialize the particle managers and load the new particle configurations.
+        if (this.particleConfigLoader != null) {
+            this.particleConfigLoader.clearCache();
+        }
         this.particleManager.initialize();
         this.entityParticleManager.initialize();
         this.particleConfigLoader.loadParticles();

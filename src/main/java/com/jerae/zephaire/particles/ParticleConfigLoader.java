@@ -12,6 +12,9 @@ import com.jerae.zephaire.particles.managers.ParticleManager;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import com.jerae.zephaire.particles.data.ParticleCreationData;
+import java.util.HashMap;
+import java.util.Map;
 
 import java.util.logging.Level;
 
@@ -25,13 +28,24 @@ public class ParticleConfigLoader {
     private final AnimatedParticleLoader animatedLoader;
     private final EntityParticleLoader entityLoader;
     private final ConditionParser conditionParser;
+    private final Map<String, ParticleCreationData> creationDataCache = new HashMap<>();
+    private final WorldProvider worldProvider;
 
     public ParticleConfigLoader(Zephaire plugin, FactoryManager factoryManager, ParticleManager particleManager, EntityParticleManager entityParticleManager) {
+        this(plugin, factoryManager, particleManager, entityParticleManager, Bukkit::getWorld);
+    }
+
+    public ParticleConfigLoader(Zephaire plugin, FactoryManager factoryManager, ParticleManager particleManager, EntityParticleManager entityParticleManager, WorldProvider worldProvider) {
         this.plugin = plugin;
         this.staticLoader = new StaticParticleLoader(plugin, factoryManager, particleManager);
         this.animatedLoader = new AnimatedParticleLoader(plugin, factoryManager, particleManager);
         this.entityLoader = new EntityParticleLoader(plugin, factoryManager, entityParticleManager);
         this.conditionParser = new ConditionParser(plugin, factoryManager);
+        this.worldProvider = worldProvider;
+    }
+
+    public void clearCache() {
+        creationDataCache.clear();
     }
 
     /**
@@ -74,18 +88,26 @@ public class ParticleConfigLoader {
 
         plugin.getLogger().info("Loading entity particle templates...");
         for (String key : section.getKeys(false)) {
-            ConfigurationSection particleConfig = section.getConfigurationSection(key);
-            if (particleConfig == null) {
-                plugin.getLogger().warning("Invalid configuration for entity particle key '" + key + "'. Skipping.");
-                continue;
+            String cacheKey = "entity-particles." + key;
+            ParticleCreationData data = creationDataCache.get(cacheKey);
+
+            if (data == null) {
+                ConfigurationSection particleConfig = section.getConfigurationSection(key);
+                if (particleConfig == null) {
+                    plugin.getLogger().warning("Invalid configuration for entity particle key '" + key + "'. Skipping.");
+                    continue;
+                }
+                try {
+                    String particlePath = "entity-particles." + key;
+                    ConditionManager manager = conditionParser.parse(particleConfig, null, particlePath);
+                    data = new ParticleCreationData(key, null, particleConfig, manager, false);
+                    creationDataCache.put(cacheKey, data);
+                } catch (Exception e) {
+                    plugin.getLogger().log(Level.SEVERE, "An unexpected error occurred while loading entity particle '" + key + "'.", e);
+                    continue;
+                }
             }
-            try {
-                String particlePath = "entity-particles." + key;
-                ConditionManager manager = conditionParser.parse(particleConfig, null, particlePath);
-                entityLoader.load(key, particleConfig, manager);
-            } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "An unexpected error occurred while loading entity particle '" + key + "'.", e);
-            }
+            entityLoader.load(data.key(), data.config(), data.condManager());
         }
     }
 
@@ -118,36 +140,44 @@ public class ParticleConfigLoader {
     }
 
     private void loadParticleFromSection(ConfigurationSection section, String key, boolean isAnimated) {
-        ConfigurationSection particleConfig = section.getConfigurationSection(key);
-        if (particleConfig == null) {
-            plugin.getLogger().warning("Invalid configuration for particle key '" + key + "' in '" + section.getName() + "'. Skipping.");
-            return;
+        String cacheKey = section.getName() + "." + key;
+        ParticleCreationData data = creationDataCache.get(cacheKey);
+
+        if (data == null) {
+            ConfigurationSection particleConfig = section.getConfigurationSection(key);
+            if (particleConfig == null) {
+                plugin.getLogger().warning("Invalid configuration for particle key '" + key + "' in '" + section.getName() + "'. Skipping.");
+                return;
+            }
+
+            try {
+                String shape = particleConfig.getString("shape", isAnimated ? "" : "POINT").toUpperCase();
+                if (isAnimated && shape.isEmpty()) {
+                    plugin.getLogger().warning("Missing 'shape' for animated particle '" + key + "'. Skipping.");
+                    return;
+                }
+
+                World world = worldProvider.getWorld(particleConfig.getString("world", "world"));
+                if (world == null) {
+                    plugin.getLogger().warning("Invalid world for particle '" + key + "'. Skipping.");
+                    return;
+                }
+
+                String particlePath = section.getName() + "." + key;
+                ConditionManager manager = conditionParser.parse(particleConfig, world, particlePath);
+
+                data = new ParticleCreationData(key, shape, particleConfig, manager, isAnimated);
+                creationDataCache.put(cacheKey, data);
+            } catch (Exception e) {
+                plugin.getLogger().log(Level.SEVERE, "An unexpected error occurred while loading particle '" + key + "' in '" + section.getName() + "'.", e);
+                return;
+            }
         }
 
-        try {
-            String shape = particleConfig.getString("shape", isAnimated ? "" : "POINT").toUpperCase();
-            if (isAnimated && shape.isEmpty()) {
-                plugin.getLogger().warning("Missing 'shape' for animated particle '" + key + "'. Skipping.");
-                return;
-            }
-
-            World world = Bukkit.getWorld(particleConfig.getString("world", "world"));
-            if (world == null) {
-                plugin.getLogger().warning("Invalid world for particle '" + key + "'. Skipping.");
-                return;
-            }
-
-            String particlePath = section.getName() + "." + key;
-            ConditionManager manager = conditionParser.parse(particleConfig, world, particlePath);
-
-            if (isAnimated) {
-                animatedLoader.load(key, shape, particleConfig, manager);
-            } else {
-                staticLoader.load(key, shape, particleConfig, manager);
-            }
-
-        } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "An unexpected error occurred while loading particle '" + key + "' in '" + section.getName() + "'.", e);
+        if (data.isAnimated()) {
+            animatedLoader.load(data.key(), data.shape(), data.config(), data.condManager());
+        } else {
+            staticLoader.load(data.key(), data.shape(), data.config(), data.condManager());
         }
     }
 }
