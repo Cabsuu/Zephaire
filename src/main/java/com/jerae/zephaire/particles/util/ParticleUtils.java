@@ -2,11 +2,13 @@ package com.jerae.zephaire.particles.util;
 
 import com.jerae.zephaire.Zephaire;
 import org.bukkit.*;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Map;
+import java.util.logging.Level;
 
 /**
  * A utility class for parsing particle-related data from configurations.
@@ -104,9 +106,7 @@ public final class ParticleUtils {
         } else if (particle == Particle.SHRIEK) {
             return optionsSection.getInt("delay", 0);
         } else if (particle == Particle.TINTED_LEAVES) {
-            Color color = hexToColor(optionsSection.getString("color", "FFFFFF"));
-            float size = (float) optionsSection.getDouble("size", 1.0);
-            return new Particle.DustOptions(color, size);
+            return hexToColor(optionsSection.getString("color", "FFFFFF"));
         } else if (particle == Particle.TRAIL) {
             if (optionsSection.isConfigurationSection("target")) {
                 ConfigurationSection targetSection = optionsSection.getConfigurationSection("target");

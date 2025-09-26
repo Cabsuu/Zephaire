@@ -39,6 +39,10 @@ static / animated / entity-particles:
     options:
       delay: 0
 
+    type: 'TINTED_LEAVES'
+    options:
+      color: '#FFFFFF'
+
     type: 'TRAIL' # Not working at the moment
     options:
       duration: 20
