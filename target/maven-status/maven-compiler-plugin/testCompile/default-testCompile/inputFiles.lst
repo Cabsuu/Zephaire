@@ -8,6 +8,7 @@ H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zep
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zephaire\particles\animations\entity\OrbitalParticleTaskTest.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zephaire\particles\animations\entity\TestParticleSpawnException.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zephaire\particles\animations\LoopDelayTest.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zephaire\particles\conditions\DelayConditionDecoratorTest.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zephaire\particles\conditions\ElytraConditionTest.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zephaire\particles\conditions\PlayerStatConditionTest.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zephaire\particles\EventParticleTest.java

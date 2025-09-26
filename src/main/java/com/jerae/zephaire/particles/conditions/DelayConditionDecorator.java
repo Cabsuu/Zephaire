@@ -9,6 +9,7 @@ public class DelayConditionDecorator implements ParticleCondition {
 
     private boolean isWaiting = false;
     private long delayCounter = 0;
+    private boolean hasWaited = false;
 
     public DelayConditionDecorator(ParticleCondition wrappedCondition, long delayTicks) {
         this.wrappedCondition = wrappedCondition;
@@ -24,26 +25,28 @@ public class DelayConditionDecorator implements ParticleCondition {
     public boolean check(Location referenceLocation) {
         boolean primaryConditionMet = wrappedCondition.check(referenceLocation);
 
-        if (primaryConditionMet && !isWaiting) {
+        if (!primaryConditionMet) {
+            isWaiting = false;
+            hasWaited = false;
+            return false;
+        }
+
+        if (hasWaited) {
+            return true;
+        }
+
+        if (!isWaiting) {
             isWaiting = true;
             delayCounter = delayTicks;
             return false;
         }
 
-        if (isWaiting) {
-            if (!primaryConditionMet) {
-                isWaiting = false;
-                return false;
-            }
+        delayCounter--;
 
-            delayCounter--;
-
-            if (delayCounter <= 0) {
-                isWaiting = false;
-                return true;
-            } else {
-                return false;
-            }
+        if (delayCounter <= 0) {
+            hasWaited = true;
+            isWaiting = false;
+            return true;
         }
 
         return false;

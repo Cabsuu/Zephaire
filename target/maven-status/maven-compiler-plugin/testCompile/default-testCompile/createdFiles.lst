@@ -1,4 +1,5 @@
 com\jerae\zephaire\particles\animations\entity\EntitySpiralParticleTaskTest.class
+com\jerae\zephaire\particles\conditions\DelayConditionDecoratorTest.class
 com\jerae\zephaire\particles\conditions\ElytraConditionTest.class
 com\jerae\zephaire\particles\EventParticleTest.class
 com\jerae\zephaire\particles\animations\AnimatedOrbitalParticleTaskTest.class
