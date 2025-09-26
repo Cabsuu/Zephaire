@@ -49,7 +49,7 @@ public class EntitySpawnBehaviorTest {
                 "test", (org.bukkit.Particle) null, 0.0, 0.0, 0, (Object) null, 0.0, 0.0,
                 mockConditionManager,
                 false, (org.bukkit.util.Vector) null, (com.jerae.zephaire.particles.data.EntityTarget) null,
-                1, SpawnBehavior.STANDING_STILL, 0, false, 0, true, false
+                1, SpawnBehavior.STANDING_STILL, 0, false, 0, true, false, -1
         );
 
         // Case 1: Standing still on the ground (should spawn)
@@ -79,7 +79,7 @@ public class EntitySpawnBehaviorTest {
                 "test", (org.bukkit.Particle) null, 0.0, 0.0, 0, (Object) null, 0.0, 0.0,
                 mockConditionManager,
                 false, (org.bukkit.util.Vector) null, (com.jerae.zephaire.particles.data.EntityTarget) null,
-                1, SpawnBehavior.MOVING, 0, false, 0, true, false
+                1, SpawnBehavior.MOVING, 0, false, 0, true, false, -1
         );
 
         // Case 1: Standing still on the ground (should not spawn)
@@ -112,7 +112,7 @@ public class EntitySpawnBehaviorTest {
         EntityCircleParticleTask task = new EntityCircleParticleTask(
                 "test", null, 0.0, 0.0, 0, null, 0.0, 0.0,
                 mockConditionManager, false, new Vector(0,0,0), null,
-                1, SpawnBehavior.STANDING_STILL, 0, false, 0, true, false
+                1, SpawnBehavior.STANDING_STILL, 0, false, 0, true, false, -1
         );
 
         when(mockEntity.getVelocity()).thenReturn(new Vector(0, 0, 0)); // Zero velocity
@@ -142,7 +142,7 @@ public class EntitySpawnBehaviorTest {
         EntityCircleParticleTask task = new EntityCircleParticleTask(
                 "test", null, 0.0, 0.0, 0, null, 0.0, 0.0,
                 mockConditionManager, false, new Vector(0,0,0), null,
-                1, SpawnBehavior.MOVING, 0, false, 0, true, false
+                1, SpawnBehavior.MOVING, 0, false, 0, true, false, -1
         );
 
         when(mockEntity.getVelocity()).thenReturn(new Vector(0, 0, 0)); // Zero velocity
@@ -174,7 +174,7 @@ public class EntitySpawnBehaviorTest {
 
         EntityPointParticleTask task = new EntityPointParticleTask(
                 "test", null, Mockito.mock(ItemStack.class), mockConditionManager, false, new Vector(0,0,0), null,
-                1, SpawnBehavior.ALWAYS, 0, false, 0, false, true, 0.0, 1
+                1, SpawnBehavior.ALWAYS, 0, false, 0, false, true, 0.0, 1, -1
         );
 
         task.tick(mockEntity);
@@ -202,7 +202,7 @@ public class EntitySpawnBehaviorTest {
 
         EntityPointParticleTask task = new EntityPointParticleTask(
                 "test", null, Mockito.mock(ItemStack.class), mockConditionManager, false, new Vector(0,0,0), null,
-                1, SpawnBehavior.ALWAYS, 0, false, 0, false, false, 0.0, 1
+                1, SpawnBehavior.ALWAYS, 0, false, 0, false, false, 0.0, 1, -1
         );
 
         task.tick(mockEntity);
@@ -229,7 +229,7 @@ public class EntitySpawnBehaviorTest {
 
         EntityPointParticleTask task = new EntityPointParticleTask(
                 "test", null, Mockito.mock(ItemStack.class), mockConditionManager, false, new Vector(0,0,0), null,
-                1, SpawnBehavior.ALWAYS, 0, false, 0, false, false, 0.5, 5
+                1, SpawnBehavior.ALWAYS, 0, false, 0, false, false, 0.5, 5, -1
         );
 
         task.tick(mockEntity);
@@ -252,7 +252,7 @@ public class EntitySpawnBehaviorTest {
                 "test", (org.bukkit.Particle) null, 0.0, 0.0, 0, (Object) null, 0.0, 0.0,
                 mockConditionManager,
                 false, (org.bukkit.util.Vector) null, (com.jerae.zephaire.particles.data.EntityTarget) null,
-                1, SpawnBehavior.ALWAYS, 0, false, 0, true, false
+                1, SpawnBehavior.ALWAYS, 0, false, 0, true, false, -1
         );
 
         // Case 1: Conditions not met (should not spawn)

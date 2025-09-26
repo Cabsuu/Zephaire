@@ -37,6 +37,8 @@ public class EntityVortexParticleTask implements EntityParticleTask {
     private final boolean hasGravity;
     private final int loopDelay;
     private final boolean inheritEntityVelocity;
+    private final int duration;
+    private int ticksLived = 0;
 
     private final List<Location> particles = new ArrayList<>();
     private final List<Vector> velocities = new ArrayList<>();
@@ -49,7 +51,7 @@ public class EntityVortexParticleTask implements EntityParticleTask {
     private final Vector rotational = new Vector();
 
 
-    public EntityVortexParticleTask(String effectName, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay, boolean inheritEntityVelocity) {
+    public EntityVortexParticleTask(String effectName, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay, boolean inheritEntityVelocity, int duration) {
         this.effectName = effectName;
         this.particle = particle;
         this.radius = radius;
@@ -67,6 +69,7 @@ public class EntityVortexParticleTask implements EntityParticleTask {
         this.hasGravity = hasGravity;
         this.loopDelay = loopDelay;
         this.inheritEntityVelocity = inheritEntityVelocity;
+        this.duration = duration;
     }
 
     @Override
@@ -74,7 +77,7 @@ public class EntityVortexParticleTask implements EntityParticleTask {
         return new EntityVortexParticleTask(
                 effectName, particle, radius, height, speed, particleCount, options,
                 conditionManager, collisionEnabled, offset, target, period, spawnBehavior,
-                despawnTimer, hasGravity, loopDelay, inheritEntityVelocity
+                despawnTimer, hasGravity, loopDelay, inheritEntityVelocity, duration
         );
     }
 
@@ -85,6 +88,11 @@ public class EntityVortexParticleTask implements EntityParticleTask {
 
     @Override
     public void tick(Entity entity) {
+        if (isDone()) {
+            return;
+        }
+        ticksLived++;
+
         if (!conditionManager.allConditionsMet(entity.getLocation())) return;
         // --- Spawn Behavior ---
         Location currentLocation = entity.getLocation();
@@ -226,5 +234,20 @@ public class EntityVortexParticleTask implements EntityParticleTask {
     @Override
     public ConditionManager getConditionManager() {
         return conditionManager;
+    }
+
+    @Override
+    public boolean isDone() {
+        return duration != -1 && ticksLived >= duration;
+    }
+
+    @Override
+    public int getDuration() {
+        return duration;
+    }
+
+    @Override
+    public SpawnBehavior getSpawnBehavior() {
+        return spawnBehavior;
     }
 }

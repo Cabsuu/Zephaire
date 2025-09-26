@@ -3,7 +3,6 @@ package com.jerae.zephaire.particles;
 import com.jerae.zephaire.Zephaire;
 import com.jerae.zephaire.particles.util.ParticleUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.Vibration;

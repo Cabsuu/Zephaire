@@ -1,34 +1,26 @@
+# -------------------------------------------------------------------
+# APPLIED CONDITIONS FOR THE PARTICLE TASKS
+# The particle tasks will execute if they meet the available conditions based on this guide.
+# Conditions are additional settings for the particle tasks.
+# -------------------------------------------------------------------
+
+# Note: The applied settings in this guide are set by default, even if it's omitted.
+
 # --- EXAMPLE OF CONDITIONS ---
+static / animated / entity-particles:
   particle-name:
     shape: 'POINT'
-    ...
+    ... // written settings //
     conditions:
-      - type: "TIME"
-        from: 0
-        to: 12000
-
-      - type: "WEATHER"
-        is: "RAINING" # Can be RAINING / THUNDERING / CLEAR
+      - type: "ANVIL"
 
       - type: "BLOCK_MATCH"
         location:
           x: 0
           y: 0
           z: 0
-        material: REDSTONE_BLOCK
-        trigger-once: true # The effect will only fire on the tick this block appears.
-
-      - type: "TIMER"
-        active-duration: 40  # 2 seconds ON (20 ticks per second)
-        cooldown-duration: 60 # 3 seconds OFF
-
-      - type: "DELAY" # (After fulfilling the condition, a delay is added.)
-        delay: 60
-        condition:
-          type: "WEATHER"
-          is: "RAINING"
-
-      - type: ELYTRA
+        material: STONE
+        trigger-once: false
 
       - type: "BLOCK_INTERACT"
     # This condition has two modes: Trigger and Toggle.
@@ -44,3 +36,25 @@
         material: BEACON
         activation-item: NETHER_STAR    # REQUIRED for toggle mode
         deactivation-item: STICK        # REQUIRED for toggle mode
+
+      - type: "DELAY" # (After fulfilling the condition, a delay is added.)
+        delay: 60
+        condition:
+          type: "WEATHER"
+          is: "RAINING"
+
+      - type: ELYTRA
+    # Will trigger only if the player wearing elytra is near of particles. Best for entity-attached particle.
+
+      - type: ENCHANT
+
+      - type: "TIME"
+        from: 0
+        to: 12000
+
+      - type: "TIMER"
+        active-duration: 40
+        cooldown-duration: 60
+
+      - type: "WEATHER"
+        is: "RAINING" or "THUNDERING" / "CLEAR"

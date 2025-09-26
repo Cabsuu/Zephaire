@@ -52,7 +52,7 @@ public class EntitySpiralParticleTaskTest {
         when(entity.getWorld()).thenReturn(world);
 
         ConditionManager conditionManager = new ConditionManager(Collections.emptyList());
-        EntitySpiralParticleTask task = new EntitySpiralParticleTask("test", Particle.FLAME, 1, 5, 10, 0.1, 0.1, null, 0, 0, false, conditionManager, false, new Vector(0,0,0), entityTarget, 1, SpawnBehavior.ALWAYS, 100, false, 0, false, false);
+        EntitySpiralParticleTask task = new EntitySpiralParticleTask("test", Particle.FLAME, 1, 5, 10, 0.1, 0.1, null, 0, 0, false, conditionManager, false, new Vector(0,0,0), entityTarget, 1, SpawnBehavior.ALWAYS, 100, false, 0, false, false, -1);
 
         // Act
         task.tick(entity);

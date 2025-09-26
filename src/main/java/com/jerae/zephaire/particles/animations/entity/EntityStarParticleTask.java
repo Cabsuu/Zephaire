@@ -40,6 +40,9 @@ public class EntityStarParticleTask implements EntityParticleTask {
     private final boolean hasGravity;
     private final int loopDelay;
     private final boolean inheritEntityVelocity;
+    private final int duration;
+    private int ticksLived = 0;
+
 
     private double rotationAngle = 0;
     private int tickCounter = 0;
@@ -55,7 +58,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
     private final Vector currentLinePoint = new Vector();
     private final Location particleLoc;
 
-    public EntityStarParticleTask(String effectName, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, double height, double verticalSpeed, boolean bounce, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay, boolean inheritEntityVelocity) {
+    public EntityStarParticleTask(String effectName, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, double height, double verticalSpeed, boolean bounce, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay, boolean inheritEntityVelocity, int duration) {
         this.effectName = effectName;
         this.particle = particle;
         this.points = Math.max(2, points);
@@ -79,6 +82,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
         this.hasGravity = hasGravity;
         this.loopDelay = loopDelay;
         this.inheritEntityVelocity = inheritEntityVelocity;
+        this.duration = duration;
         this.vertices = new Vector[this.points * 2];
         for (int i = 0; i < vertices.length; i++) {
             vertices[i] = new Vector();
@@ -88,7 +92,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
 
     @Override
     public EntityParticleTask newInstance() {
-        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, conditionManager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce, this.spawnBehavior, despawnTimer, hasGravity, loopDelay, inheritEntityVelocity);
+        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, conditionManager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce, this.spawnBehavior, despawnTimer, hasGravity, loopDelay, inheritEntityVelocity, duration);
     }
 
     @Override
@@ -98,6 +102,11 @@ public class EntityStarParticleTask implements EntityParticleTask {
 
     @Override
     public void tick(Entity entity) {
+        if (isDone()) {
+            return;
+        }
+        ticksLived++;
+
         if (!conditionManager.allConditionsMet(entity.getLocation())) return;
         // --- Spawn Behavior ---
         Location currentLocation = entity.getLocation();
@@ -250,5 +259,20 @@ public class EntityStarParticleTask implements EntityParticleTask {
     @Override
     public ConditionManager getConditionManager() {
         return conditionManager;
+    }
+
+    @Override
+    public boolean isDone() {
+        return duration != -1 && ticksLived >= duration;
+    }
+
+    @Override
+    public int getDuration() {
+        return duration;
+    }
+
+    @Override
+    public SpawnBehavior getSpawnBehavior() {
+        return spawnBehavior;
     }
 }

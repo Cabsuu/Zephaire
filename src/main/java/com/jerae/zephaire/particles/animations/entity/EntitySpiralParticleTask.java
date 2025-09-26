@@ -39,6 +39,9 @@ public class EntitySpiralParticleTask implements EntityParticleTask {
     private final boolean bounce;
     private final int despawnTimer;
     private final boolean hasGravity;
+    private final int duration;
+    private int ticksLived = 0;
+
 
     private double angle;
     private double currentYOffset;
@@ -47,7 +50,7 @@ public class EntitySpiralParticleTask implements EntityParticleTask {
     private final Vector particleVector = new Vector();
     private final Vector rotatedVector = new Vector();
 
-    public EntitySpiralParticleTask(String effectName, Particle particle, double startRadius, double endRadius, double height, double speed, double verticalSpeed, Object options, double pitch, double yaw, boolean bounce, ConditionManager manager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay, boolean debug, boolean inheritEntityVelocity) {
+    public EntitySpiralParticleTask(String effectName, Particle particle, double startRadius, double endRadius, double height, double speed, double verticalSpeed, Object options, double pitch, double yaw, boolean bounce, ConditionManager manager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay, boolean debug, boolean inheritEntityVelocity, int duration) {
         this.effectName = effectName;
         this.conditionManager = manager;
         this.collisionEnabled = collisionEnabled;
@@ -70,10 +73,16 @@ public class EntitySpiralParticleTask implements EntityParticleTask {
         this.bounce = bounce;
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
+        this.duration = duration;
     }
 
     @Override
     public void tick(Entity entity) {
+        if (isDone()) {
+            return;
+        }
+        ticksLived++;
+
         if (!conditionManager.allConditionsMet(entity.getLocation())) {
             return;
         }
@@ -154,11 +163,26 @@ public class EntitySpiralParticleTask implements EntityParticleTask {
 
     @Override
     public EntityParticleTask newInstance() {
-        return new EntitySpiralParticleTask(effectName, particle, startRadius, endRadius, height, speed, verticalSpeed, options, pitch, yaw, bounce, conditionManager, collisionEnabled, offset, target, period, spawnBehavior, despawnTimer, hasGravity, loopDelay, debug, inheritEntityVelocity);
+        return new EntitySpiralParticleTask(effectName, particle, startRadius, endRadius, height, speed, verticalSpeed, options, pitch, yaw, bounce, conditionManager, collisionEnabled, offset, target, period, spawnBehavior, despawnTimer, hasGravity, loopDelay, debug, inheritEntityVelocity, duration);
     }
 
     @Override
     public String getDebugInfo() {
         return "EntitySpiralParticleTask";
+    }
+
+    @Override
+    public boolean isDone() {
+        return duration != -1 && ticksLived >= duration;
+    }
+
+    @Override
+    public int getDuration() {
+        return duration;
+    }
+
+    @Override
+    public SpawnBehavior getSpawnBehavior() {
+        return spawnBehavior;
     }
 }

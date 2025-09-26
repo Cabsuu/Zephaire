@@ -2,10 +2,9 @@
 
 - ANGRY_VILLAGER
 - ASH
-- BLOCK
-- BLOCK_CRUMBLE
-- BLOCK_MARKER
-- DUST_PILLAR
+- BLOCK (Has extra configurations. Check out `guides/particle-type-guide.txt` for instructions.)
+- BLOCK_CRUMBLE (Has extra configurations. Check out `guides/particle-type-guide.txt` for instructions.)
+- BLOCK_MARKER (Has extra configurations. Check out `guides/particle-type-guide.txt` for instructions.)
 - BUBBLE
 - BUBBLE_COLUMN_UP
 - BUBBLE_POP
@@ -26,8 +25,9 @@
 - DRIPPING_LAVA
 - DRIPPING_OBSIDIAN_TEAR
 - DRIPPING_WATER
-- DUST
-- DUST_COLOR_TRANSITION
+- DUST (Has extra configurations. Check out `guides/particle-type-guide.txt` for instructions.)
+- DUST_COLOR_TRANSITION (Has extra configurations. Check out `guides/particle-type-guide.txt` for instructions.)
+- DUST_PILLAR (Has extra configurations. Check out `guides/particle-type-guide.txt` for instructions.)
 - DUST_PLUME
 - EFFECT
 - EGG_CRACK
@@ -35,10 +35,10 @@
 - ENCHANT
 - ENCHANTED_HIT
 - END_ROD
-- ENTITY_EFFECT
+- ENTITY_EFFECT (Has extra configurations. Check out `guides/particle-type-guide.txt` for instructions.)
 - EXPLOSION
 - EXPLOSION_EMITTER
-- FALLING_DUST
+- FALLING_DUST (Has extra configurations. Check out `guides/particle-type-guide.txt` for instructions.)
 - FALLING_DRIPSTONE_LAVA
 - FALLING_DRIPSTONE_WATER
 - FALLING_HONEY
@@ -60,7 +60,7 @@
 - HEART
 - INFESTED
 - INSTANT_EFFECT
-- ITEM
+- ITEM (Has extra configurations. Check out `guides/particle-type-guide.txt` for instructions.)
 - ITEM_COBWEB
 - ITEM_SLIME
 - ITEM_SNOWBALL
@@ -80,10 +80,10 @@
 - RAIN
 - REVERSE_PORTAL
 - SCRAPE
-- SCULK_CHARGE
+- SCULK_CHARGE (Has extra configurations. Check out `guides/particle-type-guide.txt` for instructions.)
 - SCULK_CHARGE_POP
 - SCULK_SOUL
-- SHRIEK
+- SHRIEK (Has extra configurations. Check out `guides/particle-type-guide.txt` for instructions.)
 - SMALL_FLAME
 - SMALL_GUST
 - SMOKE
@@ -99,13 +99,13 @@
 - SWEEP_ATTACK
 - TINTED_LEAVES
 - TOTEM_OF_UNDYING
-- TRAIL
+- TRAIL (Has extra configurations. Check out `guides/particle-type-guide.txt` for instructions.)
 - TRIAL_OMEN
 - TRIAL_SPAWNER_DIRECTION
 - TRIAL_SPAWNER_DIRECTION_OMINOUS
 - UNDERWATER
 - VAULT_CONNECTION
-- VIBRATION
+- VIBRATION (Has extra configurations. Check out `guides/particle-type-guide.txt` for instructions.)
 - WARPED_SPORE
 - WAX_OFF
 - WAX_ON
@@ -113,14 +113,7 @@
 - WHITE_SMOKE
 - WITCH
 
-### Special Particle Type ###
-
-- VISUAL_ITEM
-
 - ELDER_GUARDIAN -- Note: You can still put this but it won't work, as it only target players.
 
 ### Special Particle Type ###
-- VISUAL_ITEM
-
-### List of Particles that are not yet implemented ###
-( Do not use, as these particles doesn't work yet )
+- VISUAL_ITEM (Has extra configurations. Check out `guides/particle-type-guide.txt` for instructions.)

@@ -1,0 +1,33 @@
+# ----------------------------------------------------------------------------------- #
+#                                   Zephaire Regions                                  #
+# ----------------------------------------------------------------------------------- #
+#
+# This file is used to define custom regions for your particle effects.
+# You can create as many regions as you like. Each region needs a unique name.
+#
+# A region is a cuboid defined by two corner points (min and max).
+#
+# Format:
+# regions:
+#   <region_name>:
+#     world: "world_name"
+#     min:
+#       x: <x_coordinate>
+#       y: <y_coordinate>
+#       z: <z_coordinate>
+#     max:
+#       x: <x_coordinate>
+#       y: <y_coordinate>
+#       z: <z_coordinate>
+
+regions:
+  example_region:
+    world: "world"
+    min:
+      x: 0
+      y: 64
+      z: 0
+    max:
+      x: 10
+      y: 74
+      z: 10

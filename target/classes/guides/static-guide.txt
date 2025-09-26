@@ -4,157 +4,102 @@
 # They are good for atmospheric effects that don't need smooth animation.
 # -------------------------------------------------------------------
 
+# Note: The applied settings in this guide are set by default in any particle shapes, even if it's omitted.
+# Format:
 static-particles:
-  point-particle-name: # (A variable name for the particle)
-    shape: 'POINT' # (Default if 'shape' is omitted)
-    type: 'FLAME' # (Default if 'type' is omitted)
-    period: 20 # (Default if 'period' is omitted)
-    world: 'world' # (Default if 'world' is omitted)
-    location: # (Default if 'location' is omitted)
+  default-settings:
+    shape: 'POINT' # This is the default if shape is omitted.
+    type: 'FLAME'
+    world: 'world'
+
+# I'll remove the default-settings after this first example.
+# If you want to modify the following options, be sure to add them and change the value.
+# The written value in the guide are also set by default, even if it's omitted.
+
+static-particles:
+  point-particle-name:
+    shape: 'POINT'
+    type: 'FLAME'
+    world: 'world'
+    location:
       x: 0
       y: 0
       z: 0
-    count: 1 # (Default if 'count' is omitted)
-    speed: 0 # (Default for POINT if 'speed' is omitted)
+    period: 20
+    count: 1
+    speed: 0
     offset-x: 0.0
     offset-y: 0.0
-    offset-z: 0.0 # (Default if offset-xyz is omitted)
-
-  dust-name:
-    type: 'DUST' # (This particle requires an 'options' section)
-    options:
-      color: '#FFFFFF' # (Default if 'color' is omitted)
-      size: 1.0 # (Default if 'size' is omitted)
-
-  dust_color_transition-name:
-    type: 'DUST_COLOR_TRANSITION'
-    options: # (Special options required for DUST_COLOR_TRANSITION)
-      from-color: "#FFFFFF" # (Default if 'from-color' is omitted)
-      to-color: "#000000" # (Default if 'to-color' is omitted)
-      size: 1.0
-
-  entity-effect-example:
-    type: 'ENTITY_EFFECT'
-    options:
-      color: '#00FF00' # A green color for the effect.
-
-  item-particle-example:
-    type: 'ITEM'
-    options:
-      material: "DIAMOND" # The material to show as a particle.
-
-  block-particle-example:
-    type: 'BLOCK' # Can be BLOCK_MARKER, DUST_PILLAR, BLOCK_CRUMBLE, FALLING_DUST, etc.
-    options:
-      material: "GLASS" # The block material to show as a particle.
-
-  visual-item-example:
-    type: 'VISUAL_ITEM'
-    options:
-      material: "DIAMOND_SWORD"
-      gravity: false
-    despawn-timer: 60 # 3 seconds. The lower the tick, the better.
-    period: 20 # Recommended: Set a higher period for VISUAL_ITEM to avoid entity spam. This is 1 item per second.
-    spread: 0 # How fast the velocity it will spread the item. Best with count setting.
-    # Note: `spread` setting only works in Static and Entity 'POINT' shape.
+    offset-z: 0.0
+    spread: 0.0 # Exclusively for 'VISUAL_ITEM' particle type.
 
   static_line-name:
     shape: 'STATIC_LINE'
-    type: 'FLAME'
-    density: 0.5 # (Default for STATIC_LINE if 'density' is omitted)
-    world: 'world'
-    start: # (Default if 'start' is omitted)
-      x: 0
-      y: 0
-      z: 0
-    end: # (Default if 'end' is omitted)
-      x: 0
-      y: 0
-      z: 0
+    density: 0.5
+    start: {x: 0, y: 0, z: 0}
+    end: {x: 0, y: 0, z: 0}
+# You can also do this format for any coordinates settings. The guide will do this way for easier readability.
 
   static_circle-name:
     shape: 'STATIC_CIRCLE'
-    type: 'FLAME'
-    radius: 2.0 # (Default for STATIC_CIRCLE if 'radius' is omitted)
-    particle-count: 30 # (Default for STATIC_CIRCLE if 'particle-count' is omitted)
-    pitch: 0.0 # (x-axis rotation. Default if 'pitch' is omitted)
-    yaw: 0.0 # (y-axis rotation. Default if 'yaw' is omitted)
-    world: 'world'
-    center: # (Default if 'center' is omitted)
-      x: 0
-      y: 0
-      z: 0
+    radius: 2.0
+    particle-count: 30
+    pitch: 0.0
+    yaw: 0.0
+    center: {x: 0, y: 0, z: 0}
 
   static_region-name:
     shape: 'STATIC_REGION'
-    type: 'FLAME'
-    particle-count: 50 # (Default for STATIC_REGION if 'particle-count' is omitted)
-    world: 'world'
-    corner1: # (Default if 'corner1' is omitted)
-      x: 0
-      y: 0
-      z: 0
-    corner2: # (Default if 'corner2' is omitted)
-      x: 0
-      y: 0
-      z: 0
+    particle-count: 50
+    region: example_region
+# You can create a region through `regions.yml`.
 
   static_cuboid-name:
     shape: 'STATIC_CUBOID'
-    type: 'FLAME'
-    width: 1.0  # (Default if 'width' is omitted)
-    height: 1.0 # (Default if 'height' is omitted)
-    depth: 1.0  # (Default if 'depth' is omitted)
-    # You can also use 'size' for a uniform cube. If 'size' is present, it will override width, height, and depth.
-    # size: 2.0
-    density: 5.0 # (Default for STATIC_CUBOID if 'density' is omitted)
-    world: 'world'
+    width: 1.0
+    height: 1.0
+    depth: 1.0
+# You can also use 'size' for a uniform cube. If 'size' is present, it will override width, height, and depth.
+    #size: 2.0
+    density: 5.0
     pitch: 0.0
     yaw: 0.0
-    center:
-      x: 0
-      y: 0
-      z: 0
+    center: {x: 0, y: 0, z: 0}
 
   static_star-name:
     shape: 'STATIC_STAR'
-    type: 'FLAME'
-    points: 5 # (Default if 'points' is omitted)
-    outer-radius: 3.0 # (Default for STATIC_STAR if 'outer-radius' is omitted)
-    inner-radius: 1.5 # (Default for STATIC_STAR if 'inner-radius' is omitted)
-    density: 10.0 # (Default for STATIC_STAR if 'density' is omitted)
+    points: 5
+    outer-radius: 3.0
+    inner-radius: 1.5
+    density: 10.0
     world: 'world'
     pitch: 0.0
     yaw: 0.0
-    center:
-      x: 0
-      y: 0
-      z: 0
+    center: {x: 0, y: 0, z: 0}
 
   random_burst_region-name:
     shape: 'RANDOM_BURST_REGION'
-    type: 'SMOKE'
-    world: 'world'
-    active-duration: 100    # How long the smoke appears in one spot (5 seconds)
-    cooldown-duration: 60   # How long it's gone before reappearing (3 seconds)
-    # Note: Higher active-duration than cooldown-duration means the particle spawn increases overtime but still has a cap. (5+3=8)
-    burst-radius: 1.5       # The size of the smoke cloud
-    spawn-rate: 5           # Particles to spawn in each burst.
-    spawn-period: 10        # Ticks to wait before spawning the next burst of particles.
-    corner1: {x: 0, y: 65, z: 0}
-    corner2: {x: 20, y: 70, z: 20}
+    active-duration: 100
+    cooldown-duration: 60
+# Note: Higher active-duration than cooldown-duration means the particle spawn increases overtime but still has a cap. (5+3=8)
+    burst-radius: 1.5
+    spawn-rate: 5
+    spawn-period: 10
+    region: example_region
 
   static_pyramid-name:
     shape: 'STATIC_PYRAMID'
-    type: 'FLAME'
-    base-size: 2.0 # (Radius of the base polygon. Default is 2.0)
-    height: 3.0 # (Default is 3.0)
-    sides: 4 # (Number of sides for the base. 3=triangle, 4=square, etc. Default is 4)
-    density: 5.0 # (Default is 5.0)
+    base-size: 2.0
+    height: 3.0
+    sides: 4
+    density: 5.0
     pitch: 0.0
     yaw: 0.0
-    world: 'world'
-    center:
-      x: 0
-      y: 0
-      z: 0
+    center: {x: 0, y: 0, z: 0}
+
+  static-cone-name:
+    shape: STATIC_CONE
+    center: {x: 0, y: 0, z: 0}
+    radius: 2.5
+    height: 4
+    density: 15

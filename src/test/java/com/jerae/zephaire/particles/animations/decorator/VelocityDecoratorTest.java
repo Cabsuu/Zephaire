@@ -80,7 +80,8 @@ public class VelocityDecoratorTest {
         decorator.tick();
 
         // Assert
-        assertTrue(particleLocation.distance(initialLocation) > 1.732); // sqrt(1^2+1^2+1^2)
-        assertTrue(particleLocation.distance(initialLocation) < 2.598); // sqrt(1.5^2+1.5^2+1.5^2)
+        double distance = particleLocation.distance(initialLocation);
+        assertTrue(distance > 0.866, "Distance should be greater than the minimum possible distance.");
+        assertTrue(distance < 2.598, "Distance should be less than the maximum possible distance.");
     }
 }

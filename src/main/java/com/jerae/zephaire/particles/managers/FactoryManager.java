@@ -4,6 +4,7 @@ import com.jerae.zephaire.particles.factories.AnimatedParticleFactory;
 import com.jerae.zephaire.particles.factories.EntityParticleFactory;
 import com.jerae.zephaire.particles.factories.StaticParticleFactory;
 import com.jerae.zephaire.particles.factories.animated.*;
+import com.jerae.zephaire.particles.factories.animated.AnimatedOrbitalParticleFactory;
 import com.jerae.zephaire.particles.factories.conditions.*;
 import com.jerae.zephaire.particles.factories.conditions.AnvilConditionFactory;
 import com.jerae.zephaire.particles.factories.conditions.EnchantConditionFactory;
@@ -15,9 +16,11 @@ import com.jerae.zephaire.particles.factories.decorators.VelocityDecoratorFactor
 import com.jerae.zephaire.particles.factories.entity.EntityCircleParticleFactory;
 import com.jerae.zephaire.particles.factories.entity.EntityPointParticleFactory;
 import com.jerae.zephaire.particles.factories.entity.EntitySpiralParticleFactory;
+import com.jerae.zephaire.particles.factories.entity.OrbitalParticleFactory;
 import com.jerae.zephaire.particles.factories.entity.EntityStarParticleFactory;
 import com.jerae.zephaire.particles.factories.entity.EntityVortexParticleFactory;
 import com.jerae.zephaire.particles.factories.statics.*;
+import com.jerae.zephaire.regions.RegionManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,8 +36,10 @@ public class FactoryManager {
     private final Map<String, ConditionFactory> conditionFactories = new HashMap<>();
     private final Map<String, DecoratorFactory> decoratorFactories = new HashMap<>();
     private final Map<String, EntityParticleFactory> entityFactories = new HashMap<>();
+    private final RegionManager regionManager;
 
-    public FactoryManager() {
+    public FactoryManager(RegionManager regionManager) {
+        this.regionManager = regionManager;
         registerStaticFactories();
         registerAnimatedFactories();
         registerConditionFactories();
@@ -47,10 +52,10 @@ public class FactoryManager {
         staticFactories.put("STATIC_CIRCLE", new StaticCircleFactory());
         staticFactories.put("STATIC_CUBOID", new StaticCuboidFactory());
         staticFactories.put("STATIC_LINE", new StaticLineFactory());
-        staticFactories.put("STATIC_REGION", new StaticRegionFactory());
+        staticFactories.put("STATIC_REGION", new StaticRegionFactory(regionManager));
         staticFactories.put("STATIC_STAR", new StaticStarFactory());
         staticFactories.put("STATIC_CURVE", new StaticCurveFactory());
-        staticFactories.put("RANDOM_BURST_REGION", new RandomBurstRegionFactory());
+        staticFactories.put("RANDOM_BURST_REGION", new RandomBurstRegionFactory(regionManager));
         staticFactories.put("STATIC_PYRAMID", new StaticPyramidFactory());
         staticFactories.put("STATIC_CONE", new StaticConeFactory());
     }
@@ -66,6 +71,7 @@ public class FactoryManager {
         animatedFactories.put("MOVING_STAR", new MovingStarParticleFactory());
         animatedFactories.put("VORTEX", new VortexParticleFactory());
         animatedFactories.put("SPIRAL", new AnimatedSpiralParticleFactory());
+        animatedFactories.put("ORBITAL", new AnimatedOrbitalParticleFactory());
     }
 
     private void registerConditionFactories() {
@@ -78,6 +84,7 @@ public class FactoryManager {
         conditionFactories.put("ANVIL", new AnvilConditionFactory());
         conditionFactories.put("ENCHANT", new EnchantConditionFactory());
         conditionFactories.put("ELYTRA", new ElytraConditionFactory());
+        conditionFactories.put("PLAYER_STAT", new PlayerStatConditionFactory());
     }
 
     private void registerDecoratorFactories() {
@@ -93,6 +100,7 @@ public class FactoryManager {
         entityFactories.put("VORTEX", new EntityVortexParticleFactory());
         entityFactories.put("POINT", new EntityPointParticleFactory());
         entityFactories.put("SPIRAL", new EntitySpiralParticleFactory());
+        entityFactories.put("ORBITAL", new OrbitalParticleFactory());
     }
 
     public Optional<StaticParticleFactory> getStaticFactory(String shape) {

@@ -32,6 +32,8 @@ public class EntityCircleParticleTask implements EntityParticleTask {
     private final int despawnTimer;
     private final boolean hasGravity;
     private final int loopDelay;
+    private final int duration;
+    private int ticksLived = 0;
 
     private double angle = 0;
     private int tickCounter = 0;
@@ -45,7 +47,7 @@ public class EntityCircleParticleTask implements EntityParticleTask {
     private final boolean testMode;
     private final boolean inheritEntityVelocity;
 
-    public EntityCircleParticleTask(String effectName, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay, boolean testMode, boolean inheritEntityVelocity) {
+    public EntityCircleParticleTask(String effectName, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay, boolean testMode, boolean inheritEntityVelocity, int duration) {
         this.effectName = effectName;
         this.particle = particle;
         this.radius = radius;
@@ -67,6 +69,7 @@ public class EntityCircleParticleTask implements EntityParticleTask {
         this.relativePos = new Vector();
         this.testMode = testMode;
         this.inheritEntityVelocity = inheritEntityVelocity;
+        this.duration = duration;
     }
 
     @Override
@@ -74,7 +77,7 @@ public class EntityCircleParticleTask implements EntityParticleTask {
         return new EntityCircleParticleTask(
                 this.effectName, this.particle, this.radius, this.speed,
                 this.particleCount, this.options, this.pitch, this.yaw,
-                this.conditionManager, this.collisionEnabled, this.offset, this.target, this.period, this.spawnBehavior, this.despawnTimer, this.hasGravity, this.loopDelay, this.testMode, this.inheritEntityVelocity
+                this.conditionManager, this.collisionEnabled, this.offset, this.target, this.period, this.spawnBehavior, this.despawnTimer, this.hasGravity, this.loopDelay, this.testMode, this.inheritEntityVelocity, this.duration
         );
     }
 
@@ -85,6 +88,11 @@ public class EntityCircleParticleTask implements EntityParticleTask {
 
     @Override
     public void tick(Entity entity) {
+        if (isDone()) {
+            return;
+        }
+        ticksLived++;
+
         if (!conditionManager.allConditionsMet(entity.getLocation())) return;
 
         // --- Spawn Behavior ---
@@ -203,5 +211,20 @@ public class EntityCircleParticleTask implements EntityParticleTask {
     @Override
     public ConditionManager getConditionManager() {
         return conditionManager;
+    }
+
+    @Override
+    public boolean isDone() {
+        return duration != -1 && ticksLived >= duration;
+    }
+
+    @Override
+    public int getDuration() {
+        return duration;
+    }
+
+    @Override
+    public SpawnBehavior getSpawnBehavior() {
+        return spawnBehavior;
     }
 }

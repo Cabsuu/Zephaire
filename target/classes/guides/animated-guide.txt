@@ -4,17 +4,22 @@
 # and visual effects like color changes.
 # -------------------------------------------------------------------
 
+# Note: The applied settings in this guide are set by default, even if it's omitted.
+  default:
+    type: 'FLAME'
+    loop-delay: 0
+
 animated-particles:
   animated_circle-name:
     shape: 'CIRCLE'
     type: 'FLAME'
-    particle-count: 20 # (Default for CIRCLE if 'particle-count' is omitted)
-    radius: 1.0 # (Default for CIRCLE if 'radius' is omitted)
-    speed: 0.1 # (Default for CIRCLE if 'speed' is omitted)
-    period: 1 # (Default for animated particles if 'period' is omitted)
+    particle-count: 20
+    radius: 1.0
+    speed: 0.1
+    period: 1
     pitch: 0.0
     yaw: 0.0
-    loop-delay: 0 # This is only available to all animated and entity particles.
+    loop-delay: 0
     world: 'world'
     center:
       x: 0
@@ -123,3 +128,17 @@ animated-particles:
       x: 0
       y: 65
       z: 0
+
+  my-animated-spiral:
+    shape: SPIRAL
+    world: world
+    base:
+      x: 20
+      y: 70
+      z: 20
+    start-radius: 0.5
+    end-radius: 4
+    height: 8
+    speed: 0.2
+    vertical-speed: 0.1
+    particle-type: END_ROD

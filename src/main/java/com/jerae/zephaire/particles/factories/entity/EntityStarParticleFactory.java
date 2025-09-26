@@ -31,7 +31,8 @@ public class EntityStarParticleFactory implements EntityParticleFactory {
         boolean collisionEnabled = CollisionManager.shouldCollide(section);
         int despawnTimer = section.getInt("despawn-timer", 100);
         boolean hasGravity = section.getBoolean("options.gravity", false);
+        int duration = section.getInt("duration", -1);
 
-        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, manager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce, spawnBehavior, despawnTimer, hasGravity, loopDelay, inheritEntityVelocity);
+        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, manager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce, spawnBehavior, despawnTimer, hasGravity, loopDelay, inheritEntityVelocity, duration);
     }
 }

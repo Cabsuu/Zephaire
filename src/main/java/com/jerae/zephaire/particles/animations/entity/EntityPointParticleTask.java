@@ -32,12 +32,14 @@ public class EntityPointParticleTask implements EntityParticleTask {
     private final boolean inheritEntityVelocity;
     private final double spread;
     private final int particleCount;
+    private final int duration;
+    private int ticksLived = 0;
 
     private int tickCounter = 0;
     private int loopDelayCounter = 0;
     private Location lastLocation;
 
-    public EntityPointParticleTask(String effectName, Particle particle, Object options, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay, boolean debug, boolean inheritEntityVelocity, double spread, int particleCount) {
+    public EntityPointParticleTask(String effectName, Particle particle, Object options, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay, boolean debug, boolean inheritEntityVelocity, double spread, int particleCount, int duration) {
         this.effectName = effectName;
         this.particle = particle;
         this.options = options;
@@ -54,11 +56,12 @@ public class EntityPointParticleTask implements EntityParticleTask {
         this.inheritEntityVelocity = inheritEntityVelocity;
         this.spread = spread;
         this.particleCount = particleCount;
+        this.duration = duration;
     }
 
     @Override
     public EntityParticleTask newInstance() {
-        return new EntityPointParticleTask(effectName, particle, options, conditionManager, collisionEnabled, offset, target, period, spawnBehavior, despawnTimer, hasGravity, loopDelay, debug, inheritEntityVelocity, spread, particleCount);
+        return new EntityPointParticleTask(effectName, particle, options, conditionManager, collisionEnabled, offset, target, period, spawnBehavior, despawnTimer, hasGravity, loopDelay, debug, inheritEntityVelocity, spread, particleCount, duration);
     }
 
     @Override
@@ -68,6 +71,11 @@ public class EntityPointParticleTask implements EntityParticleTask {
 
     @Override
     public void tick(Entity entity) {
+        if (isDone()) {
+            return;
+        }
+        ticksLived++;
+
         if (!conditionManager.allConditionsMet(entity.getLocation())) return;
         Location currentLocation = entity.getLocation();
 
@@ -168,5 +176,20 @@ public class EntityPointParticleTask implements EntityParticleTask {
     @Override
     public ConditionManager getConditionManager() {
         return conditionManager;
+    }
+
+    @Override
+    public boolean isDone() {
+        return duration != -1 && ticksLived >= duration;
+    }
+
+    @Override
+    public int getDuration() {
+        return duration;
+    }
+
+    @Override
+    public SpawnBehavior getSpawnBehavior() {
+        return spawnBehavior;
     }
 }

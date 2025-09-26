@@ -5,7 +5,6 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.junit.jupiter.api.Test;
 
-import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -1,4 +1,13 @@
+# -------------------------------------------------------------------
+# APPLIED DECORATORS FOR THE PARTICLE TASKS
+# The particle tasks will have additional settings
+# Decorators are additional settings for the particle tasks.
+# -------------------------------------------------------------------
+
+# Note: The applied settings in this guide are set by default, even if it's omitted.
+
 # --- EXAMPLE OF A DECORATOR ---
+static / animated / entity-particles:
   particle-name:
     shape: 'POINT'
     ...

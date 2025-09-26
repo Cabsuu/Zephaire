@@ -5,7 +5,6 @@ import com.jerae.zephaire.particles.conditions.EnchantCondition;
 import com.jerae.zephaire.particles.conditions.ParticleCondition;
 import com.jerae.zephaire.particles.managers.FactoryManager;
 import org.bukkit.World;
-import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.Map;
 
