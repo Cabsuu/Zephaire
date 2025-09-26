@@ -39,9 +39,9 @@ static / animated / entity-particles:
     options:
       delay: 0
 
-    type: 'TRAIL' # Not working at the moment
+    type: 'TINTED_LEAVES'
     options:
-      duration: 20
+      color: '#FFFFFF'
 
     type: 'VIBRATION'
     options:

@@ -99,7 +99,6 @@
 - SWEEP_ATTACK
 - TINTED_LEAVES
 - TOTEM_OF_UNDYING
-- TRAIL (Has extra configurations. Check out `guides/particle-type-guide.txt` for instructions.)
 - TRIAL_OMEN
 - TRIAL_SPAWNER_DIRECTION
 - TRIAL_SPAWNER_DIRECTION_OMINOUS

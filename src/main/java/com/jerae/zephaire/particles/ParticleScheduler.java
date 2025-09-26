@@ -49,13 +49,15 @@ public class ParticleScheduler extends BukkitRunnable {
                             data.location.getWorld().spawnParticle(data.particle, data.location, 1, data.vibration);
                         } else if (data.particle == Particle.SCULK_CHARGE) {
                             try {
+                                // Paper-specific API for SculkCharge
                                 Class<?> sculkChargeClass = Class.forName("org.bukkit.Particle$SculkCharge");
                                 java.lang.reflect.Constructor<?> constructor = sculkChargeClass.getConstructor(float.class);
-                                Object sculkChargeOptions = constructor.newInstance((Float) data.data);
+                                Object sculkChargeOptions = constructor.newInstance(data.sculkChargeRoll);
                                 data.location.getWorld().spawnParticle(data.particle, data.location, 1, 0, 0, 0, 0, sculkChargeOptions);
                             } catch (Exception e) {
-                                // Fallback for non-Paper servers
-                                data.location.getWorld().spawnParticle(data.particle, data.location, 1);
+                                // Fallback for other server types, pass the float directly.
+                                // This might not display the roll animation, but it prevents a crash.
+                                data.location.getWorld().spawnParticle(data.particle, data.location, 1, 0, 0, 0, 0, data.sculkChargeRoll);
                             }
                         } else if (data.particle == Particle.TRAIL) {
                             if (data.data instanceof java.util.Map) {
@@ -88,10 +90,14 @@ public class ParticleScheduler extends BukkitRunnable {
                                 }
                             }
                         } else if (data.particle != null) {
+                            Object particleData = data.data;
+                            if (particleData instanceof Number && data.particle.getDataType().equals(Float.class)) {
+                                particleData = ((Number) particleData).floatValue();
+                            }
                             data.location.getWorld().spawnParticle(
                                     data.particle, data.location, data.count,
                                     data.offsetX, data.offsetY, data.offsetZ,
-                                    data.speed, data.data
+                                    data.speed, particleData
                             );
                         }
                         break;

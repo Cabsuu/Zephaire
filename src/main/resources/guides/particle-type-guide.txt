@@ -43,10 +43,6 @@ static / animated / entity-particles:
     options:
       color: '#FFFFFF'
 
-    type: 'TRAIL' # Not working at the moment
-    options:
-      duration: 20
-
     type: 'VIBRATION'
     options:
       destination: {x: 0, y: 0, z: 0}
