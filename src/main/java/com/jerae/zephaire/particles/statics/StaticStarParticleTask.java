@@ -36,8 +36,9 @@ public class StaticStarParticleTask extends BukkitRunnable implements Debuggable
     private final Vector[] vertices;
     private final int despawnTimer;
     private final boolean hasGravity;
+    private final Vector rotation;
 
-    public StaticStarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity) {
+    public StaticStarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, Vector rotation) {
         this.center = center;
         this.particle = particle;
         this.particleOptions = options;
@@ -53,11 +54,12 @@ public class StaticStarParticleTask extends BukkitRunnable implements Debuggable
         this.vertices = new Vector[this.points * 2];
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
+        this.rotation = rotation;
         for (int i = 0; i < vertices.length; i++) {
             vertices[i] = new Vector();
         }
 
-        ParticleDrawingUtils.drawStar(center, points, outerRadius, innerRadius, 0, pitch, yaw, vertices);
+        ParticleDrawingUtils.drawStar(center, points, outerRadius, innerRadius, 0, rotation, vertices);
 
         for (int i = 0; i < points * 2; i++) {
             Vector start = vertices[i];

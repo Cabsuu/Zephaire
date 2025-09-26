@@ -6,7 +6,6 @@ import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.data.EntityTarget;
 import com.jerae.zephaire.particles.data.SpawnBehavior;
-import com.jerae.zephaire.particles.util.ParticleDrawingUtils;
 import com.jerae.zephaire.particles.util.VectorUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -41,6 +40,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
     private final int loopDelay;
     private final boolean inheritEntityVelocity;
     private final int duration;
+    private final Vector rotation;
     private int ticksLived = 0;
 
 
@@ -58,7 +58,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
     private final Vector currentLinePoint = new Vector();
     private final Location particleLoc;
 
-    public EntityStarParticleTask(String effectName, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, double height, double verticalSpeed, boolean bounce, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay, boolean inheritEntityVelocity, int duration) {
+    public EntityStarParticleTask(String effectName, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, double height, double verticalSpeed, boolean bounce, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay, boolean inheritEntityVelocity, int duration, Vector rotation) {
         this.effectName = effectName;
         this.particle = particle;
         this.points = Math.max(2, points);
@@ -83,6 +83,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
         this.loopDelay = loopDelay;
         this.inheritEntityVelocity = inheritEntityVelocity;
         this.duration = duration;
+        this.rotation = rotation;
         this.vertices = new Vector[this.points * 2];
         for (int i = 0; i < vertices.length; i++) {
             vertices[i] = new Vector();
@@ -92,7 +93,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
 
     @Override
     public EntityParticleTask newInstance() {
-        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, conditionManager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce, this.spawnBehavior, despawnTimer, hasGravity, loopDelay, inheritEntityVelocity, duration);
+        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, conditionManager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce, this.spawnBehavior, despawnTimer, hasGravity, loopDelay, inheritEntityVelocity, duration, rotation);
     }
 
     @Override
@@ -186,7 +187,7 @@ public class EntityStarParticleTask implements EntityParticleTask {
             double angle = rotationAngle + (i * Math.PI / points);
             double radius = (i % 2 == 0) ? outerRadius : innerRadius;
             reusableVertex.setX(Math.cos(angle) * radius).setY(currentYOffset).setZ(Math.sin(angle) * radius);
-            VectorUtils.rotateVector(reusableVertex, pitch, yaw, vertices[i]);
+            VectorUtils.rotateVector(reusableVertex, rotation, vertices[i]);
         }
 
         // Draw lines between the vertices

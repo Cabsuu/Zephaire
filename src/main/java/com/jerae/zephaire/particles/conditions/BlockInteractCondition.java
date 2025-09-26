@@ -37,33 +37,29 @@ public class BlockInteractCondition implements ParticleCondition {
 
     @Override
     public void tick() {
-        // Tick logic is handled inside check() for simplicity.
+        if (activeTicksRemaining > 0) {
+            activeTicksRemaining--;
+        }
     }
 
     @Override
     public boolean check(Location referenceLocation) {
-        // In trigger mode, manage the internal, temporary state.
         if (wasTriggered) {
-            wasTriggered = false; // Consume the trigger immediately.
-            if (triggerOnce && hasFired) return false;
-            hasFired = true;
+            wasTriggered = false; // Consume the trigger
             return true;
         }
-
-        if (activeTicksRemaining > 0) {
-            activeTicksRemaining--;
-            if (triggerOnce) hasFired = true;
-            return true;
-        }
-        return false;
+        return activeTicksRemaining > 0;
     }
 
     /**
      * Called by an event listener to trigger the non-persistent effect.
      */
     public void trigger() {
-        if (triggerOnce && hasFired) {
-            return;
+        if (triggerOnce && hasFired) return;
+        if (activeTicksRemaining > 0) return; // Don't re-trigger if already active
+
+        if (triggerOnce) {
+            hasFired = true;
         }
 
         if (repeatDuration > 0) {

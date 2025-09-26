@@ -9,7 +9,7 @@ import org.bukkit.util.Vector;
 
 public class ParticleDrawingUtils {
 
-    public static void drawStar(Location center, int points, double outerRadius, double innerRadius, double rotationAngle, double pitch, double yaw, Vector[] vertices) {
+    public static void drawStar(Location center, int points, double outerRadius, double innerRadius, double rotationAngle, Vector rotation, Vector[] vertices) {
         int totalVertices = points * 2;
         Vector reusableVertex = new Vector();
 
@@ -17,7 +17,7 @@ public class ParticleDrawingUtils {
             double angle = rotationAngle + (i * Math.PI / points);
             double radius = (i % 2 == 0) ? outerRadius : innerRadius;
             reusableVertex.setX(Math.cos(angle) * radius).setY(0).setZ(Math.sin(angle) * radius);
-            VectorUtils.rotateVector(reusableVertex, pitch, yaw, vertices[i]);
+            VectorUtils.rotateVector(reusableVertex, rotation, vertices[i]);
         }
     }
 

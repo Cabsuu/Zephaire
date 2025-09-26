@@ -8,6 +8,7 @@ import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 public class StaticStarFactory extends AbstractStaticParticleFactory {
     @Override
@@ -29,6 +30,14 @@ public class StaticStarFactory extends AbstractStaticParticleFactory {
         int despawnTimer = section.getInt("despawn-timer", 100);
         boolean hasGravity = section.getBoolean("options.gravity", false);
 
-        return new StaticStarParticleTask(center, particle, points, outerRadius, innerRadius, density, options, pitch, yaw, manager, collisionEnabled, despawnTimer, hasGravity);
+        ConfigurationSection rotationSection = section.getConfigurationSection("rotation");
+        Vector rotation = new Vector(0,0,0);
+        if (rotationSection != null) {
+            rotation.setX(rotationSection.getDouble("x", 0));
+            rotation.setY(rotationSection.getDouble("y", 0));
+            rotation.setZ(rotationSection.getDouble("z", 0));
+        }
+
+        return new StaticStarParticleTask(center, particle, points, outerRadius, innerRadius, density, options, pitch, yaw, manager, collisionEnabled, despawnTimer, hasGravity, rotation);
     }
 }

@@ -27,6 +27,7 @@ public class StarParticleTask implements AnimatedParticle {
     private final double yaw;
     private final ConditionManager conditionManager;
     private final boolean collisionEnabled;
+    private final Vector rotation;
     private final int despawnTimer;
     private final boolean hasGravity;
     private final int loopDelay;
@@ -43,7 +44,7 @@ public class StarParticleTask implements AnimatedParticle {
     private final Vector rotatedPos = new Vector();
 
 
-    public StarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, int loopDelay) {
+    public StarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, int loopDelay, Vector rotation) {
         this.center = center;
         this.particle = particle;
         this.points = Math.max(2, points); // A star must have at least 2 points
@@ -59,6 +60,7 @@ public class StarParticleTask implements AnimatedParticle {
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
         this.loopDelay = loopDelay;
+        this.rotation = rotation;
         this.vertices = new Vector[this.points * 2];
         for (int i = 0; i < vertices.length; i++) {
             vertices[i] = new Vector();
@@ -93,7 +95,7 @@ public class StarParticleTask implements AnimatedParticle {
             double radius = (i % 2 == 0) ? outerRadius : innerRadius;
             // --- PERFORMANCE: Use the reusable vector instead of creating a new one ---
             reusableVertex.setX(Math.cos(angle) * radius).setY(0).setZ(Math.sin(angle) * radius);
-            VectorUtils.rotateVector(reusableVertex, pitch, yaw, vertices[i]);
+            VectorUtils.rotateVector(reusableVertex, rotation, vertices[i]);
         }
 
         // Draw lines between the vertices to form the star's outline

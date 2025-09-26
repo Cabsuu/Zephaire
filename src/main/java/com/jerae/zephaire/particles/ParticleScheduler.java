@@ -2,6 +2,7 @@ package com.jerae.zephaire.particles;
 
 import com.jerae.zephaire.Zephaire;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
@@ -11,8 +12,6 @@ import org.bukkit.util.Vector;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import org.bukkit.Sound;
-
 
 public class ParticleScheduler extends BukkitRunnable {
 
@@ -50,23 +49,43 @@ public class ParticleScheduler extends BukkitRunnable {
                             data.location.getWorld().spawnParticle(data.particle, data.location, 1, data.vibration);
                         } else if (data.particle == Particle.SCULK_CHARGE) {
                             try {
-                                Class<?> sculkChargeClass = Class.forName("com.destroystokyo.paper.particle.Particle$SculkCharge");
+                                Class<?> sculkChargeClass = Class.forName("org.bukkit.Particle$SculkCharge");
                                 java.lang.reflect.Constructor<?> constructor = sculkChargeClass.getConstructor(float.class);
-                                Object sculkChargeOptions = constructor.newInstance(data.sculkChargeRoll);
+                                Object sculkChargeOptions = constructor.newInstance((Float) data.data);
                                 data.location.getWorld().spawnParticle(data.particle, data.location, 1, 0, 0, 0, 0, sculkChargeOptions);
                             } catch (Exception e) {
                                 // Fallback for non-Paper servers
                                 data.location.getWorld().spawnParticle(data.particle, data.location, 1);
                             }
                         } else if (data.particle == Particle.TRAIL) {
-                            try {
-                                Class<?> trailClass = Class.forName("org.bukkit.Particle$Trail");
-                                java.lang.reflect.Constructor<?> constructor = trailClass.getConstructor(int.class);
-                                Object trailOptions = constructor.newInstance(data.trailDuration);
-                                data.location.getWorld().spawnParticle(data.particle, data.location, 1, 0, 0, 0, 0, trailOptions);
-                            } catch (Exception e) {
-                                // Fallback for non-Paper servers
-                                data.location.getWorld().spawnParticle(data.particle, data.location, 1);
+                            if (data.data instanceof java.util.Map) {
+                                @SuppressWarnings("unchecked")
+                                java.util.Map<String, Object> map = (java.util.Map<String, Object>) data.data;
+                                Vector target = (Vector) map.get("target");
+                                Particle.DustOptions dustOptions = (Particle.DustOptions) map.get("dust");
+
+                                Location currentLocation = data.location.clone();
+                                Vector direction = target.clone().subtract(currentLocation.toVector());
+                                double distance = direction.length();
+
+                                if (distance > 0) {
+                                    direction.normalize().multiply(0.25); // Step vector
+
+                                    for (double i = 0; i < distance; i += 0.25) {
+                                        currentLocation.add(direction);
+                                        currentLocation.getWorld().spawnParticle(Particle.DUST, currentLocation, 1, dustOptions);
+                                    }
+                                }
+                            } else {
+                                try {
+                                    Class<?> trailClass = Class.forName("org.bukkit.Particle$Trail");
+                                    java.lang.reflect.Constructor<?> constructor = trailClass.getConstructor(int.class);
+                                    Object trailOptions = constructor.newInstance((Integer) data.data);
+                                    data.location.getWorld().spawnParticle(data.particle, data.location, 1, 0, 0, 0, 0, trailOptions);
+                                } catch (Exception e) {
+                                    // Fallback for non-Paper servers
+                                    data.location.getWorld().spawnParticle(data.particle, data.location, 1);
+                                }
                             }
                         } else if (data.particle != null) {
                             data.location.getWorld().spawnParticle(
@@ -107,4 +126,3 @@ public class ParticleScheduler extends BukkitRunnable {
         }
     }
 }
-

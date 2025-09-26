@@ -11,7 +11,6 @@ import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
@@ -51,7 +50,7 @@ public class EntityParticleManager {
                 tick();
             }
         };
-        animationTask.runTaskTimerAsynchronously(plugin, 0L, 1L);
+        animationTask.runTaskTimer(plugin, 0L, 1L);
     }
 
     public void addEffectTemplate(String name, EntityParticleTask task) {

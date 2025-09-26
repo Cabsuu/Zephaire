@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.util.Vector;
 
 public class StarParticleFactory extends AbstractAnimatedParticleFactory {
     @Override
@@ -31,6 +32,14 @@ public class StarParticleFactory extends AbstractAnimatedParticleFactory {
         int despawnTimer = section.getInt("despawn-timer", 100);
         boolean hasGravity = section.getBoolean("options.gravity", false);
 
-        return new StarParticleTask(center, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, manager, collisionEnabled, despawnTimer, hasGravity, loopDelay);
+        ConfigurationSection rotationSection = section.getConfigurationSection("rotation");
+        Vector rotation = new Vector(0,0,0);
+        if (rotationSection != null) {
+            rotation.setX(rotationSection.getDouble("x", 0));
+            rotation.setY(rotationSection.getDouble("y", 0));
+            rotation.setZ(rotationSection.getDouble("z", 0));
+        }
+
+        return new StarParticleTask(center, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, manager, collisionEnabled, despawnTimer, hasGravity, loopDelay, rotation);
     }
 }

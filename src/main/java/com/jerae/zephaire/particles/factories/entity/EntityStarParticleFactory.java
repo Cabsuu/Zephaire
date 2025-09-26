@@ -33,6 +33,14 @@ public class EntityStarParticleFactory implements EntityParticleFactory {
         boolean hasGravity = section.getBoolean("options.gravity", false);
         int duration = section.getInt("duration", -1);
 
-        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, manager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce, spawnBehavior, despawnTimer, hasGravity, loopDelay, inheritEntityVelocity, duration);
+        ConfigurationSection rotationSection = section.getConfigurationSection("rotation");
+        Vector rotation = new Vector(0,0,0);
+        if (rotationSection != null) {
+            rotation.setX(rotationSection.getDouble("x", 0));
+            rotation.setY(rotationSection.getDouble("y", 0));
+            rotation.setZ(rotationSection.getDouble("z", 0));
+        }
+
+        return new EntityStarParticleTask(effectName, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, manager, collisionEnabled, offset, target, period, height, verticalSpeed, bounce, spawnBehavior, despawnTimer, hasGravity, loopDelay, inheritEntityVelocity, duration, rotation);
     }
 }

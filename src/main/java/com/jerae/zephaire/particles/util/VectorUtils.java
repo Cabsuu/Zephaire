@@ -59,4 +59,48 @@ public final class VectorUtils {
 
         return result;
     }
+
+    /**
+     * Rotates a vector around the X (pitch), Y (yaw), and Z (roll) axes.
+     *
+     * @param v The vector to rotate.
+     * @param rotation The vector containing pitch (x), yaw (y), and roll (z) in degrees.
+     * @param result The Vector object to store the result in.
+     * @return The same result Vector object with the rotated values.
+     */
+    public static Vector rotateVector(Vector v, Vector rotation, Vector result) {
+        double pitchRad = Math.toRadians(rotation.getX());
+        double yawRad = Math.toRadians(rotation.getY());
+        double rollRad = Math.toRadians(rotation.getZ());
+
+        double cosPitch = Math.cos(pitchRad);
+        double sinPitch = Math.sin(pitchRad);
+        double cosYaw = Math.cos(yawRad);
+        double sinYaw = Math.sin(yawRad);
+        double cosRoll = Math.cos(rollRad);
+        double sinRoll = Math.sin(rollRad);
+
+        // Initial coordinates
+        double x = v.getX();
+        double y = v.getY();
+        double z = v.getZ();
+
+        // Yaw (Y-axis rotation)
+        double x1 = x * cosYaw - z * sinYaw;
+        double z1 = x * sinYaw + z * cosYaw;
+
+        // Pitch (X-axis rotation)
+        double y2 = y * cosPitch - z1 * sinPitch;
+        double z2 = y * sinPitch + z1 * cosPitch;
+
+        // Roll (Z-axis rotation)
+        double x3 = x1 * cosRoll - y2 * sinRoll;
+        double y3 = x1 * sinRoll + y2 * cosRoll;
+
+        result.setX(x3);
+        result.setY(y3);
+        result.setZ(z2);
+
+        return result;
+    }
 }
