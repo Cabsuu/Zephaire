@@ -45,8 +45,6 @@ public class ParticleDrawingUtils {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, particleLoc, (org.bukkit.Vibration) options));
                 } else if (particle == Particle.SCULK_CHARGE && options instanceof Float) {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, particleLoc, (Float) options));
-                } else if (particle == Particle.TRAIL && options instanceof Integer) {
-                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, particleLoc, (Integer) options, hasGravity));
                 } else {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, particleLoc, 1, 0, 0, 0, 0, options));
                 }

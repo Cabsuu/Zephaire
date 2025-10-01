@@ -33,6 +33,7 @@ public class VortexParticleTask implements AnimatedParticle {
     private final double speed;
     private final int particleCount;
     private final int loopDelay;
+    private final int period;
 
     private final List<Location> particles = new ArrayList<>();
     private final List<Vector> velocities = new ArrayList<>();
@@ -42,9 +43,10 @@ public class VortexParticleTask implements AnimatedParticle {
     private final Vector rotational = new Vector();
 
     private int loopDelayCounter = 0;
+    private int tickCounter = 0;
 
 
-    public VortexParticleTask(Location center, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, int loopDelay) {
+    public VortexParticleTask(Location center, Particle particle, double radius, double height, double speed, int particleCount, Object options, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, int loopDelay, int period) {
         this.center = center;
         this.particle = particle;
         this.radius = radius;
@@ -58,6 +60,7 @@ public class VortexParticleTask implements AnimatedParticle {
         this.hasGravity = hasGravity;
         this.world = center.getWorld();
         this.loopDelay = loopDelay;
+        this.period = period;
     }
 
     @Override
@@ -70,6 +73,12 @@ public class VortexParticleTask implements AnimatedParticle {
             loopDelayCounter--;
             return;
         }
+
+        tickCounter++;
+        if (tickCounter < period) {
+            return;
+        }
+        tickCounter = 0;
 
         // Initialize particles if the list is empty
         if (particles.isEmpty()) {
@@ -137,8 +146,6 @@ public class VortexParticleTask implements AnimatedParticle {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, p, (org.bukkit.Vibration) options));
                 } else if (particle == Particle.SCULK_CHARGE && options instanceof Float) {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, p, (Float) options));
-                } else if (particle == Particle.TRAIL && options instanceof Integer) {
-                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, p, (Integer) options, hasGravity));
                 } else {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, p, 1, 0, 0, 0, 0, options));
                 }

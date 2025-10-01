@@ -2,8 +2,6 @@ package com.jerae.zephaire.particles.factories.animated;
 
 import com.jerae.zephaire.particles.animations.AnimatedOrbitalParticleTask;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
-import com.jerae.zephaire.particles.util.ConfigValidator;
-import com.jerae.zephaire.particles.util.ParticleUtils;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
@@ -19,12 +17,13 @@ public class AnimatedOrbitalParticleFactory extends AbstractAnimatedParticleFact
             return null;
         }
 
-        Particle particle = ConfigValidator.getParticleType(section, "particle", "REDSTONE");
+        Particle particle = parseParticle(section);
         int orbitingParticles = section.getInt("orbiting-particles", 5);
         double radius = section.getDouble("radius", 2.0);
         double speed = section.getDouble("speed", 0.1);
-        Object options = ParticleUtils.parseParticleOptions(particle, section.getConfigurationSection("options"));
+        int period = section.getInt("period", 1);
+        Object options = parseOptions(particle, section);
 
-        return new AnimatedOrbitalParticleTask(center, particle, orbitingParticles, radius, speed, options, manager);
+        return new AnimatedOrbitalParticleTask(center, particle, orbitingParticles, radius, speed, options, manager, period);
     }
 }

@@ -131,6 +131,7 @@ public final class Zephaire extends JavaPlugin {
     public void reloadPluginConfig() {
         // 1. Reload the config.yml file from disk and initialize performance settings.
         reloadConfig();
+        dataManager.load();
         PerformanceManager.initialize(getConfig());
         this.disabledWorlds = getConfig().getStringList("disabled-worlds");
         this.staticParticlesEnabled = getConfig().getBoolean("plugin-features.enable-static-particles", true);

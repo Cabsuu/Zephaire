@@ -42,8 +42,8 @@ public class ToggleCommand implements SubCommand {
     }
 
     private void toggleSingleParticle(CommandSender sender, String particleName) {
-        ConfigurationSection staticSection = plugin.getStaticParticlesConfig().getConfigurationSection("particles");
-        ConfigurationSection animatedSection = plugin.getAnimatedParticlesConfig().getConfigurationSection("particles");
+        ConfigurationSection staticSection = plugin.getStaticParticlesConfig().getConfigurationSection("static-particles");
+        ConfigurationSection animatedSection = plugin.getAnimatedParticlesConfig().getConfigurationSection("animated-particles");
 
         boolean particleExists = (staticSection != null && staticSection.contains(particleName)) ||
                 (animatedSection != null && animatedSection.contains(particleName));
@@ -100,11 +100,11 @@ public class ToggleCommand implements SubCommand {
         if (args.length == 2) {
             List<String> suggestions = new ArrayList<>();
             // Add particle names
-            ConfigurationSection staticSection = plugin.getStaticParticlesConfig().getConfigurationSection("particles");
+            ConfigurationSection staticSection = plugin.getStaticParticlesConfig().getConfigurationSection("static-particles");
             if (staticSection != null) {
                 suggestions.addAll(staticSection.getKeys(false));
             }
-            ConfigurationSection animatedSection = plugin.getAnimatedParticlesConfig().getConfigurationSection("particles");
+            ConfigurationSection animatedSection = plugin.getAnimatedParticlesConfig().getConfigurationSection("animated-particles");
             if (animatedSection != null) {
                 suggestions.addAll(animatedSection.getKeys(false));
             }

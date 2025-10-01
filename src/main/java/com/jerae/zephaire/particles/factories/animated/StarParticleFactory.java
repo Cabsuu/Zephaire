@@ -27,6 +27,7 @@ public class StarParticleFactory extends AbstractAnimatedParticleFactory {
         double density = ConfigValidator.getPositiveDouble(section, "density", 10.0);
         double pitch = section.getDouble("pitch", 0.0);
         double yaw = section.getDouble("yaw", 0.0);
+        int period = section.getInt("period", 1);
         Object options = parseOptions(particle, section);
         boolean collisionEnabled = parseCollision(section);
         int despawnTimer = section.getInt("despawn-timer", 100);
@@ -40,6 +41,6 @@ public class StarParticleFactory extends AbstractAnimatedParticleFactory {
             rotation.setZ(rotationSection.getDouble("z", 0));
         }
 
-        return new StarParticleTask(center, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, manager, collisionEnabled, despawnTimer, hasGravity, loopDelay, rotation);
+        return new StarParticleTask(center, particle, points, outerRadius, innerRadius, speed, density, options, pitch, yaw, manager, collisionEnabled, despawnTimer, hasGravity, loopDelay, rotation, period);
     }
 }

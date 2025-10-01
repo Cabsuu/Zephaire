@@ -18,16 +18,17 @@ public class VortexParticleFactory extends AbstractAnimatedParticleFactory {
             return null;
         }
 
-        Particle particle = ConfigValidator.getParticleType(section, "type", "PORTAL");
+        Particle particle = parseParticle(section);
         double radius = ConfigValidator.getPositiveDouble(section, "radius", 3.0);
         double height = ConfigValidator.getPositiveDouble(section, "height", 5.0);
         double speed = section.getDouble("speed", 0.5);
         int particleCount = ConfigValidator.getPositiveInt(section, "particle-count", 150);
+        int period = section.getInt("period", 1);
         Object options = parseOptions(particle, section);
         boolean collisionEnabled = parseCollision(section);
         int despawnTimer = section.getInt("despawn-timer", 100);
         boolean hasGravity = section.getBoolean("options.gravity", false);
 
-        return new VortexParticleTask(center, particle, radius, height, speed, particleCount, options, manager, collisionEnabled, despawnTimer, hasGravity, loopDelay);
+        return new VortexParticleTask(center, particle, radius, height, speed, particleCount, options, manager, collisionEnabled, despawnTimer, hasGravity, loopDelay, period);
     }
 }

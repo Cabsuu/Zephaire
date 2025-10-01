@@ -157,7 +157,18 @@ public class ParticleConfigLoader {
                     return;
                 }
 
-                World world = worldProvider.getWorld(particleConfig.getString("world", "world"));
+                World world = null;
+                if (particleConfig.isString("region")) {
+                    com.jerae.zephaire.regions.Region region = plugin.getRegionManager().getRegionByName(particleConfig.getString("region"));
+                    if (region != null) {
+                        world = region.getWorld();
+                    }
+                }
+
+                if (world == null) {
+                    world = worldProvider.getWorld(particleConfig.getString("world", "world"));
+                }
+
                 if (world == null) {
                     plugin.getLogger().warning("Invalid world for particle '" + key + "'. Skipping.");
                     return;

@@ -26,10 +26,12 @@ public class CurveParticleTask implements AnimatedParticle {
     private final int despawnTimer;
     private final boolean hasGravity;
     private final int loopDelay;
+    private final int period;
 
     private double t = 0.0;
     private int direction = 1;
     private int loopDelayCounter = 0;
+    private int tickCounter = 0;
 
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Location currentLocation;
@@ -37,7 +39,7 @@ public class CurveParticleTask implements AnimatedParticle {
     private final Vector term2 = new Vector();
     private final Vector term3 = new Vector();
 
-    public CurveParticleTask(Location start, Location control, Location end, Particle particle, double speed, boolean bounce, Object options, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, int loopDelay) {
+    public CurveParticleTask(Location start, Location control, Location end, Particle particle, double speed, boolean bounce, Object options, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, int loopDelay, int period) {
         this.world = start.getWorld();
         this.p0 = start.toVector();
         this.p1 = control.toVector();
@@ -52,6 +54,7 @@ public class CurveParticleTask implements AnimatedParticle {
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
         this.loopDelay = loopDelay;
+        this.period = period;
     }
 
     @Override
@@ -64,6 +67,12 @@ public class CurveParticleTask implements AnimatedParticle {
             loopDelayCounter--;
             return;
         }
+
+        tickCounter++;
+        if (tickCounter < period) {
+            return;
+        }
+        tickCounter = 0;
 
         t += speed * direction;
 
@@ -106,8 +115,6 @@ public class CurveParticleTask implements AnimatedParticle {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, (org.bukkit.Vibration) options));
             } else if (particle == Particle.SCULK_CHARGE && options instanceof Float) {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, (Float) options));
-            } else if (particle == Particle.TRAIL && options instanceof Integer) {
-                ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, (Integer) options, hasGravity));
             } else {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, 1, 0, 0, 0, 0, options));
             }

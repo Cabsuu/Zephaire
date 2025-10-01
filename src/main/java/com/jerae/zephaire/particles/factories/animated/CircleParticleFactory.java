@@ -24,11 +24,12 @@ public class CircleParticleFactory extends AbstractAnimatedParticleFactory {
         double speed = section.getDouble("speed", 0.1);
         double pitch = section.getDouble("pitch", 0.0);
         double yaw = section.getDouble("yaw", 0.0);
+        int period = section.getInt("period", 1);
         Object options = parseOptions(particle, section);
         boolean collisionEnabled = parseCollision(section);
         int despawnTimer = section.getInt("despawn-timer", 100);
         boolean hasGravity = section.getBoolean("options.gravity", false);
 
-        return new CircleParticleTask(plugin, center, particle, radius, speed, particleCount, options, pitch, yaw, manager, collisionEnabled, despawnTimer, hasGravity, loopDelay);
+        return new CircleParticleTask(plugin, center, particle, radius, speed, particleCount, options, pitch, yaw, manager, collisionEnabled, despawnTimer, hasGravity, loopDelay, period);
     }
 }

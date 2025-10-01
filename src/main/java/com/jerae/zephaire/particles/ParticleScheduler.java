@@ -2,13 +2,11 @@ package com.jerae.zephaire.particles;
 
 import com.jerae.zephaire.Zephaire;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -58,36 +56,6 @@ public class ParticleScheduler extends BukkitRunnable {
                                 // Fallback for other server types, pass the float directly.
                                 // This might not display the roll animation, but it prevents a crash.
                                 data.location.getWorld().spawnParticle(data.particle, data.location, 1, 0, 0, 0, 0, data.sculkChargeRoll);
-                            }
-                        } else if (data.particle == Particle.TRAIL) {
-                            if (data.data instanceof java.util.Map) {
-                                @SuppressWarnings("unchecked")
-                                java.util.Map<String, Object> map = (java.util.Map<String, Object>) data.data;
-                                Vector target = (Vector) map.get("target");
-                                Particle.DustOptions dustOptions = (Particle.DustOptions) map.get("dust");
-
-                                Location currentLocation = data.location.clone();
-                                Vector direction = target.clone().subtract(currentLocation.toVector());
-                                double distance = direction.length();
-
-                                if (distance > 0) {
-                                    direction.normalize().multiply(0.25); // Step vector
-
-                                    for (double i = 0; i < distance; i += 0.25) {
-                                        currentLocation.add(direction);
-                                        currentLocation.getWorld().spawnParticle(Particle.DUST, currentLocation, 1, dustOptions);
-                                    }
-                                }
-                            } else {
-                                try {
-                                    Class<?> trailClass = Class.forName("org.bukkit.Particle$Trail");
-                                    java.lang.reflect.Constructor<?> constructor = trailClass.getConstructor(int.class);
-                                    Object trailOptions = constructor.newInstance((Integer) data.data);
-                                    data.location.getWorld().spawnParticle(data.particle, data.location, 1, 0, 0, 0, 0, trailOptions);
-                                } catch (Exception e) {
-                                    // Fallback for non-Paper servers
-                                    data.location.getWorld().spawnParticle(data.particle, data.location, 1);
-                                }
                             }
                         } else if (data.particle != null) {
                             Object particleData = data.data;

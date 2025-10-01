@@ -77,6 +77,12 @@ public class HelixParticleTask implements AnimatedParticle {
             return;
         }
 
+        tickCounter++;
+        if (tickCounter < period) {
+            return;
+        }
+        tickCounter = 0;
+
         angle += speed;
         currentYOffset += verticalSpeed * verticalDirection;
 
@@ -125,8 +131,6 @@ public class HelixParticleTask implements AnimatedParticle {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, (org.bukkit.Vibration) options));
                 } else if (particle == Particle.SCULK_CHARGE && options instanceof Float) {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, (Float) options));
-                } else if (particle == Particle.TRAIL && options instanceof Integer) {
-                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, (Integer) options, hasGravity));
                 } else {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, 1, 0, 0, 0, 0, options));
                 }

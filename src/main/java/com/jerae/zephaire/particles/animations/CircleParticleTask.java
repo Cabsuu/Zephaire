@@ -36,15 +36,17 @@ public class CircleParticleTask implements AnimatedParticle {
     private final boolean hasGravity;
     private final int loopDelay;
     private final Zephaire plugin;
+    private final int period;
 
     private double angle = 0;
     private int loopDelayCounter = 0;
+    private int tickCounter = 0;
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Location spawnLocation;
     private final Vector relativePos;
     private final Vector rotatedPos = new Vector();
 
-    public CircleParticleTask(Zephaire plugin, Location center, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, int loopDelay) {
+    public CircleParticleTask(Zephaire plugin, Location center, Particle particle, double radius, double speed, int particleCount, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, int loopDelay, int period) {
         this.plugin = plugin;
         this.center = center;
         this.particle = particle;
@@ -60,6 +62,7 @@ public class CircleParticleTask implements AnimatedParticle {
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
         this.loopDelay = loopDelay;
+        this.period = period;
         // --- PERFORMANCE: Initialize reusable objects in the constructor ---
         this.spawnLocation = center.clone();
         this.relativePos = new Vector();
@@ -79,6 +82,12 @@ public class CircleParticleTask implements AnimatedParticle {
             loopDelayCounter--;
             return;
         }
+
+        tickCounter++;
+        if (tickCounter < period) {
+            return;
+        }
+        tickCounter = 0;
 
         angle += speed;
 
@@ -117,8 +126,6 @@ public class CircleParticleTask implements AnimatedParticle {
                             spawnDataList.add(new ParticleSpawnData(particle, spawnLocation.clone(), (org.bukkit.Vibration) options));
                         } else if (particle == Particle.SCULK_CHARGE && options instanceof Float) {
                             spawnDataList.add(new ParticleSpawnData(particle, spawnLocation.clone(), (Float) options));
-                        } else if (particle == Particle.TRAIL && options instanceof Integer) {
-                            spawnDataList.add(new ParticleSpawnData(particle, spawnLocation.clone(), (Integer) options, hasGravity));
                         } else {
                             spawnDataList.add(new ParticleSpawnData(particle, spawnLocation.clone(), 1, 0, 0, 0, 0, options));
                         }

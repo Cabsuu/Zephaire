@@ -4,10 +4,7 @@ import com.jerae.zephaire.particles.ParticleScheduler;
 import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.managers.CollisionManager;
-import com.jerae.zephaire.particles.managers.PerformanceManager;
-import com.jerae.zephaire.particles.util.ParticleUtils;
 import com.jerae.zephaire.particles.util.VectorUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.inventory.ItemStack;
@@ -126,8 +123,6 @@ public class AnimatedSpiralParticleTask implements AnimatedParticle {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, (org.bukkit.Vibration) options));
                 } else if (particle == Particle.SCULK_CHARGE && options instanceof Float) {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, (Float) options));
-                } else if (particle == Particle.TRAIL && options instanceof Integer) {
-                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, (Integer) options, hasGravity));
                 } else {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, currentLocation, 1, 0, 0, 0, 0, options));
                 }

@@ -34,6 +34,8 @@ public class StarParticleTask implements AnimatedParticle {
 
     private double rotationAngle = 0;
     private int loopDelayCounter = 0;
+    private int tickCounter = 0;
+    private final int period;
 
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Vector[] vertices;
@@ -44,7 +46,7 @@ public class StarParticleTask implements AnimatedParticle {
     private final Vector rotatedPos = new Vector();
 
 
-    public StarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, int loopDelay, Vector rotation) {
+    public StarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, boolean collisionEnabled, int despawnTimer, boolean hasGravity, int loopDelay, Vector rotation, int period) {
         this.center = center;
         this.particle = particle;
         this.points = Math.max(2, points); // A star must have at least 2 points
@@ -61,6 +63,7 @@ public class StarParticleTask implements AnimatedParticle {
         this.hasGravity = hasGravity;
         this.loopDelay = loopDelay;
         this.rotation = rotation;
+        this.period = period;
         this.vertices = new Vector[this.points * 2];
         for (int i = 0; i < vertices.length; i++) {
             vertices[i] = new Vector();
@@ -78,6 +81,12 @@ public class StarParticleTask implements AnimatedParticle {
             loopDelayCounter--;
             return;
         }
+
+        tickCounter++;
+        if (tickCounter < period) {
+            return;
+        }
+        tickCounter = 0;
 
         rotationAngle += speed;
 
@@ -132,8 +141,6 @@ public class StarParticleTask implements AnimatedParticle {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, particleLoc, (org.bukkit.Vibration) options));
                 } else if (particle == Particle.SCULK_CHARGE && options instanceof Float) {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, particleLoc, (Float) options));
-                } else if (particle == Particle.TRAIL && options instanceof Integer) {
-                    ParticleScheduler.queueParticle(new ParticleSpawnData(particle, particleLoc, (Integer) options, hasGravity));
                 } else {
                     ParticleScheduler.queueParticle(new ParticleSpawnData(particle, particleLoc, 1, 0, 0, 0, 0, options));
                 }

@@ -131,10 +131,6 @@ public class EntitySpiralParticleTask implements EntityParticleTask {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLoc, (Integer) options));
             } else if (particle == Particle.VIBRATION && options instanceof org.bukkit.Vibration) {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLoc, (org.bukkit.Vibration) options));
-            } else if (particle == Particle.SCULK_CHARGE && options instanceof Float) {
-                ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLoc, (Float) options));
-            } else if (particle == Particle.TRAIL && options instanceof Integer) {
-                ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLoc, (Integer) options, hasGravity));
             } else {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLoc, 1, 0, 0, 0, 0, options));
             }

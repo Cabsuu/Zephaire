@@ -23,18 +23,17 @@ public class StaticRegionFactory extends AbstractStaticParticleFactory {
     protected BukkitRunnable createParticleTask(ConfigurationSection section, ConditionManager manager, World world) {
         Location corner1 = null;
         Location corner2 = null;
+        World regionWorld = world;
 
         if (section.isString("region")) {
             String regionName = section.getString("region");
-            Region region = regionManager.getRegions(world).stream()
-                    .filter(r -> r.getName().equalsIgnoreCase(regionName))
-                    .findFirst()
-                    .orElse(null);
+            Region region = regionManager.getRegionByName(regionName);
             if (region != null) {
+                regionWorld = region.getWorld();
                 Vector min = region.getMin();
                 Vector max = region.getMax();
-                corner1 = new Location(world, min.getX(), min.getY(), min.getZ());
-                corner2 = new Location(world, max.getX(), max.getY(), max.getZ());
+                corner1 = new Location(regionWorld, min.getX(), min.getY(), min.getZ());
+                corner2 = new Location(regionWorld, max.getX(), max.getY(), max.getZ());
             }
         } else {
             corner1 = parseLocation(world, section, "corner1");

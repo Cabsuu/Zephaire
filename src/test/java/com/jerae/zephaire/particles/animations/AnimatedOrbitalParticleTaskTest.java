@@ -49,7 +49,7 @@ public class AnimatedOrbitalParticleTaskTest {
         double radius = 2.0;
         AnimatedOrbitalParticleTask task = new AnimatedOrbitalParticleTask(
                 center, Particle.DUST, orbitingParticles, radius, 0.1,
-                null, conditionManager
+                null, conditionManager, 1
         );
 
         task.tick();

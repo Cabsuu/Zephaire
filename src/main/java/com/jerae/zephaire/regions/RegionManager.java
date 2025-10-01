@@ -73,6 +73,18 @@ public class RegionManager {
         }
     }
 
+    public Region getRegion(String name, World world) {
+        Region region = regions.get(name.toLowerCase());
+        if (region != null && region.getWorld().equals(world)) {
+            return region;
+        }
+        return null;
+    }
+
+    public Region getRegionByName(String name) {
+        return regions.get(name.toLowerCase());
+    }
+
     public List<Region> getRegions(Location location) {
         List<Region> containingRegions = new ArrayList<>();
         for (Region region : regions.values()) {

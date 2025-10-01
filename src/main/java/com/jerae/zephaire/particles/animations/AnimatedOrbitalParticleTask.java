@@ -1,6 +1,5 @@
 package com.jerae.zephaire.particles.animations;
 
-import com.jerae.zephaire.particles.Debuggable;
 import com.jerae.zephaire.particles.ParticleScheduler;
 import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
@@ -16,9 +15,11 @@ public class AnimatedOrbitalParticleTask implements AnimatedParticle {
     private final double speed;
     private final Object options;
     private final ConditionManager conditionManager;
+    private final int period;
     private double angle = 0;
+    private int tickCounter = 0;
 
-    public AnimatedOrbitalParticleTask(Location center, Particle particle, int orbitingParticles, double radius, double speed, Object options, ConditionManager conditionManager) {
+    public AnimatedOrbitalParticleTask(Location center, Particle particle, int orbitingParticles, double radius, double speed, Object options, ConditionManager conditionManager, int period) {
         this.center = center;
         this.particle = particle;
         this.orbitingParticles = orbitingParticles;
@@ -26,6 +27,7 @@ public class AnimatedOrbitalParticleTask implements AnimatedParticle {
         this.speed = speed;
         this.options = options;
         this.conditionManager = conditionManager;
+        this.period = period;
     }
 
     @Override
@@ -33,6 +35,12 @@ public class AnimatedOrbitalParticleTask implements AnimatedParticle {
         if (!conditionManager.allConditionsMet(center)) {
             return;
         }
+
+        tickCounter++;
+        if (tickCounter < period) {
+            return;
+        }
+        tickCounter = 0;
 
         angle += speed;
 

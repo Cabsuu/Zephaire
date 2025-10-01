@@ -33,6 +33,23 @@ public class ParticleGroupManager {
 
     public void loadParticleGroups() {
         particleGroups.clear();
+
+        // Load default groups from resources first
+        try (java.io.InputStream in = plugin.getResource("particles/particle-groups.yml")) {
+            if (in != null) {
+                FileConfiguration defaultConfig = YamlConfiguration.loadConfiguration(new java.io.InputStreamReader(in));
+                ConfigurationSection defaultGroupsSection = defaultConfig.getConfigurationSection("particle-groups");
+                if (defaultGroupsSection != null) {
+                    for (String groupName : defaultGroupsSection.getKeys(false)) {
+                        particleGroups.put(groupName, defaultGroupsSection.getStringList(groupName));
+                    }
+                }
+            }
+        } catch (java.io.IOException e) {
+            plugin.getLogger().log(java.util.logging.Level.SEVERE, "Could not load default particle-groups.yml", e);
+        }
+
+        // Load user-configured groups, overriding defaults
         ConfigurationSection groupsSection = particleGroupsConfig.getConfigurationSection("particle-groups");
         if (groupsSection != null) {
             for (String groupName : groupsSection.getKeys(false)) {
