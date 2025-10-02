@@ -1,7 +1,6 @@
 package com.jerae.zephaire;
 
 import com.jerae.zephaire.commands.ZephaireCommand;
-import com.jerae.zephaire.data.DataManager;
 import com.jerae.zephaire.listeners.AnvilListener;
 import com.jerae.zephaire.listeners.EnchantListener;
 import com.jerae.zephaire.listeners.EntityListener;
@@ -14,7 +13,6 @@ import com.jerae.zephaire.particles.managers.ParticleGroupManager;
 import com.jerae.zephaire.particles.managers.ParticleManager;
 import com.jerae.zephaire.particles.ParticleRegistry;
 import com.jerae.zephaire.particles.managers.PerformanceManager;
-import com.jerae.zephaire.regions.RegionManager;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -28,7 +26,6 @@ public final class Zephaire extends JavaPlugin {
 
     private FactoryManager factoryManager;
     private ParticleManager particleManager;
-    private DataManager dataManager;
     private ParticleConfigLoader particleConfigLoader;
     private EntityParticleManager entityParticleManager;
     private ParticleGroupManager particleGroupManager;
@@ -43,7 +40,6 @@ public final class Zephaire extends JavaPlugin {
     private boolean animatedParticlesEnabled;
     private boolean entityParticlesEnabled;
     private List<String> disabledWorlds;
-    private RegionManager regionManager;
 
 
     @Override
@@ -57,18 +53,14 @@ public final class Zephaire extends JavaPlugin {
         this.saveResource("guides/entity-guide.txt", true);
         this.saveResource("guides/particle-type-guide.txt", true);
         this.saveResource("particles/particles.txt", true);
-        this.saveResource("particles/disabled-particles.yml", false);
         this.saveResource("particles/entity-particles.yml", false);
         this.saveResource("particles/static-particles.yml", false);
         this.saveResource("particles/animated-particles.yml", false);
         this.saveResource("particles/particle-groups.yml", false);
-        this.saveResource("regions.yml", false);
 
 
         // --- INITIALIZE CORE COMPONENTS ---
-        this.regionManager = new RegionManager(this);
-        this.factoryManager = new FactoryManager(this.regionManager);
-        this.dataManager = new DataManager(this);
+        this.factoryManager = new FactoryManager();
         this.particleManager = new ParticleManager(this);
         this.entityParticleManager = new EntityParticleManager(this);
         this.particleGroupManager = new ParticleGroupManager(this);
@@ -92,7 +84,6 @@ public final class Zephaire extends JavaPlugin {
 
 
         // --- LOAD DATA AND PARTICLES ---
-        this.dataManager.load();
         this.particleGroupManager.initialize();
         // Perform the initial load of configuration and particles.
         reloadPluginConfig();
@@ -131,7 +122,6 @@ public final class Zephaire extends JavaPlugin {
     public void reloadPluginConfig() {
         // 1. Reload the config.yml file from disk and initialize performance settings.
         reloadConfig();
-        dataManager.load();
         PerformanceManager.initialize(getConfig());
         this.disabledWorlds = getConfig().getStringList("disabled-worlds");
         this.staticParticlesEnabled = getConfig().getBoolean("plugin-features.enable-static-particles", true);
@@ -158,7 +148,6 @@ public final class Zephaire extends JavaPlugin {
         }
         this.particleManager.initialize();
         this.entityParticleManager.initialize();
-        this.regionManager.loadRegions();
         this.particleConfigLoader.loadParticles();
         this.particleManager.startAnimationManager();
         this.entityParticleManager.startManager();
@@ -170,10 +159,6 @@ public final class Zephaire extends JavaPlugin {
     // --- GETTERS FOR MANAGERS ---
     public ParticleManager getParticleManager() {
         return particleManager;
-    }
-
-    public DataManager getDataManager() {
-        return dataManager;
     }
 
     public EntityParticleManager getEntityParticleManager() {
@@ -210,9 +195,5 @@ public final class Zephaire extends JavaPlugin {
 
     public List<String> getDisabledWorlds() {
         return disabledWorlds;
-    }
-
-    public RegionManager getRegionManager() {
-        return regionManager;
     }
 }

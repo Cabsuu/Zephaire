@@ -11,7 +11,6 @@ com\jerae\zephaire\particles\animations\AnimatedSpiralParticleTask.class
 com\jerae\zephaire\particles\conditions\PlayerStatCondition$Stat.class
 com\jerae\zephaire\particles\animations\CircleParticleTask$1$1.class
 com\jerae\zephaire\particles\animations\CircleParticleTask$1.class
-com\jerae\zephaire\regions\RegionManager.class
 com\jerae\zephaire\particles\factories\entity\EntitySpiralParticleFactory.class
 com\jerae\zephaire\particles\factories\animated\AnimatedSpiralParticleFactory.class
 com\jerae\zephaire\particles\conditions\PlayerStatCondition.class
@@ -26,6 +25,5 @@ com\jerae\zephaire\particles\managers\ParticleGroupManager.class
 com\jerae\zephaire\particles\factories\animated\AnimatedOrbitalParticleFactory.class
 com\jerae\zephaire\listeners\EnchantListener.class
 com\jerae\zephaire\particles\data\ParticleCreationData.class
-com\jerae\zephaire\regions\Region.class
 com\jerae\zephaire\particles\factories\entity\OrbitalParticleFactory.class
 com\jerae\zephaire\particles\WorldProvider.class

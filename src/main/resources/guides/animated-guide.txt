@@ -121,3 +121,11 @@ animated-particles:
     speed: 0.2
     vertical-speed: 0.1
     particle-type: END_ROD
+
+  animated_orbital-name:
+    shape: 'ORBITAL'
+    center: { x: 0, y: 0, z: 0 }
+    orbiting-particles: 5
+    radius: 2.0
+    speed: 0.1
+    period: 2

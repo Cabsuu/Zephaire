@@ -3,9 +3,7 @@ H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zep
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\commands\subcommands\ListCommand.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\commands\subcommands\ReloadCommand.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\commands\subcommands\SubCommand.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\commands\subcommands\ToggleCommand.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\commands\ZephaireCommand.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\data\DataManager.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\listeners\AnvilListener.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\listeners\EnchantListener.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\listeners\EntityListener.java
@@ -132,6 +130,4 @@ H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zep
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\util\ParticleUtils.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\util\VectorUtils.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\WorldProvider.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\regions\Region.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\regions\RegionManager.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\Zephaire.java

@@ -19,8 +19,16 @@ import com.jerae.zephaire.particles.factories.entity.EntitySpiralParticleFactory
 import com.jerae.zephaire.particles.factories.entity.OrbitalParticleFactory;
 import com.jerae.zephaire.particles.factories.entity.EntityStarParticleFactory;
 import com.jerae.zephaire.particles.factories.entity.EntityVortexParticleFactory;
-import com.jerae.zephaire.particles.factories.statics.*;
-import com.jerae.zephaire.regions.RegionManager;
+import com.jerae.zephaire.particles.factories.statics.StaticCircleFactory;
+import com.jerae.zephaire.particles.factories.statics.StaticConeFactory;
+import com.jerae.zephaire.particles.factories.statics.StaticCuboidFactory;
+import com.jerae.zephaire.particles.factories.statics.StaticCurveFactory;
+import com.jerae.zephaire.particles.factories.statics.StaticLineFactory;
+import com.jerae.zephaire.particles.factories.statics.StaticPointFactory;
+import com.jerae.zephaire.particles.factories.statics.RandomBurstRegionFactory;
+import com.jerae.zephaire.particles.factories.statics.StaticPyramidFactory;
+import com.jerae.zephaire.particles.factories.statics.StaticRegionFactory;
+import com.jerae.zephaire.particles.factories.statics.StaticStarFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,10 +44,8 @@ public class FactoryManager {
     private final Map<String, ConditionFactory> conditionFactories = new HashMap<>();
     private final Map<String, DecoratorFactory> decoratorFactories = new HashMap<>();
     private final Map<String, EntityParticleFactory> entityFactories = new HashMap<>();
-    private final RegionManager regionManager;
 
-    public FactoryManager(RegionManager regionManager) {
-        this.regionManager = regionManager;
+    public FactoryManager() {
         registerStaticFactories();
         registerAnimatedFactories();
         registerConditionFactories();
@@ -49,15 +55,15 @@ public class FactoryManager {
 
     private void registerStaticFactories() {
         staticFactories.put("POINT", new StaticPointFactory());
-        staticFactories.put("STATIC_CIRCLE", new StaticCircleFactory());
-        staticFactories.put("STATIC_CUBOID", new StaticCuboidFactory());
-        staticFactories.put("STATIC_LINE", new StaticLineFactory());
-        staticFactories.put("STATIC_REGION", new StaticRegionFactory(regionManager));
-        staticFactories.put("STATIC_STAR", new StaticStarFactory());
-        staticFactories.put("STATIC_CURVE", new StaticCurveFactory());
-        staticFactories.put("RANDOM_BURST_REGION", new RandomBurstRegionFactory(regionManager));
-        staticFactories.put("STATIC_PYRAMID", new StaticPyramidFactory());
-        staticFactories.put("STATIC_CONE", new StaticConeFactory());
+        staticFactories.put("CIRCLE", new StaticCircleFactory());
+        staticFactories.put("CUBOID", new StaticCuboidFactory());
+        staticFactories.put("LINE", new StaticLineFactory());
+        staticFactories.put("REGION", new StaticRegionFactory());
+        staticFactories.put("STAR", new StaticStarFactory());
+        staticFactories.put("CURVE", new StaticCurveFactory());
+        staticFactories.put("BURST_REGION", new RandomBurstRegionFactory());
+        staticFactories.put("PYRAMID", new StaticPyramidFactory());
+        staticFactories.put("CONE", new StaticConeFactory());
     }
 
     private void registerAnimatedFactories() {

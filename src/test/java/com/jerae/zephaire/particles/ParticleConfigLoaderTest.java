@@ -1,7 +1,6 @@
 package com.jerae.zephaire.particles;
 
 import com.jerae.zephaire.Zephaire;
-import com.jerae.zephaire.data.DataManager;
 import com.jerae.zephaire.particles.data.ParticleCreationData;
 import com.jerae.zephaire.particles.loaders.AnimatedParticleLoader;
 import com.jerae.zephaire.particles.loaders.EntityParticleLoader;
@@ -36,8 +35,6 @@ public class ParticleConfigLoaderTest {
     @Mock
     private EntityParticleManager entityParticleManager;
     @Mock
-    private DataManager dataManager;
-    @Mock
     private FileConfiguration staticParticlesConfig;
     @Mock
     private FileConfiguration animatedParticlesConfig;
@@ -56,7 +53,6 @@ public class ParticleConfigLoaderTest {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         when(plugin.getLogger()).thenReturn(java.util.logging.Logger.getLogger("TestLogger"));
-        when(plugin.getDataManager()).thenReturn(dataManager);
         when(plugin.getStaticParticlesConfig()).thenReturn(staticParticlesConfig);
         when(plugin.getAnimatedParticlesConfig()).thenReturn(animatedParticlesConfig);
         when(staticParticlesConfig.getConfigurationSection("static-particles")).thenReturn(staticSection);
@@ -93,7 +89,6 @@ public class ParticleConfigLoaderTest {
         when(particleConfig.getString("shape", "POINT")).thenReturn("POINT");
         when(particleConfig.getString("world", "world")).thenReturn("test_world");
         when(particleConfig.getMapList("conditions")).thenReturn(java.util.Collections.emptyList());
-        when(plugin.getDataManager().isParticleDisabled(anyString())).thenReturn(false);
 
         // Act
         particleConfigLoader.loadParticles();

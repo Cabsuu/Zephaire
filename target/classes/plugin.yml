@@ -1,5 +1,5 @@
 name: Zephaire
-version: '0.7.0'
+version: '0.7.1'
 main: com.jerae.zephaire.Zephaire
 api-version: '1.21'
 softdepend: [Purpur]
@@ -23,7 +23,4 @@ permissions:
     default: op
   zephaire.list:
     description: Allows listing particle effects.
-    default: op
-  zephaire.toggle:
-    description: Allows toggling particle effects.
     default: op

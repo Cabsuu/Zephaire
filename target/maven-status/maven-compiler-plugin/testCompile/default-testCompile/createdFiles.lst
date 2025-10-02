@@ -2,10 +2,10 @@ com\jerae\zephaire\particles\animations\entity\EntitySpiralParticleTaskTest.clas
 com\jerae\zephaire\particles\conditions\DelayConditionDecoratorTest.class
 com\jerae\zephaire\particles\conditions\ElytraConditionTest.class
 com\jerae\zephaire\particles\EventParticleTest.class
+com\jerae\zephaire\particles\managers\FactoryManagerTest.class
 com\jerae\zephaire\particles\animations\AnimatedOrbitalParticleTaskTest.class
 com\jerae\zephaire\particles\animations\AnimatedSpiralParticleTaskTest.class
 com\jerae\zephaire\particles\conditions\PlayerStatConditionTest.class
-com\jerae\zephaire\commands\subcommands\ToggleCommandTest.class
 com\jerae\zephaire\particles\animations\decorator\VelocityDecoratorTest.class
 com\jerae\zephaire\particles\ParticleConfigLoaderTest.class
 com\jerae\zephaire\listeners\EnchantAnvilListenerTest.class
