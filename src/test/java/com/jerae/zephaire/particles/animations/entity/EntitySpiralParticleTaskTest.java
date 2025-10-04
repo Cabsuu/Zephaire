@@ -50,6 +50,8 @@ public class EntitySpiralParticleTaskTest {
         when(entity.getLocation()).thenReturn(entityLocation);
         when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
         when(entity.getWorld()).thenReturn(world);
+        when(entity.isValid()).thenReturn(true);
+        when(entity.getVelocity()).thenReturn(new Vector(0, 0, 0));
 
         ConditionManager conditionManager = new ConditionManager(Collections.emptyList());
         EntitySpiralParticleTask task = new EntitySpiralParticleTask("test", Particle.FLAME, 1, 5, 10, 0.1, 0.1, null, 0, 0, false, conditionManager, false, new Vector(0,0,0), entityTarget, 1, SpawnBehavior.ALWAYS, 100, false, 0, false, false, -1);

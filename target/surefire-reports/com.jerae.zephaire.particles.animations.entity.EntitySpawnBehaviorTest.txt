@@ -1,4 +1,103 @@
 -------------------------------------------------------------------------------
 Test set: com.jerae.zephaire.particles.animations.entity.EntitySpawnBehaviorTest
 -------------------------------------------------------------------------------
-Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.277 s -- in com.jerae.zephaire.particles.animations.entity.EntitySpawnBehaviorTest
+Tests run: 8, Failures: 8, Errors: 0, Skipped: 0, Time elapsed: 0.284 s <<< FAILURE! -- in com.jerae.zephaire.particles.animations.entity.EntitySpawnBehaviorTest
+com.jerae.zephaire.particles.animations.entity.EntitySpawnBehaviorTest.testStandingStillBehaviorWithLocationChange -- Time elapsed: 0.075 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: Should throw on first tick for STANDING_STILL with zero velocity ==> Expected java.lang.RuntimeException to be thrown, but nothing was thrown.
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:152)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:73)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:39)
+	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3127)
+	at com.jerae.zephaire.particles.animations.entity.EntitySpawnBehaviorTest.testStandingStillBehaviorWithLocationChange(EntitySpawnBehaviorTest.java:124)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.jerae.zephaire.particles.animations.entity.EntitySpawnBehaviorTest.testEntityParticleConditions -- Time elapsed: 0.083 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: Should throw when conditions are met ==> Expected java.lang.RuntimeException to be thrown, but nothing was thrown.
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:152)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:73)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:39)
+	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3127)
+	at com.jerae.zephaire.particles.animations.entity.EntitySpawnBehaviorTest.testEntityParticleConditions(EntitySpawnBehaviorTest.java:264)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.jerae.zephaire.particles.animations.entity.EntitySpawnBehaviorTest.testDoNotInheritEntityVelocity -- Time elapsed: 0.094 s <<< FAILURE!
+Wanted but not invoked:
+ParticleScheduler.class.queueParticle(
+    <Capturing argument: ParticleSpawnData>
+);
+-> at com.jerae.zephaire.particles.ParticleScheduler.queueParticle(ParticleScheduler.java:26)
+Actually, there were zero interactions with this mock.
+
+	at com.jerae.zephaire.particles.ParticleScheduler.queueParticle(ParticleScheduler.java:26)
+	at com.jerae.zephaire.particles.animations.entity.EntitySpawnBehaviorTest.lambda$testDoNotInheritEntityVelocity$11(EntitySpawnBehaviorTest.java:211)
+	at com.jerae.zephaire.particles.animations.entity.EntitySpawnBehaviorTest.testDoNotInheritEntityVelocity(EntitySpawnBehaviorTest.java:211)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.jerae.zephaire.particles.animations.entity.EntitySpawnBehaviorTest.testMovingBehaviorWithLocationChange -- Time elapsed: 0.005 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: Should throw when location changes for MOVING ==> Expected java.lang.RuntimeException to be thrown, but nothing was thrown.
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:152)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:73)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:39)
+	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3127)
+	at com.jerae.zephaire.particles.animations.entity.EntitySpawnBehaviorTest.testMovingBehaviorWithLocationChange(EntitySpawnBehaviorTest.java:158)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.jerae.zephaire.particles.animations.entity.EntitySpawnBehaviorTest.testInheritEntityVelocity -- Time elapsed: 0.004 s <<< FAILURE!
+Wanted but not invoked:
+ParticleScheduler.class.queueParticle(
+    <Capturing argument: ParticleSpawnData>
+);
+-> at com.jerae.zephaire.particles.ParticleScheduler.queueParticle(ParticleScheduler.java:26)
+Actually, there were zero interactions with this mock.
+
+	at com.jerae.zephaire.particles.ParticleScheduler.queueParticle(ParticleScheduler.java:26)
+	at com.jerae.zephaire.particles.animations.entity.EntitySpawnBehaviorTest.lambda$testInheritEntityVelocity$10(EntitySpawnBehaviorTest.java:183)
+	at com.jerae.zephaire.particles.animations.entity.EntitySpawnBehaviorTest.testInheritEntityVelocity(EntitySpawnBehaviorTest.java:183)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.jerae.zephaire.particles.animations.entity.EntitySpawnBehaviorTest.testMovingSpawnBehavior -- Time elapsed: 0.003 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: Should throw when moving horizontally on ground ==> Expected java.lang.RuntimeException to be thrown, but nothing was thrown.
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:152)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:73)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:39)
+	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3127)
+	at com.jerae.zephaire.particles.animations.entity.EntitySpawnBehaviorTest.testMovingSpawnBehavior(EntitySpawnBehaviorTest.java:93)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.jerae.zephaire.particles.animations.entity.EntitySpawnBehaviorTest.testStandingStillSpawnBehavior -- Time elapsed: 0.003 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: Should throw when standing still on ground ==> Expected java.lang.RuntimeException to be thrown, but nothing was thrown.
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:152)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:73)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:39)
+	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3127)
+	at com.jerae.zephaire.particles.animations.entity.EntitySpawnBehaviorTest.testStandingStillSpawnBehavior(EntitySpawnBehaviorTest.java:58)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.jerae.zephaire.particles.animations.entity.EntitySpawnBehaviorTest.testSpread -- Time elapsed: 0.006 s <<< FAILURE!
+Wanted but not invoked:
+ParticleScheduler.class.queueParticle(
+    <Capturing argument: ParticleSpawnData>
+);
+-> at com.jerae.zephaire.particles.ParticleScheduler.queueParticle(ParticleScheduler.java:26)
+Actually, there were zero interactions with this mock.
+
+	at com.jerae.zephaire.particles.ParticleScheduler.queueParticle(ParticleScheduler.java:26)
+	at com.jerae.zephaire.particles.animations.entity.EntitySpawnBehaviorTest.lambda$testSpread$12(EntitySpawnBehaviorTest.java:238)
+	at com.jerae.zephaire.particles.animations.entity.EntitySpawnBehaviorTest.testSpread(EntitySpawnBehaviorTest.java:238)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)

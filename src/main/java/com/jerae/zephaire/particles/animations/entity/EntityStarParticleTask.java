@@ -43,13 +43,12 @@ public class EntityStarParticleTask implements EntityParticleTask {
     private final Vector rotation;
     private int ticksLived = 0;
 
-
     private double rotationAngle = 0;
     private int tickCounter = 0;
     private double currentYOffset = 0;
     private int verticalDirection = 1;
     private int loopDelayCounter = 0;
-    private Location lastLocation;
+    private Location deathLocation;
 
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Vector[] vertices;
@@ -108,33 +107,16 @@ public class EntityStarParticleTask implements EntityParticleTask {
         }
         ticksLived++;
 
-        if (!conditionManager.allConditionsMet(entity.getLocation())) return;
-        // --- Spawn Behavior ---
-        Location currentLocation = entity.getLocation();
-
-        boolean isMovingHorizontally;
-        if (lastLocation == null || currentLocation == null || !lastLocation.getWorld().equals(currentLocation.getWorld())) {
-            isMovingHorizontally = entity.getVelocity().setY(0).lengthSquared() > 0.001;
+        Location currentLocation;
+        if (entity != null && entity.isValid()) {
+            currentLocation = entity.getLocation();
+        } else if (deathLocation != null) {
+            currentLocation = deathLocation;
         } else {
-            isMovingHorizontally = lastLocation.getX() != currentLocation.getX() || lastLocation.getZ() != currentLocation.getZ();
+            return;
         }
 
-        if (currentLocation != null) {
-            this.lastLocation = currentLocation.clone();
-        }
-
-        boolean isOnGround = entity.isOnGround();
-
-        switch (spawnBehavior) {
-            case STANDING_STILL:
-                if (isMovingHorizontally || !isOnGround) return;
-                break;
-            case MOVING:
-                if (!isMovingHorizontally && isOnGround) return;
-                break;
-            case ALWAYS:
-                break;
-        }
+        if (!conditionManager.allConditionsMet(currentLocation)) return;
 
         if (loopDelayCounter > 0) {
             loopDelayCounter--;
@@ -147,8 +129,8 @@ public class EntityStarParticleTask implements EntityParticleTask {
         }
         tickCounter = 0;
 
-        Location center = entity.getLocation().add(offset);
-        particleLoc.setWorld(entity.getWorld());
+        Location center = currentLocation.clone().add(offset);
+        particleLoc.setWorld(center.getWorld());
 
         rotationAngle += speed;
 
@@ -176,7 +158,8 @@ public class EntityStarParticleTask implements EntityParticleTask {
             }
         }
 
-        drawStar(center, entity.getVelocity());
+        Vector entityVelocity = (entity != null && entity.isValid()) ? entity.getVelocity() : new Vector();
+        drawStar(center, entityVelocity);
     }
 
     private void drawStar(Location center, Vector entityVelocity) {
@@ -273,5 +256,10 @@ public class EntityStarParticleTask implements EntityParticleTask {
     @Override
     public SpawnBehavior getSpawnBehavior() {
         return spawnBehavior;
+    }
+
+    @Override
+    public void setDeathLocation(Location location) {
+        this.deathLocation = location;
     }
 }

@@ -1,14 +1,1 @@
-com\jerae\zephaire\particles\animations\entity\EntitySpiralParticleTaskTest.class
-com\jerae\zephaire\particles\conditions\DelayConditionDecoratorTest.class
-com\jerae\zephaire\particles\conditions\ElytraConditionTest.class
-com\jerae\zephaire\particles\EventParticleTest.class
-com\jerae\zephaire\particles\managers\FactoryManagerTest.class
-com\jerae\zephaire\particles\animations\AnimatedOrbitalParticleTaskTest.class
-com\jerae\zephaire\particles\animations\AnimatedSpiralParticleTaskTest.class
-com\jerae\zephaire\particles\conditions\PlayerStatConditionTest.class
-com\jerae\zephaire\particles\animations\decorator\VelocityDecoratorTest.class
-com\jerae\zephaire\particles\ParticleConfigLoaderTest.class
-com\jerae\zephaire\listeners\EnchantAnvilListenerTest.class
-com\jerae\zephaire\particles\ParticleUtilsTest.class
-com\jerae\zephaire\particles\animations\entity\OrbitalParticleTaskTest.class
-com\jerae\zephaire\particles\statics\StaticConeParticleTaskTest.class
+com/jerae/zephaire/particles/managers/EntityParticleManagerTest.class
