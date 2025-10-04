@@ -1,21 +1,20 @@
 package com.jerae.zephaire.particles.managers;
 
+import org.mockbukkit.mockbukkit.MockBukkit;
+import org.mockbukkit.mockbukkit.ServerMock;
+import org.mockbukkit.mockbukkit.world.WorldMock;
+import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import com.jerae.zephaire.Zephaire;
 import com.jerae.zephaire.particles.animations.entity.EntityParticleTask;
 import com.jerae.zephaire.particles.data.EntityTarget;
 import com.jerae.zephaire.particles.data.SpawnBehavior;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import java.util.Collections;
-import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 
@@ -25,37 +24,41 @@ public class EntityParticleManagerTest {
 
     @Mock
     private Zephaire plugin;
-    @Mock
-    private Server server;
-    @Mock
-    private World world;
-    @Mock
-    private Player player;
+    private static ServerMock server;
+    private WorldMock world;
+    private PlayerMock player;
     @Mock
     private EntityParticleTask particleTask;
     @Mock
     private EntityTarget entityTarget;
 
+    @BeforeAll
+    public static void setUpClass() {
+        server = MockBukkit.mock();
+    }
+
+    @AfterAll
+    public static void tearDownClass() {
+        MockBukkit.unmock();
+    }
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        Bukkit.setServer(server);
-        when(server.getWorlds()).thenReturn(Collections.singletonList(world));
-        when(world.getEntities()).thenReturn(Collections.singletonList(player));
+        world = server.addSimpleWorld("test");
+        player = server.addPlayer();
         entityParticleManager = new EntityParticleManager(plugin);
 
-        when(player.getUniqueId()).thenReturn(UUID.randomUUID());
-        when(player.getWorld()).thenReturn(world);
-        when(player.isValid()).thenReturn(true);
         when(particleTask.getTarget()).thenReturn(entityTarget);
         when(particleTask.newInstance()).thenReturn(particleTask);
+        when(particleTask.getEffectName()).thenReturn("test_effect");
         when(entityTarget.getTargetType()).thenReturn(EntityTarget.TargetType.SPECIFIC_TYPE);
         when(entityTarget.getEntityType()).thenReturn(org.bukkit.entity.EntityType.PLAYER);
     }
 
     @Test
     public void testStandingStillSpawnsWhenNotMoving() {
-        when(player.getLocation()).thenReturn(new Location(world, 0, 0, 0));
+        player.setLocation(new Location(world, 0, 0, 0));
         when(particleTask.getSpawnBehavior()).thenReturn(SpawnBehavior.STANDING_STILL);
         entityParticleManager.addEffectTemplate("test_effect", particleTask);
 
@@ -71,11 +74,14 @@ public class EntityParticleManagerTest {
         entityParticleManager.addEffectTemplate("test_effect", particleTask);
 
         // First tick, establish location
-        when(player.getLocation()).thenReturn(new Location(world, 0, 0, 0));
+        player.setLocation(new Location(world, 0, 0, 0));
         entityParticleManager.tick();
 
         // Second tick, with movement
-        when(player.getLocation()).thenReturn(new Location(world, 1, 0, 1));
+        player.setLocation(new Location(world, 1, 0, 1));
+        entityParticleManager.tick();
+
+        // Third tick, to process the active effect
         entityParticleManager.tick();
 
         verify(particleTask, times(1)).tick(player);
@@ -84,16 +90,17 @@ public class EntityParticleManagerTest {
     @Test
     public void testOnDeathPersistsAfterEntityInvalid() {
         when(particleTask.getSpawnBehavior()).thenReturn(SpawnBehavior.ON_DEATH);
-        when(particleTask.getDuration()).thenReturn(10);
         when(particleTask.shouldPersistOnDeath()).thenReturn(true);
+        when(particleTask.isDone()).thenReturn(false);
+
+        entityParticleManager.addEffectTemplate("test_effect", particleTask);
 
         Location deathLocation = new Location(world, 0, 0, 0);
-        when(player.getLocation()).thenReturn(deathLocation);
+        player.setLocation(deathLocation);
 
         entityParticleManager.handleEvent(player, SpawnBehavior.ON_DEATH);
 
-        when(player.isValid()).thenReturn(false);
-        when(Bukkit.getEntity(player.getUniqueId())).thenReturn(null);
+        player.setHealth(0); // This will make the player invalid
 
         // Tick for 5 ticks
         for (int i = 0; i < 5; i++) {

@@ -1,15 +1,15 @@
-/app/src/test/java/com/jerae/zephaire/listeners/EnchantAnvilListenerTest.java
-/app/src/test/java/com/jerae/zephaire/particles/EventParticleTest.java
-/app/src/test/java/com/jerae/zephaire/particles/ParticleConfigLoaderTest.java
-/app/src/test/java/com/jerae/zephaire/particles/ParticleUtilsTest.java
-/app/src/test/java/com/jerae/zephaire/particles/animations/AnimatedSpiralParticleTaskTest.java
-/app/src/test/java/com/jerae/zephaire/particles/animations/LoopDelayTest.java
-/app/src/test/java/com/jerae/zephaire/particles/animations/decorator/VelocityDecoratorTest.java
-/app/src/test/java/com/jerae/zephaire/particles/animations/entity/EntitySpiralParticleTaskTest.java
-/app/src/test/java/com/jerae/zephaire/particles/animations/entity/TestParticleSpawnException.java
-/app/src/test/java/com/jerae/zephaire/particles/conditions/DelayConditionDecoratorTest.java
-/app/src/test/java/com/jerae/zephaire/particles/conditions/ElytraConditionTest.java
-/app/src/test/java/com/jerae/zephaire/particles/conditions/PlayerStatConditionTest.java
-/app/src/test/java/com/jerae/zephaire/particles/managers/EntityParticleManagerTest.java
-/app/src/test/java/com/jerae/zephaire/particles/managers/FactoryManagerTest.java
-/app/src/test/java/com/jerae/zephaire/particles/statics/StaticConeParticleTaskTest.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zephaire\listeners\EnchantAnvilListenerTest.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zephaire\particles\animations\AnimatedSpiralParticleTaskTest.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zephaire\particles\animations\decorator\VelocityDecoratorTest.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zephaire\particles\animations\entity\EntitySpiralParticleTaskTest.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zephaire\particles\animations\entity\TestParticleSpawnException.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zephaire\particles\animations\LoopDelayTest.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zephaire\particles\conditions\DelayConditionDecoratorTest.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zephaire\particles\conditions\ElytraConditionTest.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zephaire\particles\conditions\PlayerStatConditionTest.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zephaire\particles\EventParticleTest.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zephaire\particles\managers\EntityParticleManagerTest.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zephaire\particles\managers\FactoryManagerTest.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zephaire\particles\ParticleConfigLoaderTest.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zephaire\particles\ParticleUtilsTest.java
+H:\Documents\Server Management\Self-Plugins\Zephaire\src\test\java\com\jerae\zephaire\particles\statics\StaticConeParticleTaskTest.java
