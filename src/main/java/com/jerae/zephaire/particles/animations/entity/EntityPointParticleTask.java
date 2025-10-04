@@ -37,7 +37,7 @@ public class EntityPointParticleTask implements EntityParticleTask {
 
     private int tickCounter = 0;
     private int loopDelayCounter = 0;
-    private Location lastLocation;
+    private Location deathLocation;
 
     public EntityPointParticleTask(String effectName, Particle particle, Object options, ConditionManager conditionManager, boolean collisionEnabled, Vector offset, EntityTarget target, int period, SpawnBehavior spawnBehavior, int despawnTimer, boolean hasGravity, int loopDelay, boolean debug, boolean inheritEntityVelocity, double spread, int particleCount, int duration) {
         this.effectName = effectName;
@@ -76,32 +76,16 @@ public class EntityPointParticleTask implements EntityParticleTask {
         }
         ticksLived++;
 
-        if (!conditionManager.allConditionsMet(entity.getLocation())) return;
-        Location currentLocation = entity.getLocation();
-
-        boolean isMovingHorizontally;
-        if (lastLocation == null || currentLocation == null || !lastLocation.getWorld().equals(currentLocation.getWorld())) {
-            isMovingHorizontally = entity.getVelocity().setY(0).lengthSquared() > 0.001;
+        Location currentLocation;
+        if (entity != null && entity.isValid()) {
+            currentLocation = entity.getLocation();
+        } else if (deathLocation != null) {
+            currentLocation = deathLocation;
         } else {
-            isMovingHorizontally = lastLocation.getX() != currentLocation.getX() || lastLocation.getZ() != currentLocation.getZ();
+            return;
         }
 
-        if (currentLocation != null) {
-            this.lastLocation = currentLocation.clone();
-        }
-
-        boolean isOnGround = entity.isOnGround();
-
-        switch (spawnBehavior) {
-            case STANDING_STILL:
-                if (isMovingHorizontally || !isOnGround) return;
-                break;
-            case MOVING:
-                if (!isMovingHorizontally && isOnGround) return;
-                break;
-            case ALWAYS:
-                break;
-        }
+        if (!conditionManager.allConditionsMet(currentLocation)) return;
 
         if (loopDelayCounter > 0) {
             loopDelayCounter--;
@@ -114,11 +98,13 @@ public class EntityPointParticleTask implements EntityParticleTask {
         }
         tickCounter = 0;
 
-        Location spawnLocation = entity.getLocation().add(offset);
+        Location spawnLocation = currentLocation.clone().add(offset);
 
         if (collisionEnabled && CollisionManager.isColliding(spawnLocation)) {
             return;
         }
+
+        Vector entityVelocity = (entity != null && entity.isValid()) ? entity.getVelocity() : new Vector();
 
         if (particle == null && options instanceof ItemStack) {
             if (spread > 0) {
@@ -128,11 +114,11 @@ public class EntityPointParticleTask implements EntityParticleTask {
                             ThreadLocalRandom.current().nextDouble(-1, 1),
                             ThreadLocalRandom.current().nextDouble(-1, 1)
                     ).normalize().multiply(spread);
-                    Vector finalVelocity = inheritEntityVelocity ? entity.getVelocity().clone().add(randomVelocity) : randomVelocity;
+                    Vector finalVelocity = inheritEntityVelocity ? entityVelocity.clone().add(randomVelocity) : randomVelocity;
                     ParticleScheduler.queueParticle(new ParticleSpawnData(spawnLocation, (ItemStack) options, despawnTimer, hasGravity, finalVelocity));
                 }
             } else {
-                Vector velocity = inheritEntityVelocity ? entity.getVelocity() : new Vector(0, 0, 0);
+                Vector velocity = inheritEntityVelocity ? entityVelocity : new Vector(0, 0, 0);
                 ParticleScheduler.queueParticle(new ParticleSpawnData(spawnLocation, (ItemStack) options, despawnTimer, hasGravity, velocity));
             }
         } else if (particle != null) {
@@ -141,7 +127,7 @@ public class EntityPointParticleTask implements EntityParticleTask {
             } else if (particle == Particle.VIBRATION && options instanceof org.bukkit.Vibration) {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, (org.bukkit.Vibration) options));
             } else {
-                ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, 1, 0, 0, 0, 0, options));
+                ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLocation, particleCount, spread, spread, spread, 0, options));
             }
         }
     }
@@ -187,5 +173,10 @@ public class EntityPointParticleTask implements EntityParticleTask {
     @Override
     public SpawnBehavior getSpawnBehavior() {
         return spawnBehavior;
+    }
+
+    @Override
+    public void setDeathLocation(Location location) {
+        this.deathLocation = location;
     }
 }

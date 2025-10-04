@@ -24,8 +24,8 @@ public class RandomBurstRegionFactory extends AbstractStaticParticleFactory {
         }
 
         Particle particle = parseParticle(section);
-        long activeDuration = ConfigValidator.getPositiveInt(section, "active-duration", 100);
-        long cooldownDuration = ConfigValidator.getPositiveInt(section, "cooldown-duration", 60);
+        long activeDuration = ConfigValidator.getPositiveInt(section, "active-duration", 5) * 20L;
+        long cooldownDuration = ConfigValidator.getPositiveInt(section, "cooldown-duration", 3) * 20L;
         double burstRadius = ConfigValidator.getPositiveDouble(section, "burst-radius", 1.0);
         int spawnRate = ConfigValidator.getPositiveInt(section, "spawn-rate", 5);
         long spawnPeriod = ConfigValidator.getPositiveInt(section, "spawn-period", 1);

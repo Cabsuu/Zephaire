@@ -6,6 +6,5 @@ public enum SpawnBehavior {
     MOVING,
     ON_HIT,
     ON_DEATH,
-    ON_TELEPORT,
-    ON_REGION_ENTER
+    ON_TELEPORT
 }

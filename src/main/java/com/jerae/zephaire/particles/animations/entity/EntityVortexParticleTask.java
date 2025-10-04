@@ -44,7 +44,7 @@ public class EntityVortexParticleTask implements EntityParticleTask {
     private final List<Vector> velocities = new ArrayList<>();
     private int tickCounter = 0;
     private int loopDelayCounter = 0;
-    private Location lastLocation;
+    private Location deathLocation;
 
     // --- PERFORMANCE: Reusable objects for vector calculations ---
     private final Vector toCenter = new Vector();
@@ -93,33 +93,16 @@ public class EntityVortexParticleTask implements EntityParticleTask {
         }
         ticksLived++;
 
-        if (!conditionManager.allConditionsMet(entity.getLocation())) return;
-        // --- Spawn Behavior ---
-        Location currentLocation = entity.getLocation();
-
-        boolean isMovingHorizontally;
-        if (lastLocation == null || currentLocation == null || !lastLocation.getWorld().equals(currentLocation.getWorld())) {
-            isMovingHorizontally = entity.getVelocity().setY(0).lengthSquared() > 0.001;
+        Location currentLocation;
+        if (entity != null && entity.isValid()) {
+            currentLocation = entity.getLocation();
+        } else if (deathLocation != null) {
+            currentLocation = deathLocation;
         } else {
-            isMovingHorizontally = lastLocation.getX() != currentLocation.getX() || lastLocation.getZ() != currentLocation.getZ();
+            return;
         }
 
-        if (currentLocation != null) {
-            this.lastLocation = currentLocation.clone();
-        }
-
-        boolean isOnGround = entity.isOnGround();
-
-        switch (spawnBehavior) {
-            case STANDING_STILL:
-                if (isMovingHorizontally || !isOnGround) return;
-                break;
-            case MOVING:
-                if (!isMovingHorizontally && isOnGround) return;
-                break;
-            case ALWAYS:
-                break;
-        }
+        if (!conditionManager.allConditionsMet(currentLocation)) return;
 
         if (loopDelayCounter > 0) {
             loopDelayCounter--;
@@ -132,8 +115,8 @@ public class EntityVortexParticleTask implements EntityParticleTask {
         }
         tickCounter = 0;
 
-        Location center = entity.getLocation().add(offset);
-        World world = entity.getWorld();
+        Location center = currentLocation.clone().add(offset);
+        World world = currentLocation.getWorld();
 
         if (particles.isEmpty()) {
             for (int i = 0; i < particleCount; i++) {
@@ -175,9 +158,10 @@ public class EntityVortexParticleTask implements EntityParticleTask {
 
             if (collisionEnabled && CollisionManager.isColliding(p)) continue;
 
+            Vector entityVelocity = (entity != null && entity.isValid()) ? entity.getVelocity() : new Vector();
             Vector totalVelocity = v.clone();
             if (inheritEntityVelocity) {
-                totalVelocity.add(entity.getVelocity());
+                totalVelocity.add(entityVelocity);
             }
             if (particle == null && options instanceof ItemStack) {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(p, (ItemStack) options, despawnTimer, hasGravity, totalVelocity));
@@ -247,5 +231,10 @@ public class EntityVortexParticleTask implements EntityParticleTask {
     @Override
     public SpawnBehavior getSpawnBehavior() {
         return spawnBehavior;
+    }
+
+    @Override
+    public void setDeathLocation(Location location) {
+        this.deathLocation = location;
     }
 }

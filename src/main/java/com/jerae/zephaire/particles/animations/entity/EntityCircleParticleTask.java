@@ -38,7 +38,7 @@ public class EntityCircleParticleTask implements EntityParticleTask {
     private double angle = 0;
     private int tickCounter = 0;
     private int loopDelayCounter = 0;
-    private Location lastLocation;
+    private Location deathLocation;
 
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Location spawnLocation;
@@ -93,34 +93,16 @@ public class EntityCircleParticleTask implements EntityParticleTask {
         }
         ticksLived++;
 
-        if (!conditionManager.allConditionsMet(entity.getLocation())) return;
-
-        // --- Spawn Behavior ---
-        Location currentLocation = entity.getLocation();
-
-        boolean isMovingHorizontally;
-        if (lastLocation == null || currentLocation == null || !lastLocation.getWorld().equals(currentLocation.getWorld())) {
-            isMovingHorizontally = entity.getVelocity().setY(0).lengthSquared() > 0.001;
+        Location currentLocation;
+        if (entity != null && entity.isValid()) {
+            currentLocation = entity.getLocation();
+        } else if (deathLocation != null) {
+            currentLocation = deathLocation;
         } else {
-            isMovingHorizontally = lastLocation.getX() != currentLocation.getX() || lastLocation.getZ() != currentLocation.getZ();
+            return;
         }
 
-        if (currentLocation != null) {
-            this.lastLocation = currentLocation.clone();
-        }
-
-        boolean isOnGround = entity.isOnGround();
-
-        switch (spawnBehavior) {
-            case STANDING_STILL:
-                if (isMovingHorizontally || !isOnGround) return;
-                break;
-            case MOVING:
-                if (!isMovingHorizontally && isOnGround) return;
-                break;
-            case ALWAYS:
-                break;
-        }
+        if (!conditionManager.allConditionsMet(currentLocation)) return;
 
         if (testMode) {
             throw new RuntimeException("TestParticleSpawn");
@@ -137,8 +119,8 @@ public class EntityCircleParticleTask implements EntityParticleTask {
         }
         tickCounter = 0;
 
-        Location center = entity.getLocation().add(offset);
-        spawnLocation.setWorld(entity.getWorld()); // Ensure world is correct
+        Location center = currentLocation.clone().add(offset);
+        spawnLocation.setWorld(center.getWorld()); // Ensure world is correct
 
         angle += speed;
 
@@ -164,8 +146,10 @@ public class EntityCircleParticleTask implements EntityParticleTask {
                 continue;
             }
 
+            Vector entityVelocity = (entity != null && entity.isValid()) ? entity.getVelocity() : new Vector();
+
             if (particle == null && options instanceof ItemStack) {
-                Vector velocity = inheritEntityVelocity ? entity.getVelocity() : new Vector(0, 0, 0);
+                Vector velocity = inheritEntityVelocity ? entityVelocity : new Vector(0, 0, 0);
                 ParticleScheduler.queueParticle(new ParticleSpawnData(spawnLocation, (ItemStack) options, despawnTimer, hasGravity, velocity));
             } else if (particle != null) {
                 if (particle == Particle.SHRIEK && options instanceof Integer) {
@@ -222,5 +206,10 @@ public class EntityCircleParticleTask implements EntityParticleTask {
     @Override
     public SpawnBehavior getSpawnBehavior() {
         return spawnBehavior;
+    }
+
+    @Override
+    public void setDeathLocation(Location location) {
+        this.deathLocation = location;
     }
 }

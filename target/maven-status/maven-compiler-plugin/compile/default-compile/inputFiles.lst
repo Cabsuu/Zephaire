@@ -9,7 +9,6 @@ H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zep
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\listeners\EntityListener.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\listeners\ItemListener.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\listeners\PlayerInteractListener.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\AnimatedOrbitalParticleTask.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\AnimatedParticle.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\AnimatedSpiralParticleTask.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\CircleParticleTask.java
@@ -24,7 +23,6 @@ H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zep
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\entity\EntitySpiralParticleTask.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\entity\EntityStarParticleTask.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\entity\EntityVortexParticleTask.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\entity\OrbitalParticleTask.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\HelixParticleTask.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\LineParticleTask.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\animations\MovingStarParticleTask.java
@@ -51,7 +49,6 @@ H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zep
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\Debuggable.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\AbstractParticleFactory.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\animated\AbstractAnimatedParticleFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\animated\AnimatedOrbitalParticleFactory.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\animated\AnimatedSpiralParticleFactory.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\animated\CircleParticleFactory.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\animated\CurveParticleFactory.java
@@ -84,7 +81,6 @@ H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zep
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\entity\EntitySpiralParticleFactory.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\entity\EntityStarParticleFactory.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\entity\EntityVortexParticleFactory.java
-H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\entity\OrbitalParticleFactory.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\EntityParticleFactory.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\StaticParticleFactory.java
 H:\Documents\Server Management\Self-Plugins\Zephaire\src\main\java\com\jerae\zephaire\particles\factories\statics\AbstractStaticParticleFactory.java

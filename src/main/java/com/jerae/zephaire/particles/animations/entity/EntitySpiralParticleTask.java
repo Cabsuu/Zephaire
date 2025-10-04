@@ -42,10 +42,10 @@ public class EntitySpiralParticleTask implements EntityParticleTask {
     private final int duration;
     private int ticksLived = 0;
 
-
     private double angle;
     private double currentYOffset;
     private int verticalDirection = 1;
+    private Location deathLocation;
 
     private final Vector particleVector = new Vector();
     private final Vector rotatedVector = new Vector();
@@ -83,7 +83,16 @@ public class EntitySpiralParticleTask implements EntityParticleTask {
         }
         ticksLived++;
 
-        if (!conditionManager.allConditionsMet(entity.getLocation())) {
+        Location currentLocation;
+        if (entity != null && entity.isValid()) {
+            currentLocation = entity.getLocation();
+        } else if (deathLocation != null) {
+            currentLocation = deathLocation;
+        } else {
+            return;
+        }
+
+        if (!conditionManager.allConditionsMet(currentLocation)) {
             return;
         }
 
@@ -118,14 +127,17 @@ public class EntitySpiralParticleTask implements EntityParticleTask {
         particleVector.setX(xOffset).setY(yOffset).setZ(zOffset);
         VectorUtils.rotateVector(particleVector, pitch, yaw, rotatedVector);
 
-        Location spawnLoc = entity.getLocation().add(offset).add(rotatedVector);
+        Location spawnLoc = currentLocation.clone().add(offset).add(rotatedVector);
 
         if (collisionEnabled && CollisionManager.isColliding(spawnLoc)) {
             return;
         }
 
+        Vector entityVelocity = (entity != null && entity.isValid()) ? entity.getVelocity() : new Vector();
+        Vector finalVelocity = inheritEntityVelocity ? entityVelocity : new Vector();
+
         if (particle == null && options instanceof ItemStack) {
-            ParticleScheduler.queueParticle(new ParticleSpawnData(spawnLoc, (ItemStack) options, despawnTimer, hasGravity));
+            ParticleScheduler.queueParticle(new ParticleSpawnData(spawnLoc, (ItemStack) options, despawnTimer, hasGravity, finalVelocity));
         } else if (particle != null) {
             if (particle == Particle.SHRIEK && options instanceof Integer) {
                 ParticleScheduler.queueParticle(new ParticleSpawnData(particle, spawnLoc, (Integer) options));
@@ -180,5 +192,10 @@ public class EntitySpiralParticleTask implements EntityParticleTask {
     @Override
     public SpawnBehavior getSpawnBehavior() {
         return spawnBehavior;
+    }
+
+    @Override
+    public void setDeathLocation(Location location) {
+        this.deathLocation = location;
     }
 }

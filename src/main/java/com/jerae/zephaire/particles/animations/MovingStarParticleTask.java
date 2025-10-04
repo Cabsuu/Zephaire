@@ -1,7 +1,5 @@
 package com.jerae.zephaire.particles.animations;
 
-import com.jerae.zephaire.particles.ParticleScheduler;
-import com.jerae.zephaire.particles.ParticleSpawnData;
 import com.jerae.zephaire.particles.conditions.ConditionManager;
 import com.jerae.zephaire.particles.managers.CollisionManager;
 import com.jerae.zephaire.particles.managers.PerformanceManager;
@@ -34,16 +32,18 @@ public class MovingStarParticleTask implements AnimatedParticle {
     private final int despawnTimer;
     private final boolean hasGravity;
     private final int loopDelay;
+    private final int period;
 
     private double rotationAngle = 0;
     private double currentYOffset = 0;
     private int verticalDirection = 1;
     private int loopDelayCounter = 0;
+    private int tickCounter = 0;
 
     // --- PERFORMANCE: Reusable objects to avoid creating new ones every tick ---
     private final Vector[] vertices;
 
-    public MovingStarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, Vector velocity, boolean collisionEnabled, double height, double verticalSpeed, boolean bounce, int despawnTimer, boolean hasGravity, int loopDelay) {
+    public MovingStarParticleTask(Location center, Particle particle, int points, double outerRadius, double innerRadius, double speed, double density, Object options, double pitch, double yaw, ConditionManager conditionManager, Vector velocity, boolean collisionEnabled, double height, double verticalSpeed, boolean bounce, int despawnTimer, boolean hasGravity, int loopDelay, int period) {
         this.center = center;
         this.particle = particle;
         this.points = Math.max(2, points);
@@ -63,6 +63,7 @@ public class MovingStarParticleTask implements AnimatedParticle {
         this.despawnTimer = despawnTimer;
         this.hasGravity = hasGravity;
         this.loopDelay = loopDelay;
+        this.period = period;
         this.vertices = new Vector[this.points * 2];
         for (int i = 0; i < vertices.length; i++) {
             vertices[i] = new Vector();
@@ -79,6 +80,12 @@ public class MovingStarParticleTask implements AnimatedParticle {
             loopDelayCounter--;
             return;
         }
+
+        tickCounter++;
+        if (tickCounter < period) {
+            return;
+        }
+        tickCounter = 0;
 
         // Check for collision at the center's next position
         if (collisionEnabled && CollisionManager.isColliding(center.clone().add(velocity))) {
@@ -119,7 +126,7 @@ public class MovingStarParticleTask implements AnimatedParticle {
             double angle = rotationAngle + (i * Math.PI / points);
             double radius = (i % 2 == 0) ? outerRadius : innerRadius;
             reusableVertex.setX(Math.cos(angle) * radius).setY(currentYOffset).setZ(Math.sin(angle) * radius);
-            VectorUtils.rotateVector(reusableVertex, pitch, yaw, vertices[i]);
+            VectorUtils.rotateVector(reusableVertex, Math.toRadians(pitch), Math.toRadians(yaw), vertices[i]);
         }
 
         // Draw lines between the vertices
