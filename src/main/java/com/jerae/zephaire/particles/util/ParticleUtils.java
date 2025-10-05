@@ -1,6 +1,7 @@
 package com.jerae.zephaire.particles.util;
 
 import com.jerae.zephaire.Zephaire;
+import com.jerae.zephaire.nms.NMSManager;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -61,16 +62,19 @@ public final class ParticleUtils {
                 return new ItemStack(Material.STONE);
             }
         }
-        if (particle == Particle.DUST) {
+
+        String particleName = particle.name();
+
+        if (particleName.equals("DUST")) {
             Color color = hexToColor(optionsSection.getString("color", "FFFFFF"));
             float size = (float) optionsSection.getDouble("size", 1.0);
             return new Particle.DustOptions(color, size);
-        } else if (particle == Particle.DUST_COLOR_TRANSITION) {
+        } else if (particleName.equals("DUST_COLOR_TRANSITION")) {
             Color from = hexToColor(optionsSection.getString("from-color", "FFFFFF"));
             Color to = hexToColor(optionsSection.getString("to-color", "000000"));
             float size = (float) optionsSection.getDouble("size", 1.0);
             return new Particle.DustTransition(from, to, size);
-        } else if (particle == Particle.ITEM) {
+        } else if (particleName.equals("ITEM")) {
             String materialName = optionsSection.getString("material", "STONE").toUpperCase();
             try {
                 Material material = Material.valueOf(materialName);
@@ -79,11 +83,11 @@ public final class ParticleUtils {
                 plugin.getLogger().warning("Invalid material '" + materialName + "' in particle options for '" + optionsSection.getParent().getName() + "'. Using STONE instead.");
                 return new ItemStack(Material.STONE);
             }
-        } else if (particle == Particle.BLOCK ||
-                particle == Particle.BLOCK_CRUMBLE ||
-                particle == Particle.BLOCK_MARKER ||
-                particle == Particle.DUST_PILLAR ||
-                particle == Particle.FALLING_DUST) {
+        } else if (particleName.equals("BLOCK") ||
+                particleName.equals("BLOCK_CRUMBLE") ||
+                particleName.equals("BLOCK_MARKER") ||
+                particleName.equals("DUST_PILLAR") ||
+                particleName.equals("FALLING_DUST")) {
             String materialName = optionsSection.getString("material", "STONE").toUpperCase();
             try {
                 Material material = Material.valueOf(materialName);
@@ -96,16 +100,15 @@ public final class ParticleUtils {
                 plugin.getLogger().warning("Invalid material '" + materialName + "' in particle options for '" + optionsSection.getParent().getName() + "'. Using STONE instead.");
                 return Material.STONE.createBlockData();
             }
-        } else if (particle == Particle.ENTITY_EFFECT) {
-            // ENTITY_EFFECT uses a Color object for its data
+        } else if (particleName.equals("ENTITY_EFFECT")) {
             return hexToColor(optionsSection.getString("color", "FFFFFF"));
-        } else if (particle == Particle.SCULK_CHARGE) {
+        } else if (particleName.equals("SCULK_CHARGE")) {
             return (float) optionsSection.getDouble("roll", 0.0);
-        } else if (particle == Particle.SHRIEK) {
+        } else if (particleName.equals("SHRIEK")) {
             return optionsSection.getInt("delay", 0);
-        } else if (particle == Particle.TINTED_LEAVES) {
+        } else if (particleName.equals("TINTED_LEAVES")) {
             return hexToColor(optionsSection.getString("color", "FFFFFF"));
-        } else if (particle == Particle.VIBRATION) {
+        } else if (particleName.equals("VIBRATION")) {
             ConfigurationSection destSection = optionsSection.getConfigurationSection("destination");
             if (destSection == null) {
                 JavaPlugin.getPlugin(Zephaire.class).getLogger().warning("Missing 'destination' for VIBRATION particle in '" + optionsSection.getParent().getName() + "'. Skipping.");
@@ -120,6 +123,19 @@ public final class ParticleUtils {
             int arrivalTime = optionsSection.getInt("arrival-time", 20);
             return new org.bukkit.Vibration(new org.bukkit.Vibration.Destination.BlockDestination(destination), arrivalTime);
         }
+
+        if (NMSManager.isVersionAtLeast("1.21.9")) {
+            if (particleName.equals("INSTANT_EFFECT") || particleName.equals("EFFECT")) {
+                return hexToColor(optionsSection.getString("color", "FFFFFF"));
+            } else if (particleName.equals("FLASH")) {
+                if (!optionsSection.contains("color")) {
+                    plugin.getLogger().warning("Missing required 'color' for FLASH particle in '" + optionsSection.getParent().getName() + "' on 1.21.9+. Skipping.");
+                    return null;
+                }
+                return hexToColor(optionsSection.getString("color"));
+            }
+        }
+
         return null;
     }
 

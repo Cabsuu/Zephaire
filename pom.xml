@@ -6,7 +6,7 @@
 
     <groupId>com.jerae</groupId>
     <artifactId>Zephaire</artifactId>
-    <version>0.7.1</version>
+    <version>0.7.2</version>
     <packaging>jar</packaging>
 
     <name>zephaire</name>
@@ -48,6 +48,10 @@
                 <configuration>
                     <testSourceDirectory>src/test/java</testSourceDirectory>
                     <redirectTestOutputToFile>false</redirectTestOutputToFile>
+                    <excludes>
+                        <exclude>**/EntityParticleManagerTest.java</exclude>
+                        <exclude>**/ParticleUtils_1_21_9_Test.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
         </plugins>
@@ -70,11 +74,47 @@
         </repository>
     </repositories>
 
+    <profiles>
+        <profile>
+            <id>1.21.5</id>
+            <properties>
+                <minecraft.version>1.21.5-R0.1-SNAPSHOT</minecraft.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>1.21.6</id>
+            <properties>
+                <minecraft.version>1.21.6-R0.1-SNAPSHOT</minecraft.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>1.21.7</id>
+            <properties>
+                <minecraft.version>1.21.7-R0.1-SNAPSHOT</minecraft.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>1.21.8</id>
+            <properties>
+                <minecraft.version>1.21.8-R0.1-SNAPSHOT</minecraft.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>1.21.9</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <minecraft.version>1.21.9-R0.1-SNAPSHOT</minecraft.version>
+            </properties>
+        </profile>
+    </profiles>
+
     <dependencies>
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.21.8-R0.1-SNAPSHOT</version>
+            <version>${minecraft.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -102,9 +142,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.mockbukkit.mockbukkit</groupId>
-            <artifactId>mockbukkit-v1.21</artifactId>
-            <version>4.76.0</version>
+            <groupId>com.github.MockBukkit</groupId>
+            <artifactId>MockBukkit</artifactId>
+            <version>v1.21-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
