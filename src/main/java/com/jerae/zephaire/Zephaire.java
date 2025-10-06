@@ -22,7 +22,7 @@ import org.bukkit.scheduler.BukkitTask;
 import java.io.File;
 import java.util.List;
 
-public final class Zephaire extends JavaPlugin {
+public class Zephaire extends JavaPlugin {
 
     private FactoryManager factoryManager;
     private ParticleManager particleManager;
@@ -81,6 +81,7 @@ public final class Zephaire extends JavaPlugin {
         // Make the particle manager globally accessible
         ParticleRegistry.initialize(this.particleManager);
         ParticleScheduler.initialize(this);
+        com.jerae.zephaire.particles.util.ParticleUtils.initialize(this);
 
 
         // --- LOAD DATA AND PARTICLES ---
@@ -122,7 +123,7 @@ public final class Zephaire extends JavaPlugin {
     public void reloadPluginConfig() {
         // 1. Reload the config.yml file from disk and initialize performance settings.
         reloadConfig();
-        PerformanceManager.initialize(getConfig());
+        PerformanceManager.initialize(this, getConfig());
         this.disabledWorlds = getConfig().getStringList("disabled-worlds");
         this.staticParticlesEnabled = getConfig().getBoolean("plugin-features.enable-static-particles", true);
         this.animatedParticlesEnabled = getConfig().getBoolean("plugin-features.enable-animated-particles", true);

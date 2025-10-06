@@ -28,7 +28,7 @@ public final class PerformanceManager {
      *
      * @param config The FileConfiguration to load from.
      */
-    public static void initialize(FileConfiguration config) {
+    public static void initialize(Zephaire plugin, FileConfiguration config) {
         distanceCheckEnabled = config.getBoolean("performance.enable-distance-check", true);
         double maxViewDistance = config.getDouble("performance.max-view-distance", 64.0);
         maxViewDistanceSquared = maxViewDistance * maxViewDistance;
@@ -40,7 +40,7 @@ public final class PerformanceManager {
 
         // Start a synchronous repeating task to update player locations every 5 ticks.
         // This is safe because it runs on the main server thread.
-        locationUpdateTaskId = Bukkit.getScheduler().runTaskTimer(JavaPlugin.getPlugin(Zephaire.class), () -> {
+        locationUpdateTaskId = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
             playerLocations.clear();
             for (Player player : Bukkit.getOnlinePlayers()) {
                 playerLocations.put(player.getUniqueId(), player.getLocation());

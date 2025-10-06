@@ -5,16 +5,26 @@ import com.jerae.zephaire.nms.NMSManager;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Map;
 
-/**
- * A utility class for parsing particle-related data from configurations.
- */
 public final class ParticleUtils {
 
-    private static final Zephaire plugin = JavaPlugin.getPlugin(Zephaire.class);
+    private static Zephaire plugin;
+
+    private ParticleUtils() {
+        // Private constructor to prevent instantiation
+    }
+
+    public static void initialize(Zephaire pluginInstance) {
+        if (plugin == null) {
+            plugin = pluginInstance;
+        }
+    }
+
+    public static void reset() {
+        plugin = null;
+    }
 
     public static Location parseLocation(World world, ConfigurationSection section) {
         if (section == null) return new Location(world, 0, 0, 0);
@@ -45,7 +55,9 @@ public final class ParticleUtils {
             int b = Integer.valueOf(hex.substring(4, 6), 16);
             return Color.fromRGB(r, g, b);
         } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-            plugin.getLogger().warning("Invalid hex color format: '" + hex + "'. Using WHITE instead.");
+            if (plugin != null) {
+                plugin.getLogger().warning("Invalid hex color format: '" + hex + "'. Using WHITE instead.");
+            }
             return Color.WHITE;
         }
     }
@@ -58,7 +70,9 @@ public final class ParticleUtils {
                 Material material = Material.valueOf(materialName);
                 return new ItemStack(material);
             } catch (IllegalArgumentException e) {
-                plugin.getLogger().warning("Invalid material '" + materialName + "' in particle options for '" + optionsSection.getParent().getName() + "'. Using STONE instead.");
+                if (plugin != null) {
+                    plugin.getLogger().warning("Invalid material '" + materialName + "' in particle options for '" + optionsSection.getParent().getName() + "'. Using STONE instead.");
+                }
                 return new ItemStack(Material.STONE);
             }
         }
@@ -80,7 +94,9 @@ public final class ParticleUtils {
                 Material material = Material.valueOf(materialName);
                 return new ItemStack(material);
             } catch (IllegalArgumentException e) {
-                plugin.getLogger().warning("Invalid material '" + materialName + "' in particle options for '" + optionsSection.getParent().getName() + "'. Using STONE instead.");
+                if (plugin != null) {
+                    plugin.getLogger().warning("Invalid material '" + materialName + "' in particle options for '" + optionsSection.getParent().getName() + "'. Using STONE instead.");
+                }
                 return new ItemStack(Material.STONE);
             }
         } else if (particleName.equals("BLOCK") ||
@@ -92,12 +108,16 @@ public final class ParticleUtils {
             try {
                 Material material = Material.valueOf(materialName);
                 if (!material.isBlock()) {
-                    plugin.getLogger().warning("Invalid material '" + materialName + "' in particle options for '" + optionsSection.getParent().getName() + "'. Material must be a block. Using STONE instead.");
+                    if (plugin != null) {
+                        plugin.getLogger().warning("Invalid material '" + materialName + "' in particle options for '" + optionsSection.getParent().getName() + "'. Material must be a block. Using STONE instead.");
+                    }
                     return Material.STONE.createBlockData();
                 }
                 return material.createBlockData();
             } catch (IllegalArgumentException e) {
-                plugin.getLogger().warning("Invalid material '" + materialName + "' in particle options for '" + optionsSection.getParent().getName() + "'. Using STONE instead.");
+                if (plugin != null) {
+                    plugin.getLogger().warning("Invalid material '" + materialName + "' in particle options for '" + optionsSection.getParent().getName() + "'. Using STONE instead.");
+                }
                 return Material.STONE.createBlockData();
             }
         } else if (particleName.equals("ENTITY_EFFECT")) {
@@ -109,19 +129,7 @@ public final class ParticleUtils {
         } else if (particleName.equals("TINTED_LEAVES")) {
             return hexToColor(optionsSection.getString("color", "FFFFFF"));
         } else if (particleName.equals("VIBRATION")) {
-            ConfigurationSection destSection = optionsSection.getConfigurationSection("destination");
-            if (destSection == null) {
-                JavaPlugin.getPlugin(Zephaire.class).getLogger().warning("Missing 'destination' for VIBRATION particle in '" + optionsSection.getParent().getName() + "'. Skipping.");
-                return null;
-            }
-            World world = Bukkit.getWorld(destSection.getString("world", "world"));
-            if (world == null) {
-                JavaPlugin.getPlugin(Zephaire.class).getLogger().warning("Invalid world for VIBRATION particle destination in '" + optionsSection.getParent().getName() + "'. Skipping.");
-                return null;
-            }
-            Location destination = parseLocation(world, destSection);
-            int arrivalTime = optionsSection.getInt("arrival-time", 20);
-            return new org.bukkit.Vibration(new org.bukkit.Vibration.Destination.BlockDestination(destination), arrivalTime);
+            return createVibrationData(optionsSection);
         }
 
         if (NMSManager.isVersionAtLeast("1.21.9")) {
@@ -129,7 +137,9 @@ public final class ParticleUtils {
                 return hexToColor(optionsSection.getString("color", "FFFFFF"));
             } else if (particleName.equals("FLASH")) {
                 if (!optionsSection.contains("color")) {
-                    plugin.getLogger().warning("Missing required 'color' for FLASH particle in '" + optionsSection.getParent().getName() + "' on 1.21.9+. Skipping.");
+                    if (plugin != null) {
+                        plugin.getLogger().warning("Missing required 'color' for FLASH particle in '" + optionsSection.getParent().getName() + "' on 1.21.9+. Skipping.");
+                    }
                     return null;
                 }
                 return hexToColor(optionsSection.getString("color"));
@@ -139,11 +149,46 @@ public final class ParticleUtils {
         return null;
     }
 
-    /**
-     * Formats a boolean value into a colored string for debug output.
-     * @param value The boolean value.
-     * @return A green "true" or red "false" string.
-     */
+    private static Object createVibrationData(ConfigurationSection optionsSection) {
+        ConfigurationSection destSection = optionsSection.getConfigurationSection("destination");
+        if (destSection == null) {
+            if (plugin != null) {
+                plugin.getLogger().warning("Missing 'destination' for VIBRATION particle in '" + optionsSection.getParent().getName() + "'. Skipping.");
+            }
+            return null;
+        }
+
+        World world = Bukkit.getWorld(destSection.getString("world", "world"));
+        if (world == null) {
+            if (plugin != null) {
+                plugin.getLogger().warning("Invalid world for VIBRATION particle destination in '" + optionsSection.getParent().getName() + "'. Skipping.");
+            }
+            return null;
+        }
+
+        Location destination = parseLocation(world, destSection);
+        int arrivalTime = optionsSection.getInt("arrival-time", 20);
+
+        try {
+            if (NMSManager.isVersionAtLeast("1.21.9")) {
+                // Modern constructor: Vibration(Vibration.Destination, int)
+                Vibration.Destination blockDestination = new Vibration.Destination.BlockDestination(destination);
+                return new Vibration(blockDestination, arrivalTime);
+            } else {
+                // Legacy constructor: Vibration(Location, Vibration.Destination, int)
+                Location origin = parseLocation(world, optionsSection.getParent().getConfigurationSection("location"));
+                Vibration.Destination blockDestination = new Vibration.Destination.BlockDestination(destination);
+                return Vibration.class.getConstructor(Location.class, Vibration.Destination.class, int.class)
+                        .newInstance(origin, blockDestination, arrivalTime);
+            }
+        } catch (Exception e) {
+            if (plugin != null) {
+                plugin.getLogger().severe("Failed to create VIBRATION particle: " + e.getMessage());
+            }
+            return null;
+        }
+    }
+
     public static String formatBoolean(boolean value) {
         return value ? ChatColor.GREEN + "true" : ChatColor.RED + "false";
     }

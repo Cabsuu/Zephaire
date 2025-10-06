@@ -4,10 +4,17 @@ import org.bukkit.Bukkit;
 
 public class NMSManager {
 
-    private static final String SERVER_VERSION = Bukkit.getServer().getBukkitVersion().split("-")[0];
+    private static String SERVER_VERSION;
+
+    private static String getServerVersion() {
+        if (SERVER_VERSION == null) {
+            SERVER_VERSION = Bukkit.getServer().getBukkitVersion().split("-")[0];
+        }
+        return SERVER_VERSION;
+    }
 
     public static boolean isVersionAtLeast(String version) {
-        String[] serverVersionParts = SERVER_VERSION.split("\\.");
+        String[] serverVersionParts = getServerVersion().split("\\.");
         String[] compareVersionParts = version.split("\\.");
 
         int length = Math.max(serverVersionParts.length, compareVersionParts.length);

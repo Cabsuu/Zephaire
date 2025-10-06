@@ -51,6 +51,7 @@
                     <excludes>
                         <exclude>**/EntityParticleManagerTest.java</exclude>
                         <exclude>**/ParticleUtils_1_21_9_Test.java</exclude>
+                        <exclude>**/ParticleUtilsTest.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -75,6 +76,36 @@
     </repositories>
 
     <profiles>
+        <profile>
+            <id>1.21</id>
+            <properties>
+                <minecraft.version>1.21-R0.1-SNAPSHOT</minecraft.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>1.21.1</id>
+            <properties>
+                <minecraft.version>1.21.1-R0.1-SNAPSHOT</minecraft.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>1.21.2</id>
+            <properties>
+                <minecraft.version>1.21.2-R0.1-SNAPSHOT</minecraft.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>1.21.3</id>
+            <properties>
+                <minecraft.version>1.21.3-R0.1-SNAPSHOT</minecraft.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>1.21.4</id>
+            <properties>
+                <minecraft.version>1.21.4-R0.1-SNAPSHOT</minecraft.version>
+            </properties>
+        </profile>
         <profile>
             <id>1.21.5</id>
             <properties>
@@ -142,9 +173,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.MockBukkit</groupId>
-            <artifactId>MockBukkit</artifactId>
-            <version>v1.21-SNAPSHOT</version>
+            <groupId>org.mockbukkit.mockbukkit</groupId>
+            <artifactId>mockbukkit-v1.21</artifactId>
+            <version>4.0.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

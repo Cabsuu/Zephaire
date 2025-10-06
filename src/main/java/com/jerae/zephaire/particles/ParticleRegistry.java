@@ -92,4 +92,8 @@ public final class ParticleRegistry {
         }
         return particleManager;
     }
+
+    public static void reset() {
+        particleManager = null;
+    }
 }

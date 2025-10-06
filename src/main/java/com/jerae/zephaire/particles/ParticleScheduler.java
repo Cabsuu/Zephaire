@@ -18,7 +18,15 @@ public class ParticleScheduler extends BukkitRunnable {
     private static Zephaire plugin;
 
     public static void initialize(Zephaire pluginInstance) {
-        plugin = pluginInstance;
+        if (plugin == null) {
+            plugin = pluginInstance;
+        }
+    }
+
+    public static void reset() {
+        plugin = null;
+        particleQueue.clear();
+        soundQueue.clear();
     }
 
 
